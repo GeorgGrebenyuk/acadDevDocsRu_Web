@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Многогранные сети - Руководство разработчика AutoCAD .NET API</title>
+        <title>Сети SubDMesh и грани Face - Руководство разработчика AutoCAD .NET API</title>
 
 
         <!-- Custom HTML head -->
@@ -152,15 +152,16 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="Многогранные-сети"><a class="header" href="#Многогранные-сети">Многогранные сети</a></h1>
-<p>Многогранная сеть представляет собой триангулированную поверхность, представленную набором вершин и связанных с ними гранями. Создание многогранной сети аналогично созданию полигональной сети. Вы создаете объект класса <code>PolyFaceMesh</code>, а затем используйте свойства и методы класса для задания геометрии. Чтобы добавить вершину к многогранной сети, создайте объект <code>PolyFaceMeshVertex</code> и добавьте его к сети <code>PolyFaceMesh</code> с помощью метода <code>AppendVertex</code>.</p>
-<p>Информация о гранях задается с помощью метода <code>AppendFaceRecord</code>, который принимает в себя объект класса <code>FaceRecord</code>. Рёбрам грани можно задать видимость, конкретный слой или цвет.</p>
+                        <h1 id="Сети-subdmesh-и-грани-face"><a class="header" href="#Сети-subdmesh-и-грани-face">Сети SubDMesh и грани Face</a></h1>
+<p>Несмотря на то, что PolyFaceMesh называется "многогранной", всё же она имеет ограничение на величину граней в ~65 тысяч объектов. Вероятно всего, вы не не столкнетесь в обычной практике программирования с этим лимитом, но в противном случае важно знать, что существует ещё один трехмерный объект "Сеть" с неограниченным числом граней, описываемый классом SubDMesh.</p>
+<p>Объект "3D-грань" описывается классом Face и может сотоять из 3 или 4 вершин. В примере "Чтение сети" ниже именно она и создается на гранях сети SubDMesh.</p>
+<h2 id="Создание-сети"><a class="header" href="#Создание-сети">Создание сети</a></h2>
 <p>В примере ниже создается многогранная сеть в пространстве модели.</p>
 <pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
- 
+
 [CommandMethod("CreatePolyfaceMesh")]
 public static void CreatePolyfaceMesh()
 {
@@ -231,16 +232,111 @@ public static void CreatePolyfaceMesh()
     }
 }
 </code></pre>
+<h2 id="Чтение-сети"><a class="header" href="#Чтение-сети">Чтение сети</a></h2>
+<p>Чтение сети имеет особенность, дело в том, что информация о гранях сохраняется в формат одномерного массива int, а грань может состоять из 3 или 4 вершин. В этом случае чтение информации о гранях должно быть аккуратным. В примере ниже приводится такая реализация. Для существующей сети в месте вершин создаются точки красного цвета, а также создаются грани типа <code>Face</code>.</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.EditorInput;
+
+[CommandMethod("ExtractSubDMesh")]
+public void ExtractSubDMesh()
+{
+    Document acCurDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acCurDoc.Database;
+
+    PromptEntityOptions selMeshOpts = new PromptEntityOptions("\nSelect a SubDMesh");
+    selMeshOpts.AddAllowedClass(typeof(SubDMesh), true);
+    PromptEntityResult selMeshResult = acCurDoc.Editor.GetEntity(selMeshOpts);
+    if (selMeshResult.Status != PromptStatus.OK) return;
+
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        // Open the Block table record for read
+        BlockTable acBlkTbl;
+        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
+                                        OpenMode.ForRead) as BlockTable;
+
+        // Open the Block table record Model space for write
+        BlockTableRecord acBlkTblRec;
+        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
+                                        OpenMode.ForWrite) as BlockTableRecord;
+
+
+        SubDMesh? meshEntity = acTrans.GetObject(selMeshResult.ObjectId, OpenMode.ForRead) as SubDMesh;
+        if (meshEntity == null) return;
+
+        acCurDoc.Editor.WriteMessage($"SubDMesh Vertices {meshEntity.NumberOfVertices}");
+        acCurDoc.Editor.WriteMessage($"SubDMesh Faces {meshEntity.NumberOfFaces}");
+        acCurDoc.Editor.WriteMessage($"SubDMesh Faces's vertextes {meshEntity.FaceArray.Count}");
+
+        for (int vertexIndex = 0; vertexIndex &lt; meshEntity.NumberOfVertices; vertexIndex++)
+        {
+            DBPoint meshVertex = new DBPoint(meshEntity.Vertices[vertexIndex]);
+            meshVertex.ColorIndex = 1;
+
+            acBlkTblRec.AppendEntity(meshVertex);
+            acTrans.AddNewlyCreatedDBObject(meshVertex, true);
+        }
+
+        // Because the faces can contains 3 or 4 vertexes, we need read it with accuracy in tmpFaceRecordDef
+        int[] tmpFaceRecordDef = new int[] { };
+        int tmpCounter = -1;
+        for (int faceVertexIndex = 0; faceVertexIndex &lt; meshEntity.FaceArray.Count; faceVertexIndex++)
+        {
+            int data = meshEntity.FaceArray[faceVertexIndex];
+
+            if (tmpFaceRecordDef.Length == 0) tmpFaceRecordDef = new int[data];
+            else tmpFaceRecordDef[tmpCounter] = data;
+
+            tmpCounter++;
+
+            if (tmpCounter == tmpFaceRecordDef.Length)
+            {
+                faceProcessing();
+            }
+        }
+        faceProcessing();
+
+        void faceProcessing()
+        {
+            if (tmpFaceRecordDef.Length &lt; 3) return;
+            // Create a 3dface
+            Face meshFace = new Face();
+            Point3d vertex1 = meshEntity.Vertices[tmpFaceRecordDef[0]];
+            Point3d vertex2 = meshEntity.Vertices[tmpFaceRecordDef[1]];
+            Point3d vertex3 = meshEntity.Vertices[tmpFaceRecordDef[2]];
+            Point3d vertex4 = new Point3d();
+            if (tmpFaceRecordDef.Length == 4) vertex4 = meshEntity.Vertices[tmpFaceRecordDef[3]];
+
+            if (tmpFaceRecordDef.Length == 3) meshFace = new Face(vertex1, vertex2, vertex3, true, true, true, true);
+            else meshFace = new Face(vertex1, vertex2, vertex3, vertex4, true, true, true, true);
+
+            meshFace.ColorIndex = 1;
+
+            acBlkTblRec.AppendEntity(meshFace);
+            acTrans.AddNewlyCreatedDBObject(meshFace, true);
+
+            // Reset temp data
+            tmpCounter = -1;
+            tmpFaceRecordDef = new int[] { };
+        }
+
+        acTrans.Commit();
+    }
+}
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="Topic_3D_CreateObjects_Meshes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="Topic_3D_CreateObjects_PolyfaceMesh.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="Topic_3D_CreateObjects_SubDMesh.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="Topic_3D_CreateObjects_Solid3d.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -250,11 +346,11 @@ public static void CreatePolyfaceMesh()
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="Topic_3D_CreateObjects_Meshes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="Topic_3D_CreateObjects_PolyfaceMesh.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="Topic_3D_CreateObjects_SubDMesh.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="Topic_3D_CreateObjects_Solid3d.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
