@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Задание пользовательских систем координат - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Задание-пользовательских-систем-координат"><a class="header" href="#Задание-пользовательских-систем-координат">Задание пользовательских систем координат</a></h1>
+<p>Вы можете определить пользовательскую систему координат (ПСК), чтобы переопределить положение начальной точки (0, 0, 0) и ориентацию плоскости XY и оси Z. Вы можете разместить ПСК в любом месте трехмерного пространства чертежа, а также создать их столько, сколько вам нужно. Ввод координат и их отображение будут относительными по отношению к текущей ПСК.</p>
+<p>Чтобы включить показ начала координат и ориентацию ПСК, вы можете отобразить значок ПСК в её начальной точке, используя свойство <code>IconAtOrigin</code> для текущего видового экрана Viewport или через системную переменную <code>UCSICON</code>. Если значок ПСК включен (свойство <code>IconVisible</code>) и не отображается в начале координат, он отображается в координатах МСК (мировой системы координат), определенных системной переменной UCSORG.</p>
+<p>Вы можете создать новую пользовательскую систему координат, используя метод <code>Add</code> коллекции <code>UCSTable</code>. Этот метод принимает на вход четыре значения: координаты начала координат, координаты по осям X и Y (задающие векторы направления), а также имя пользовательской системы координат. Имя подчиняется единым правилам для неграфических элементов (см. <a href="%5CTopic_CreateAndEditNcObjects_EditNamedAnd2D_Named_Rename.html">статью</a>).</p>
+<p>Чтобы сделать пользовательскую систему координат активной, используйте свойство <code>ActiveUCS</code> у текущего документа AutoCAD (описывается классом <code>Document</code>). Если в определение ПСК были внесены изменения, то необходимо повторить процедуру задания свойства <code>ActiveUCS</code>. В примере ниже создается новая ПСК, делается активной с выводом модального информационного окна, затем у Пользователя запрашивается точка в пространстве чертежа и другом модальном окне выводятся её координаты в значениях текущей ПСК и МСК (мировой системы координат)</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.Geometry;
+ 
+[CommandMethod("NewUCS")]
+public static void NewUCS()
+{
+    // Get the current document and database, and start a transaction
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        // Open the UCS table for read
+        UcsTable acUCSTbl;
+        acUCSTbl = acTrans.GetObject(acCurDb.UcsTableId,
+                                        OpenMode.ForRead) as UcsTable;
+
+        UcsTableRecord acUCSTblRec;
+
+        // Check to see if the "New_UCS" UCS table record exists
+        if (acUCSTbl.Has("New_UCS") == false)
+        {
+            acUCSTblRec = new UcsTableRecord();
+            acUCSTblRec.Name = "New_UCS";
+
+            // Open the UCSTable for write
+            acTrans.GetObject(acCurDb.UcsTableId, OpenMode.ForWrite);
+
+            // Add the new UCS table record
+            acUCSTbl.Add(acUCSTblRec);
+            acTrans.AddNewlyCreatedDBObject(acUCSTblRec, true);
+        }
+        else
+        {
+            acUCSTblRec = acTrans.GetObject(acUCSTbl["New_UCS"],
+                                            OpenMode.ForWrite) as UcsTableRecord;
+        }
+
+        acUCSTblRec.Origin = new Point3d(4, 5, 3);
+        acUCSTblRec.XAxis = new Vector3d(1, 0, 0);
+        acUCSTblRec.YAxis = new Vector3d(0, 1, 0);
+
+        // Open the active viewport
+        ViewportTableRecord acVportTblRec;
+        acVportTblRec = acTrans.GetObject(acDoc.Editor.ActiveViewportId,
+                                            OpenMode.ForWrite) as ViewportTableRecord;
+
+        // Display the UCS Icon at the origin of the current viewport
+        acVportTblRec.IconAtOrigin = true;
+        acVportTblRec.IconEnabled = true;
+
+        // Set the UCS current
+        acVportTblRec.SetUcs(acUCSTblRec.ObjectId);
+        acDoc.Editor.UpdateTiledViewportsFromDatabase();
+
+        // Display the name of the current UCS
+        UcsTableRecord acUCSTblRecActive;
+        acUCSTblRecActive = acTrans.GetObject(acVportTblRec.UcsName,
+                                                OpenMode.ForRead) as UcsTableRecord;
+
+        Application.ShowAlertDialog("The current UCS is: " +
+                                    acUCSTblRecActive.Name);
+
+        PromptPointResult pPtRes;
+        PromptPointOptions pPtOpts = new PromptPointOptions("");
+
+        // Prompt for a point
+        pPtOpts.Message = "\nEnter a point: ";
+        pPtRes = acDoc.Editor.GetPoint(pPtOpts);
+
+        Point3d pPt3dWCS;
+        Point3d pPt3dUCS;
+
+        // If a point was entered, then translate it to the current UCS
+        if (pPtRes.Status == PromptStatus.OK)
+        {
+            pPt3dWCS = pPtRes.Value;
+            pPt3dUCS = pPtRes.Value;
+
+            // Translate the point from the current UCS to the WCS
+            Matrix3d newMatrix = new Matrix3d();
+            newMatrix = Matrix3d.AlignCoordinateSystem(Point3d.Origin,
+                                                        Vector3d.XAxis,
+                                                        Vector3d.YAxis,
+                                                        Vector3d.ZAxis,
+                                                        acVportTblRec.Ucs.Origin,
+                                                        acVportTblRec.Ucs.Xaxis,
+                                                        acVportTblRec.Ucs.Yaxis,
+                                                        acVportTblRec.Ucs.Zaxis);
+
+            pPt3dWCS = pPt3dWCS.TransformBy(newMatrix);
+
+            Application.ShowAlertDialog("The WCS coordinates are: \n" +
+                                        pPt3dWCS.ToString() + "\n" +
+                                        "The UCS coordinates are: \n" +
+                                        pPt3dUCS.ToString());
+        }
+
+        // Save the new objects to the database
+        acTrans.Commit();
+    }
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_3D_Coords.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_3D_ConvertCoords.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_3D_Coords.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_3D_ConvertCoords.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Использование транзакций для получения доступа к объектам - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Использование-транзакций-для-получения-доступа-к-объектам"><a class="header" href="#Использование-транзакций-для-получения-доступа-к-объектам">Использование транзакций для получения доступа к объектам</a></h1>
+<p>Менеджер транзакций доступен через свойство TransactionManager у объекта базы данных чертежа (Database). После обращения к менеджеру транзакций вы можете использовать один из следующих методов для запуска или получения существующей транзакции:</p>
+<ul>
+<li><code>StartTransaction</code> : Запускает новую транзакцию, создавая новый экземпляр объекта <code>Transaction</code>. Используйте этот метод, когда вам нужно редактировать объект несколько раз в течение транзакции и иметь возможность применить или откатить изменения на любом шаге в ходе вложенных транзакций (если таковые будут);</li>
+<li><code>StartOpenCloseTransation</code> : создает объект <code>OpenCloseTransaction</code>, который ведет себя аналогично объекту Transaction, но дополнительно оборачивает объекты методами Open и Close объекта, что упрощает закрытие всех открытых объектов вместо необходимости явного закрытия каждого открытого объекта. Рекомендуется для использования во вспомогательных или служебных функциях, которые могут быть вызваны неизвестное количество раз, а также при работе с большинством из имеющихся обработчиками событий;</li>
+</ul>
+<p>Получив объект Transaction или OpenCloseTransaction, используйте метод GetObject для открытия хранящегося в БД чертежа объекта для чтения или записи. Метод <code>GetObject</code> вернет объект типа <code>DBObject</code> и вам необходимо будет самостоятельно привести его к нужному типу при помощи приведения <strong>as</strong>. Все объекты, открытые во время транзакции, закрываются в конце транзакции. Чтобы завершить транзакцию, вызовите метод <code>Dispose</code> объекта транзакции. Если вы используете объект транзакции в составе конструкции <code>using</code>, вам не нужно вызывать метод <code>Dispose.</code> Перед уничтожением транзакции необходимо зафиксировать все внесенные изменения с помощью метода <code>Commit</code>. Если изменения не будут зафиксированы (применен метод <code>Commit</code>) до уничтожения транзакции, все сделанные изменения будут откачены к состоянию, в котором они находились до начала транзакции. К этому же поведению приведет и использование метода Abort (его вы можете использовать, например, во вложенных транзакциях или на определенном шаге в текущей транзакции. Можно запустить более одной транзакции. Количество активных транзакций можно получить с помощью свойства NumberOfActiveTransactions объекта TransactionManager, а самую последнюю транзакцию можно получить с помощью свойства TopTransaction. Транзакции могут быть вложены одна в другую, чтобы откатить некоторые изменения, сделанные во время выполнения ранних процедур.</p>
+<h2 id="Запрос-объектов"><a class="header" href="#Запрос-объектов">Запрос объектов</a></h2>
+<p>В примере ниже показывается, как открывать и считывать данные об объектах при помощи транзакции. Сперва метод GetObject используется для получения таблицы блоков BlockTable, а из неё -- записи, соответствующей пространству модели.</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+ 
+[CommandMethod("StartTransactionManager")]
+public static void StartTransactionManager()
+{
+    // Get the current document and database
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+ 
+    // Start a transaction
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        // Open the Block table for read
+        BlockTable acBlkTbl;
+        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
+                                     OpenMode.ForRead) as BlockTable;
+ 
+        // Open the Block table record Model space for read
+        BlockTableRecord acBlkTblRec;
+        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
+                                        OpenMode.ForRead) as BlockTableRecord;
+ 
+        // Step through the Block table record
+        foreach (ObjectId asObjId in acBlkTblRec)
+        {
+            acDoc.Editor.WriteMessage("\nDXF name: " + asObjId.ObjectClass.DxfName);
+            acDoc.Editor.WriteMessage("\nObjectID: " + asObjId.ToString());
+            acDoc.Editor.WriteMessage("\nHandle: " + asObjId.Handle.ToString());
+            acDoc.Editor.WriteMessage("\n");
+        }
+ 
+        // Dispose of the transaction
+    }
+}
+</code></pre>
+<h2 id="Добавление-нового-объекта-в-БД"><a class="header" href="#Добавление-нового-объекта-в-БД">Добавление нового объекта в БД</a></h2>
+<p>В примере ниже показывается, как добавить в БД определение окружности. Сперва метод <code>GetObject</code> используется для получения таблицы блоков <code>BlockTable</code>, а из неё -- записи, соответствующей пространству модели с режимом записи; для ней вызываются методы <code>AppendEntity</code> и <code>AddNewlyCreatedDBObject</code> для добавления новой окружности в пространство модели.</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+ 
+[CommandMethod("AddNewCircleTransaction")]
+public static void AddNewCircleTransaction()
+{
+    // Get the current document and database
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    // Start a transaction
+    using (Transaction acTrans = acCurDb.TransactionManager.StartOpenCloseTransaction())
+    {
+        // Open the Block table for read
+        BlockTable acBlkTbl;
+        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
+                                        OpenMode.ForRead) as BlockTable;
+
+        // Open the Block table record Model space for write
+        BlockTableRecord acBlkTblRec;
+        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
+                                        OpenMode.ForWrite) as BlockTableRecord;
+
+        // Create a circle with a radius of 3 at 5,5
+        using (Circle acCirc = new Circle())
+        {
+            acCirc.Center = new Point3d(5, 5, 0);
+            acCirc.Radius = 3;
+
+            // Add the new object to Model space and the transaction
+            acBlkTblRec.AppendEntity(acCirc);
+            acTrans.AddNewlyCreatedDBObject(acCirc, true);
+        }
+
+        // Commit the changes and dispose of the transaction
+        acTrans.Commit();
+    }
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_CreateAndEditAcadObjects_Transactions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_CreateAndEditAcadObjects_Transactions_EndTrans.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_CreateAndEditAcadObjects_Transactions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_CreateAndEditAcadObjects_Transactions_EndTrans.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

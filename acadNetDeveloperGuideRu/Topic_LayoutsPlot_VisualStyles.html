@@ -1,0 +1,372 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Визуальные стили - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Визуальные-стили"><a class="header" href="#Визуальные-стили">Визуальные стили</a></h1>
+<p>Визуальные стили управляют отображением объектов в видовых экранах и при выводе их на печать. Визуальные стили хранятся в чертеже как часть словаря визуальных стилей (<code>VisualStyleDictionaryId</code>), можно создать новый визуальный стиль через класс <code>DBVisualStyle</code> и различные перечисления из пространства имён Autodesk.AutoCAD.GraphicsInterface.</p>
+<h2 id="Получение-перечня-визуальных-стилей"><a class="header" href="#Получение-перечня-визуальных-стилей">Получение перечня визуальных стилей</a></h2>
+<p>В примере ниже приведен код, выводящий в командную строку имена всех визуальных стилей в чертеже</p>
+<pre><code class="language-csharp">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Colors;
+using Autodesk.AutoCAD.GraphicsInterface;
+
+// Lists the available visual styles
+[CommandMethod("ListVisualStyle")]
+public static void ListVisualStyle()
+{
+    // Get the current document and database, and start a transaction
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        DBDictionary vStyles = acTrans.GetObject(acCurDb.VisualStyleDictionaryId, 
+                                                 OpenMode.ForRead) as DBDictionary;
+
+        // Output a message to the Command Line history
+        acDoc.Editor.WriteMessage("\nVisual styles: ");
+
+        // Step through the dictionary
+        foreach (DBDictionaryEntry entry in vStyles)
+        {
+            // Get the dictionary entry
+            DBVisualStyle vStyle = vStyles.GetAt(entry.Key).GetObject(OpenMode.ForRead) as DBVisualStyle;
+
+            // If the visual style is not marked for internal use then output its name
+            if (vStyle.InternalUseOnly == false)
+            {
+                // Output the name of the visual style
+                acDoc.Editor.WriteMessage("\n  " + vStyle.Name);
+            }
+        }
+    }
+}
+</code></pre>
+<p><strong>Примечание</strong>: в nanoCAD NET API нельзя считать и отредактировать визуальные стили. Ошибка в API, известная.</p>
+<h2 id="Создание-нового-визуального-стиля"><a class="header" href="#Создание-нового-визуального-стиля">Создание нового визуального стиля</a></h2>
+<p>В примере ниже создается новый визуальный стиль с именем MyVS.</p>
+<p><strong>Примечание</strong>: в nanoCAD NET API код ниже будет полностью несовместим, в Teigha.GraphicsInterface совсем другие названия соответствующих структур, классов, перечислений; но тем не менее соответствие есть, но не везде очевидное.</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Colors;
+using Autodesk.AutoCAD.GraphicsInterface;
+
+// Creates a new visual style
+[CommandMethod("CreateVisualStyle")]
+public static void CreateVisualStyle()
+{
+    // Get the current document and database, and start a transaction
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        DBDictionary vStyles = acTrans.GetObject(acCurDb.VisualStyleDictionaryId,
+                                                 OpenMode.ForRead) as DBDictionary;
+
+        try
+        {
+            // Check to see if the "MyVS" exists or not
+            DBVisualStyle vStyle = default(DBVisualStyle);
+            if (vStyles.Contains("MyVS") == true)
+            {
+                vStyle = acTrans.GetObject(vStyles.GetAt("MyVS"), OpenMode.ForWrite) as DBVisualStyle;
+            }
+            else
+            {
+                acTrans.GetObject(acCurDb.VisualStyleDictionaryId, OpenMode.ForWrite);
+
+                // Create the visual style
+                vStyle = new DBVisualStyle();
+                vStyles.SetAt("MyVS", vStyle);
+
+                // Add the visual style to the dictionary
+                acTrans.AddNewlyCreatedDBObject(vStyle, true);
+            }
+
+            // Set the description of the visual style
+            vStyle.Description = "My Visual Style";
+            vStyle.Type = VisualStyleType.Custom;
+
+            // Face Settings (Opacity, Face Style, Lighting Quality, Color, 
+            //                Monochrome color, Opacity, and Material Display)
+            vStyle.SetTrait(VisualStyleProperty.FaceModifier, (int)VSFaceModifiers.FaceOpacityFlag, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.FaceLightingModel, (int)VSFaceLightingModel.Gooch, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.FaceLightingQuality, (int)VSFaceLightingQuality.PerPixelLighting, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.FaceColorMode, (int)VSFaceColorMode.ObjectColor, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.FaceMonoColor, Color.FromColorIndex(ColorMethod.ByAci, 1), VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.FaceOpacity, 0.5, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.DisplayStyle, (int)VSDisplayStyles.MaterialsFlag + (int)VSDisplayStyles.TexturesFlag, VisualStyleOperation.Set);
+
+            // Lighting (Enable Highlight Intensity, 
+            //           Highlight Intensity, and Shadow Display)
+            vStyle.SetTrait(VisualStyleProperty.FaceModifier, (int)vStyle.GetTrait(VisualStyleProperty.FaceModifier) + (int)VSFaceModifiers.SpecularFlag, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.DisplayStyle, (int)vStyle.GetTrait(VisualStyleProperty.DisplayStyle) + (int)VSDisplayStyles.LightingFlag, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.FaceSpecular, 45.0, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.DisplayShadowType, (int)VSDisplayShadowType.Full, VisualStyleOperation.Set);
+
+            // Environment Settings (Backgrounds)
+            vStyle.SetTrait(VisualStyleProperty.DisplayStyle, (int)vStyle.GetTrait(VisualStyleProperty.DisplayStyle) + (int)VSDisplayStyles.BackgroundsFlag, VisualStyleOperation.Set);
+
+            // Edge Settings (Show, Number of Lines, Color, and Always on Top)
+            vStyle.SetTrait(VisualStyleProperty.EdgeModel, (int)VSEdgeModel.Isolines, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.EdgeIsolines, 6, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.EdgeColor, Color.FromColorIndex(ColorMethod.ByAci, 2), VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.EdgeModifier, (int)vStyle.GetTrait(VisualStyleProperty.EdgeModifier) + (int)VSEdgeModifiers.AlwaysOnTopFlag, VisualStyleOperation.Set);
+
+            // Occluded Edges (Show, Color, and Linetype)
+            if (!(((int)vStyle.GetTrait(VisualStyleProperty.EdgeStyle) + (int)VSEdgeStyles.ObscuredFlag) &gt; 0))
+            {
+                vStyle.SetTrait(VisualStyleProperty.EdgeStyle, (int)vStyle.GetTrait(VisualStyleProperty.EdgeStyle) + (int)VSEdgeStyles.ObscuredFlag, VisualStyleOperation.Set);
+            }
+            vStyle.SetTrait(VisualStyleProperty.EdgeObscuredColor, Color.FromColorIndex(ColorMethod.ByAci, 3), VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.EdgeObscuredLinePattern, (int)VSEdgeLinePattern.DoubleMediumDash, VisualStyleOperation.Set);
+
+            // Intersection Edges (Color and Linetype)
+            if (!(((int)vStyle.GetTrait(VisualStyleProperty.EdgeStyle) + (int)VSEdgeStyles.IntersectionFlag) &gt; 0))
+            {
+                vStyle.SetTrait(VisualStyleProperty.EdgeStyle, (int)vStyle.GetTrait(VisualStyleProperty.EdgeStyle) + (int)VSEdgeStyles.IntersectionFlag, VisualStyleOperation.Set);
+            }
+            vStyle.SetTrait(VisualStyleProperty.EdgeIntersectionColor, Color.FromColorIndex(ColorMethod.ByAci, 4), VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.EdgeIntersectionLinePattern, (int)VSEdgeLinePattern.ShortDash, VisualStyleOperation.Set);
+
+            // Silhouette Edges (Color and Width)
+            if (!(((int)vStyle.GetTrait(VisualStyleProperty.EdgeStyle) + (int)VSEdgeStyles.SilhouetteFlag) &gt; 0))
+            {
+                vStyle.SetTrait(VisualStyleProperty.EdgeStyle, (int)vStyle.GetTrait(VisualStyleProperty.EdgeStyle) + (int)VSEdgeStyles.SilhouetteFlag, VisualStyleOperation.Set);
+            }
+            vStyle.SetTrait(VisualStyleProperty.EdgeSilhouetteColor, Color.FromColorIndex(ColorMethod.ByAci, 5), VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.EdgeSilhouetteWidth, 2, VisualStyleOperation.Set);
+
+            // Edge Modifiers (Enable Line Extensions, Enable Jitter, 
+            //                 Line Extensions, Jitter, Crease Angle, 
+            //                 and Halo Gap)
+            if (!(((int)vStyle.GetTrait(VisualStyleProperty.EdgeModifier) + (int)VSEdgeModifiers.EdgeOverhangFlag) &gt; 0))
+            {
+                vStyle.SetTrait(VisualStyleProperty.EdgeModifier, (int)vStyle.GetTrait(VisualStyleProperty.EdgeModifier) + (int)VSEdgeModifiers.EdgeOverhangFlag, VisualStyleOperation.Set);
+            }
+            if (!(((int)vStyle.GetTrait(VisualStyleProperty.EdgeModifier) + (int)VSEdgeModifiers.EdgeJitterFlag) &gt; 0))
+            {
+                vStyle.SetTrait(VisualStyleProperty.EdgeModifier, (int)vStyle.GetTrait(VisualStyleProperty.EdgeModifier) + (int)VSEdgeModifiers.EdgeJitterFlag, VisualStyleOperation.Set);
+            }
+            vStyle.SetTrait(VisualStyleProperty.EdgeOverhang, 3, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.EdgeJitterAmount, (int)VSEdgeJitterAmount.JitterMedium, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.EdgeCreaseAngle, 0.3, VisualStyleOperation.Set);
+            vStyle.SetTrait(VisualStyleProperty.EdgeHaloGap, 5, VisualStyleOperation.Set);
+        }
+        catch (Autodesk.AutoCAD.Runtime.Exception es)
+        {
+            System.Windows.Forms.MessageBox.Show(es.Message);
+        }
+        finally
+        {
+            acTrans.Commit();
+        }
+    }
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_LayoutsPlot_PlotStyles.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_LayoutsPlot_PlotSettings.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_LayoutsPlot_PlotStyles.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_LayoutsPlot_PlotSettings.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

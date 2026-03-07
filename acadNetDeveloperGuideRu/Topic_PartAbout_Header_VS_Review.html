@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>О Visual Studio, взаимодействие с другим API - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="О-visual-studio-взаимодействие-с-другим-api"><a class="header" href="#О-visual-studio-взаимодействие-с-другим-api">О Visual Studio, взаимодействие с другим API</a></h1>
+<p>В данной статье приведена информация о совместимости отдельных версий Microsoft Visual Studio (MS VS далее) с соответствующими версиями AUtoCAD .NET API. MS VS может взаимодействовать одновременно с .NET API и COM (ActiveX) API.</p>
+<div class="table-wrapper"><table><thead><tr><th>Версия AutoCAD</th><th>Release-num</th><th>Поддерживаемые версии SDK</th><th>Версия .NET</th></tr></thead><tbody>
+<tr><td>AutoCAD 2027</td><td>?</td><td>AutoCAD 2027</td><td>10.0(?)</td></tr>
+<tr><td>AutoCAD 2026</td><td>25.1</td><td>AutoCAD 2026, AutoCAD 2025</td><td>8.0</td></tr>
+<tr><td>AutoCAD 2025</td><td>25.0</td><td>AutoCAD 2025</td><td>8.0</td></tr>
+<tr><td>AutoCAD 2024</td><td>24.3</td><td>AutoCAD 2024, AutoCAD 2023, AutoCAD 2022, AutoCAD 2021</td><td>4.8</td></tr>
+<tr><td>AutoCAD 2023</td><td>24.2</td><td>AutoCAD 2023, AutoCAD 2022, AutoCAD 2021</td><td>4.8</td></tr>
+<tr><td>AutoCAD 2022</td><td>24.1</td><td>AutoCAD 2022, AutoCAD 2021</td><td>4.8</td></tr>
+<tr><td>AutoCAD 2021</td><td>24.0</td><td>AutoCAD 2021</td><td>4.8</td></tr>
+<tr><td>AutoCAD 2020</td><td>23.1</td><td>AutoCAD 2020, AutoCAD 2019</td><td>4.7</td></tr>
+<tr><td>AutoCAD 2019</td><td>23.0</td><td>AutoCAD 2019</td><td>4.7</td></tr>
+<tr><td>AutoCAD 2018</td><td>22.0</td><td>AutoCAD 2018</td><td>4.6</td></tr>
+<tr><td>AutoCAD 2017</td><td>21.0</td><td>AutoCAD 2017</td><td>4.6</td></tr>
+<tr><td>AutoCAD 2016</td><td>20.1</td><td>AutoCAD 2015, AutoCAD 2016</td><td>4.5</td></tr>
+<tr><td>AutoCAD 2015</td><td>20.0</td><td>AutoCAD 2015</td><td>4.5</td></tr>
+<tr><td>AutoCAD 2014</td><td>19.1</td><td>AutoCAD 2013, AutoCAD 2014</td><td>4.0</td></tr>
+<tr><td>AutoCAD 2013</td><td>19.0</td><td>AutoCAD 2013</td><td>4.0</td></tr>
+<tr><td>AutoCAD 2012</td><td>18.2</td><td>AutoCAD 2010, AutoCAD 2011, AutoCAD 2012</td><td>3.51 SP1</td></tr>
+<tr><td>AutoCAD 2011</td><td>18.1</td><td>AutoCAD 2010, AutoCAD 2011</td><td>3.51 SP1</td></tr>
+<tr><td>AutoCAD 2010</td><td>18.0</td><td>AutoCAD 2010</td><td>3.51 SP1</td></tr>
+<tr><td>AutoCAD 2009</td><td>17.2</td><td>AutoCAD 2007, AutoCAD 2008, AutoCAD 2009</td><td>3.0</td></tr>
+<tr><td>AutoCAD 2008</td><td>17.1</td><td>AutoCAD 2007, AutoCAD 2008</td><td>2.0</td></tr>
+<tr><td>AutoCAD 2007</td><td>17.0</td><td>AutoCAD 2007</td><td>2.0</td></tr>
+<tr><td>AutoCAD 2006</td><td>16.2</td><td>AutoCAD 2005, AutoCAD 2006</td><td>1.1 SP1</td></tr>
+<tr><td>AutoCAD 2005</td><td>16.1</td><td>AutoCAD 2005</td><td>1.1</td></tr>
+</tbody></table>
+</div>
+<p>Рекомендуемая версия MS VS для разработки 2022, в связи с тем, что под ней возможно загрузить .NET 8.0, используемый в AutoCAD с 2025й версии. Вместе с тем, возможно при помощи установщика MS VS загрузить целевую версию .NET 8, а разработку вести из-под Visual Studio 2019.</p>
+<p>С версии AutoCAD 2027 и средой .NET 10 вести разработку вероятнее всего придется на MS VS 2026.</p>
+<p>Для взаимодействия с AutoCAD .NET API необходимо подключить к целевому проекту библиотеки (перечень см. в пункте раннее) из папки установки AutoCADили через NuGet-пакеты от Autodesk. Версии пакетов см. по колонке "Release number".</p>
+<h2 id="Взаимодействие-с-c-api"><a class="header" href="#Взаимодействие-с-c-api">Взаимодействие с C++ API</a></h2>
+<p>Из-под приложений на .NET API можно получать доступ к объектам, созданным на стороне неуправяемого кода (здесь, на ObjectARX); так как некоторые объекты AutoCAD не имеют управляемых оберток. Создать управляемый объект из неуправляемого объекта с помощью метода <b>DisposableWrapper.Create()</b>. Указатель на базовый неуправляемый объект из управляемого объекта можно получить с помощью свойства <b>UnmanagedObject</b>.</p>
+<h2 id="Взаимодействие-с-com"><a class="header" href="#Взаимодействие-с-com">Взаимодействие с COM</a></h2>
+<p>Библиотеки COM (ActiveX) API в AutoCAD представлены Autodesk.AutoCAD.Interop.dll, Autodesk.AutoCAD.Interop.Common.dll</p>
+<p>Существует 3 способа получения COM-интерфейса со стороны .NET API:</p>
+<ul>
+<li>Сущность "Приложение AutoCAD";</li>
+<li>Сущность "Документ AutoCAD" и "База данных документа AutoCAD";</li>
+<li>Сущность "Объект AutoCAD";</li>
+</ul>
+<p>На листинге ниже приведены основные приведения, доступные в .NET API для перехода к COM-интерфейсам</p>
+<pre><code class="language-cs">var acApp = Autodesk.AutoCAD.ApplicationServices.Application.AcadApplication as AutoCAD.AcadApplication;
+Autodesk.AutoCAD.ApplicationServices.Document doc;
+var acDoc = doc.GetAcadDocument() as AutoCAD.AcadDocument;
+var acDb = doc.Database.AcadDatabase as AutoCAD.AcadDatabase;
+Autodesk.AutoCAD.DatabaseServices.Entity ent;
+var acEntity = ent.AcadObject as AutoCAD.AcadEntity;
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_PartAbout_Header_Components.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_PartAbout_Header_GettingStart.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_PartAbout_Header_Components.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_PartAbout_Header_GettingStart.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

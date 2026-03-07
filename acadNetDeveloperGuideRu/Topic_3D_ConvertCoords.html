@@ -1,0 +1,329 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Преобразования координат - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Преобразования-координат"><a class="header" href="#Преобразования-координат">Преобразования координат</a></h1>
+<p>Метод TransformBy также может выполнять преобразования координат из одной ПСК в другую, для этого у структуры матрицы трансформации Matrix3d имеется метод AlignCoordinateSystem, требующий указания нескольких аргументов:</p>
+<ul>
+<li>Координаты точки начала исходной системы координат;</li>
+<li>Три вектора в пространстве, задающие оси ПСК по компонентам X, Y, Z исходной системы координат;</li>
+<li>Координаты точки начала целевой системы координат;</li>
+<li>Три вектора в пространстве, задающие оси ПСК по компонентам X, Y, Z целевой системы координат;</li>
+</ul>
+<p>В случае плоской матрицы (Matrix2d), векторов будет по два, а точка начала будет представлена плоской точкой, а не трехмерной. Необходимо также ввести некоторые термины по системам координат:</p>
+<ul>
+<li>WCS (World coordinate system, МСК) : Мировая система координат. Все остальные системы координат определяются относительно WCS, она которая никогда не изменяется. Значения, измеренные относительно WCS, остаются постоянными при изменении других систем координат. Все точки, передаваемые в методы и свойства .NET API, выражаются в WCS, если не указано иное;</li>
+<li>UCS (User coordinate system , ПСК) : Пользовательская система координат (UCS). UCS используются для упрощения задач разработки чертежей. Все точки, передаваемые командам AutoCAD, включая точки, возвращаемые различными функциями, являются точками в текущей ПСК (если пользователь не поставил перед ними * в командной строке). Если вы хотите, чтобы ваше приложение отправляло координаты в WCS, OCS или DCS командам AutoCAD, вы должны сначала преобразовать их в UCS (ПСК), вызвав метод преобразования, а затем преобразовать объект Point3d или Point2d с помощью метода TransformBy, представляющего значение компонентов координат;</li>
+<li>OCS (Object coordinate system) :также известная, как система координат элемента или ECS: значения точек, заданные определенными методами и свойствами для объектов Polyline2d и Polyline, выражаются в этой системе координат относительно объекта. Эти точки обычно преобразуются в WCS, текущую UCS или текущую DCS в зависимости от предполагаемого использования объекта. И наоборот, точки в WCS, UCS или DCS должны быть преобразованы в OCS перед записью в базу данных с помощью тех же свойств. При преобразовании координат в OCS или из OCS необходимо учитывать нормаль OCS;</li>
+<li>DCS (Display coordinate system): система координат, в которую объекты преобразуются при отрисовке на экране. Начало DCS находится в точке, хранимой в системной переменной TARGET, а направление оси Z соответствует направлению данного видового экрана (ВЭ). Другими словами, ВЭ всегда является плоским видом для данной DCS.</li>
+</ul>
+<p>Для получения матрицы преобразования между мировыми координатами и DCS можно использовать следующий код:</p>
+<pre><code class="language-cs">Document acDoc;
+Database acCurDb;
+using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+{
+    // Get the current view
+    using (ViewTableRecord acView = acDoc.Editor.GetCurrentView())
+    {
+        Extents3d eExtents;
+        // Translate WCS coordinates to DCS
+        Matrix3d matWCS2DCS;
+        matWCS2DCS = Matrix3d.PlaneToWorld(acView.ViewDirection);
+        matWCS2DCS = Matrix3d.Displacement(acView.Target : Point3d.Origin) * matWCS2DCS;
+        matWCS2DCS = Matrix3d.Rotation(:acView.ViewTwist,
+                                        acView.ViewDirection,
+                                        acView.Target) * matWCS2DCS;
+    }
+}
+</code></pre>
+<ul>
+<li>PSDCS (Paper space DCS) : Система координат листа. По сути, это двумерное преобразование, где координаты X и Y отмасштабированы относительно целевой СК (здесь, DCS). Поэтому ее можно использовать для определения коэффициента масштабирования между двумя системами координат. Координаты в данной СК могут быть преобразованы только в DCS модели и аналогично обратно;</li>
+</ul>
+<h2 id="Преобразование-из-ocs-в-wcs"><a class="header" href="#Преобразование-из-ocs-в-wcs">Преобразование из OCS в WCS</a></h2>
+<p>В примере ниже создается полилиния в пространстве модели. Выводится информация, какие координаты у первой вершины полилинии в системе координат полилинии и в мировой системе координат</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+ 
+[CommandMethod("TranslateCoordinates")]
+public static void TranslateCoordinates()
+{
+    // Get the current document and database, and start a transaction
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        // Open the Block table record for read
+        BlockTable acBlkTbl;
+        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
+                                     OpenMode.ForRead) as BlockTable;
+
+        // Open the Block table record Model space for write
+        BlockTableRecord acBlkTblRec;
+        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
+                                        OpenMode.ForWrite) as BlockTableRecord;
+
+        // Create a 2D polyline with two segments (3 points)
+        using (Polyline2d acPoly2d = new Polyline2d())
+        {
+            // Add the new object to the block table record and the transaction
+            acBlkTblRec.AppendEntity(acPoly2d);
+            acTrans.AddNewlyCreatedDBObject(acPoly2d, true);
+
+            // Before adding vertexes, the polyline must be in the drawing
+            Point3dCollection acPts2dPoly = new Point3dCollection();
+            acPts2dPoly.Add(new Point3d(1, 1, 0));
+            acPts2dPoly.Add(new Point3d(1, 2, 0));
+            acPts2dPoly.Add(new Point3d(2, 2, 0));
+            acPts2dPoly.Add(new Point3d(3, 2, 0));
+            acPts2dPoly.Add(new Point3d(4, 4, 0));
+
+            foreach (Point3d acPt3d in acPts2dPoly)
+            {
+                Vertex2d acVer2d = new Vertex2d(acPt3d, 0, 0, 0, 0);
+                acPoly2d.AppendVertex(acVer2d);
+                acTrans.AddNewlyCreatedDBObject(acVer2d, true);
+            }
+
+            // Set the normal of the 2D polyline
+            acPoly2d.Normal = new Vector3d(0, 1, 2);
+
+            // Get the first coordinate of the 2D polyline
+            Point3dCollection acPts3d = new Point3dCollection();
+            Vertex2d acFirstVer = null;
+
+            foreach (ObjectId acObjIdVert in acPoly2d)
+            {
+                acFirstVer = acTrans.GetObject(acObjIdVert,
+                                               OpenMode.ForRead) as Vertex2d;
+
+                acPts3d.Add(acFirstVer.Position);
+
+                break;
+            }
+
+            // Get the first point of the polyline and 
+            // use the eleveation for the Z value
+            Point3d pFirstVer = new Point3d(acFirstVer.Position.X,
+                                            acFirstVer.Position.Y,
+                                            acPoly2d.Elevation);
+
+            // Translate the OCS to WCS
+            Matrix3d mWPlane = Matrix3d.WorldToPlane(acPoly2d.Normal);
+            Point3d pWCSPt = pFirstVer.TransformBy(mWPlane);
+
+            Application.ShowAlertDialog("The first vertex has the following " +
+                                        "coordinates:" +
+                                        "\nOCS: " + pFirstVer.ToString() +
+                                        "\nWCS: " + pWCSPt.ToString());
+        }
+
+        // Save the new objects to the database
+        acTrans.Commit();
+    }
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_3D_UCS.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_3D_CreateObjects.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_3D_UCS.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_3D_CreateObjects.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

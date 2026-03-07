@@ -1,0 +1,457 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Создание видовых экранов - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Создание-видовых-экранов"><a class="header" href="#Создание-видовых-экранов">Создание видовых экранов</a></h1>
+<p>Видовые окна в пространстве листа создаются путем создания экземпляров классов Viewport и добавления их к объекту BloctTableRecord для данного листа. Конструктор объекта Viewport не принимает никаких параметров. После создания экземпляра объекта Viewport вы можете задать его расположение на листе с помощью свойств CenterPoint, Width и Height.</p>
+<p>Также вы можете задать свойства самого вида, такие как направление просмотра (свойство ViewDirection), фокусное расстояние для перспетивного вида (свойство LensLength) и флаг отображения сетки (свойство GridOn). Вы также можете управлять свойствами самого видового окна, такими как слой (свойство Layer), тип линии (свойство Linetype) и масштабирование типов линий (свойство LinetypeScale).</p>
+<h2 id="Создание-ВЭ"><a class="header" href="#Создание-ВЭ">Создание ВЭ</a></h2>
+<p>В примере ниже приводится код, делающий активым область листов, создающий там плавающий ВЭ, задающий вид для данного ВЭ и делающий данный ВЭ активным. Установка ВЭ активным делается с помощью обращения к NRX-методу ncedSetCurrentVPort из "NrxHostGate.dll", для которого прописывается соответствующая точка входа EntryPoint.</p>
+<pre><code class="language-cs">using System.Runtime.InteropServices;
+ 
+using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+ 
+[DllImport("acad.exe", CallingConvention = CallingConvention.Cdecl,
+ EntryPoint = "?acedSetCurrentVPort@@YA?AW4ErrorStatus@Acad@@PBVAcDbViewport@@@Z")]
+extern static private int acedSetCurrentVPort(IntPtr AcDbVport);
+ 
+[CommandMethod("CreateFloatingViewport")]
+public static void CreateFloatingViewport()
+{
+    // Get the current document and database, and start a transaction
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        // Open the Block table for read
+        BlockTable acBlkTbl;
+        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
+                                     OpenMode.ForRead) as BlockTable;
+
+        // Open the Block table record Paper space for write
+        BlockTableRecord acBlkTblRec;
+        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.PaperSpace],
+                                        OpenMode.ForWrite) as BlockTableRecord;
+
+        // Switch to the previous Paper space layout
+        Application.SetSystemVariable("TILEMODE", 0);
+        acDoc.Editor.SwitchToPaperSpace();
+
+        // Create a Viewport
+        using (Viewport acVport = new Viewport())
+        {
+            acVport.CenterPoint = new Point3d(3.25, 3, 0);
+            acVport.Width = 6;
+            acVport.Height = 5;
+
+            // Add the new object to the block table record and the transaction
+            acBlkTblRec.AppendEntity(acVport);
+            acTrans.AddNewlyCreatedDBObject(acVport, true);
+
+            // Change the view direction
+            acVport.ViewDirection = new Vector3d(1, 1, 1);
+
+            // Enable the viewport
+            acVport.On = true;
+
+            // Activate model space in the viewport
+            acDoc.Editor.SwitchToModelSpace();
+
+            // Set the new viewport current via an imported ObjectARX function
+            acedSetCurrentVPort(acVport.UnmanagedObject);
+        }
+
+        // Save the new objects to the database
+        acTrans.Commit();
+    }
+}
+</code></pre>
+<p><strong>Примечание</strong>: аналогичная процедура acedSetCurrentVPort для nanoCAD будет выглядеть так:</p>
+<pre><code class="language-csharp">[DllImport("NrxHostGate.dll", CallingConvention = CallingConvention.Cdecl,
+          EntryPoint = "?ncedSetCurrentVPort@@YA?AW4ErrorStatus@Nano@@PEBVNcDbViewport@@@Z")]
+extern static private int acedSetCurrentVPort(System.IntPtr AcDbVport);
+</code></pre>
+<p><b>Примечание</b>: Чтобы задать параметры вида (направление обзора, фокусное расстояние и т. д.), свойство On объекта Viewport должно быть установлено в значение false, а перед установкой текущего состояния видового окна свойство On должно быть установлено в значение true.</p>
+<h2 id="Создание-нескольких-ВЭ"><a class="header" href="#Создание-нескольких-ВЭ">Создание нескольких ВЭ</a></h2>
+<p>В примере ниже создается 4 ВЭ, каждый из которых имеет фиксированное направление вида (ViewDirection)</p>
+<pre><code class="language-cs">using System.Runtime.InteropServices;
+ 
+using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+ 
+[DllImport("acad.exe", CallingConvention = CallingConvention.Cdecl,
+ EntryPoint = "?acedSetCurrentVPort@@YA?AW4ErrorStatus@Acad@@PBVAcDbViewport@@@Z")]
+extern static private int acedSetCurrentVPort(IntPtr AcDbVport);
+ 
+[CommandMethod("FourFloatingViewports")]
+public static void FourFloatingViewports()
+{
+  // Get the current document and database, and start a transaction
+  Document acDoc = Application.DocumentManager.MdiActiveDocument;
+  Database acCurDb = acDoc.Database;
+ 
+  using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+  {
+      // Open the Block table for read
+      BlockTable acBlkTbl;
+      acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
+                                   OpenMode.ForRead) as BlockTable;
+ 
+      // Open the Block table record Paper space for write
+      BlockTableRecord acBlkTblRec;
+      acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.PaperSpace],
+                                      OpenMode.ForWrite) as BlockTableRecord;
+ 
+      // Switch to the previous Paper space layout
+      Application.SetSystemVariable("TILEMODE", 0);
+      acDoc.Editor.SwitchToPaperSpace();
+ 
+      Point3dCollection acPt3dCol = new Point3dCollection();
+      acPt3dCol.Add(new Point3d(2.5, 5.5, 0));
+      acPt3dCol.Add(new Point3d(2.5, 2.5, 0));
+      acPt3dCol.Add(new Point3d(5.5, 5.5, 0));
+      acPt3dCol.Add(new Point3d(5.5, 2.5, 0));
+ 
+      Vector3dCollection acVec3dCol = new Vector3dCollection();
+      acVec3dCol.Add(new Vector3d(0, 0, 1));
+      acVec3dCol.Add(new Vector3d(0, 1, 0));
+      acVec3dCol.Add(new Vector3d(1, 0, 0));
+      acVec3dCol.Add(new Vector3d(1, 1, 1));
+ 
+      double dWidth = 2.5;
+      double dHeight = 2.5;
+ 
+      Viewport acVportLast = null;
+      int nCnt = 0;
+ 
+      foreach (Point3d acPt3d in acPt3dCol)
+      {
+          using (Viewport acVport = new Viewport())
+          {
+              acVport.CenterPoint = acPt3d;
+              acVport.Width = dWidth;
+              acVport.Height = dHeight;
+
+              // Add the new object to the block table record and the transaction
+              acBlkTblRec.AppendEntity(acVport);
+              acTrans.AddNewlyCreatedDBObject(acVport, true);
+
+              // Change the view direction
+              acVport.ViewDirection = acVec3dCol[nCnt];
+
+              // Enable the viewport
+              acVport.On = true;
+
+              // Record the last viewport created
+              acVportLast = acVport;
+
+              // Increment the counter by 1
+              nCnt = nCnt + 1;
+          }
+      }
+ 
+      if (acVportLast != null)
+      {
+          // Activate model space in the viewport
+          acDoc.Editor.SwitchToModelSpace();
+ 
+          // Set the new viewport current via an imported ObjectARX function
+          acedSetCurrentVPort(acVportLast.UnmanagedObject);
+      }
+ 
+      // Save the new objects to the database
+      acTrans.Commit();
+  }
+}
+</code></pre>
+<h2 id="Создание-непрямоугольных-ВЭ"><a class="header" href="#Создание-непрямоугольных-ВЭ">Создание непрямоугольных ВЭ</a></h2>
+<p>В примере ниже создается прямоугольный ВЭ, а затем используется окружность для задания его границы</p>
+<pre><code class="language-cs">using System.Runtime.InteropServices;
+ 
+using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+ 
+[DllImport("acad.exe", CallingConvention = CallingConvention.Cdecl,
+ EntryPoint = "?acedSetCurrentVPort@@YA?AW4ErrorStatus@Acad@@PBVAcDbViewport@@@Z")]
+extern static private int acedSetCurrentVPort(IntPtr AcDbVport);
+ 
+[CommandMethod("CreateNonRectangularFloatingViewport")]
+public static void CreateNonRectangularFloatingViewport()
+{
+    // Get the current document and database, and start a transaction
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        // Open the Block table for read
+        BlockTable acBlkTbl;
+        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
+                                     OpenMode.ForRead) as BlockTable;
+
+        // Open the Block table record Paper space for write
+        BlockTableRecord acBlkTblRec;
+        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.PaperSpace],
+                                        OpenMode.ForWrite) as BlockTableRecord;
+
+        // Switch to the previous Paper space layout
+        Application.SetSystemVariable("TILEMODE", 0);
+        acDoc.Editor.SwitchToPaperSpace();
+
+        // Create a Viewport
+        using (Viewport acVport = new Viewport())
+        {
+            acVport.CenterPoint = new Point3d(9, 6.5, 0);
+            acVport.Width = 2.5;
+            acVport.Height = 2.5;
+
+            // Set the scale to 1" = 8'
+            acVport.CustomScale = 96;
+
+            // Create a circle
+            using (Circle acCirc = new Circle())
+            {
+                acCirc.Center = acVport.CenterPoint;
+                acCirc.Radius = 1.25;
+
+                // Add the new object to the block table record and the transaction
+                acBlkTblRec.AppendEntity(acCirc);
+                acTrans.AddNewlyCreatedDBObject(acCirc, true);
+
+                // Clip the viewport using the circle  
+                acVport.NonRectClipEntityId = acCirc.ObjectId;
+                acVport.NonRectClipOn = true;
+            }
+
+            // Add the new object to the block table record and the transaction
+            acBlkTblRec.AppendEntity(acVport);
+            acTrans.AddNewlyCreatedDBObject(acVport, true);
+
+            // Change the view direction
+            acVport.ViewDirection = new Vector3d(0, 0, 1);
+
+            // Enable the viewport
+            acVport.On = true;
+
+            // Activate model space in the viewport
+            acDoc.Editor.SwitchToModelSpace();
+
+            // Set the new viewport current via an imported ObjectARX function
+            acedSetCurrentVPort(acVport.UnmanagedObject);
+        }
+
+        // Save the new objects to the database
+        acTrans.Commit();
+    }
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_LayoutsPlot_Viewports_Floating.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_LayoutsPlot_Viewports_ChangeView.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_LayoutsPlot_Viewports_Floating.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_LayoutsPlot_Viewports_ChangeView.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

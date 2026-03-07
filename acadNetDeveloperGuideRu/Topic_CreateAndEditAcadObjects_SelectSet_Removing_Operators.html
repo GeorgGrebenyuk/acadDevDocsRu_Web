@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Добавление логических операций в фильтры - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Добавление-логических-операций-в-фильтры"><a class="header" href="#Добавление-логических-операций-в-фильтры">Добавление логических операций в фильтры</a></h1>
+<p>При указании нескольких критериев фиьтрации выбора AutoCAD предполагает, что выбранный объект должен соответствовать каждому критерию. Вы можете уточнить критерии фильтрации другими способами. Для числовых элементов можно указать операции сравнения (например, радиус круга должен быть больше или равен 5,0). А для всех элементов можно указать логические операции (например, для содержимого Text или MText).</p>
+<p>Используйте код DXF -4 или константу <code>DxfCode.Operator</code> для указания оператора сравнения в фильтре выбора. Оператор выражается в виде строки. Перечень допустимых операторов приведен в следующей таблице.</p>
+<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Описание</th></tr></thead><tbody>
+<tr><td>"*"</td><td>Любые значения (всегда true)</td></tr>
+<tr><td>"="</td><td>Точное соответствие</td></tr>
+<tr><td>"!="</td><td>Точное не-соответствие</td></tr>
+<tr><td>"/="</td><td>Точное не-соответствие</td></tr>
+<tr><td>"&lt;&gt;"</td><td>Точное не-соответствие</td></tr>
+<tr><td>"&lt;"</td><td>Менее, чем</td></tr>
+<tr><td>"&lt;="</td><td>Менее или равно, чем</td></tr>
+<tr><td>"&gt;"</td><td>Более, чем</td></tr>
+<tr><td>"&gt;="</td><td>Более или равно, чем</td></tr>
+<tr><td>"&amp;"</td><td>Побитовое И, только для групп целых чисел</td></tr>
+<tr><td>"&amp;="</td><td>Побитовое И (аналог &amp;&amp;), только для групп целых чисел</td></tr>
+</tbody></table>
+</div>
+<p>Логические операторы в фильтре выбора также обозначаются кодом группы -4 или константой DxfCode.Operator, а оператор представляет собой строку, но операторы должны быть спарены. Открывающий оператор предваряется символом «меньше» (<code>&lt;</code>), а замыкающий оператор сопровождается символом «больше» (<code>&gt;</code>). В следующей таблице перечислены логические операторы, разрешенные для задания критериев фильтрации.</p>
+<div class="table-wrapper"><table><thead><tr><th>Начальный оператор</th><th>Содержимое</th><th>Замыкающий оператор</th></tr></thead><tbody>
+<tr><td>"&lt;AND"</td><td>Один или несколько операндов</td><td>"AND&gt;"</td></tr>
+<tr><td>"&lt;OR"</td><td>Один или несколько операндов</td><td>"OR&gt;"</td></tr>
+<tr><td>"&lt;XOR"</td><td>2 операнда</td><td>"XOR&gt;"</td></tr>
+<tr><td>"&lt;NOT"</td><td>1 операнд</td><td>"NOT&gt;"</td></tr>
+</tbody></table>
+</div>
+<h2 id="Выбор-окружности-с-радиусом-более-или-равно-50"><a class="header" href="#Выбор-окружности-с-радиусом-более-или-равно-50">Выбор окружности с радиусом более или равно 5.0</a></h2>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+ 
+[CommandMethod("FilterRelational")]
+public static void FilterRelational()
+{
+    // Get the current document editor
+    Editor acDocEd = Application.DocumentManager.MdiActiveDocument.Editor;
+
+    // Create a TypedValue array to define the filter criteria
+    TypedValue[] acTypValAr = new TypedValue[3];
+    acTypValAr.SetValue(new TypedValue((int)DxfCode.Start, "CIRCLE"), 0);
+    acTypValAr.SetValue(new TypedValue((int)DxfCode.Operator, "&gt;="), 1);
+    acTypValAr.SetValue(new TypedValue(40, 5), 2);
+
+    // Assign the filter criteria to a SelectionFilter object
+    SelectionFilter acSelFtr = new SelectionFilter(acTypValAr);
+
+    // Request for objects to be selected in the drawing area
+    PromptSelectionResult acSSPrompt;
+    acSSPrompt = acDocEd.GetSelection(acSelFtr);
+
+    // If the prompt status is OK, objects were selected
+    if (acSSPrompt.Status == PromptStatus.OK)
+    {
+        SelectionSet acSSet = acSSPrompt.Value;
+
+        Application.ShowAlertDialog("Number of objects selected: " +
+                                    acSSet.Count.ToString());
+    }
+    else
+    {
+        Application.ShowAlertDialog("Number of objects selected: 0");
+    }
+}
+</code></pre>
+<h2 id="Выбор-объектов-Тест-и-МТекст"><a class="header" href="#Выбор-объектов-Тест-и-МТекст">Выбор объектов Тест и МТекст</a></h2>
+<p>В альтернативу использования фильтра типа</p>
+<pre><code class="language-cs">TypedValue[] acTypValAr = new TypedValue[1];
+acTypValAr[1] = new TypedValue((int)DxfCode.Start, "TEXT, MTEXT");
+</code></pre>
+<p>Можно записать это же условие с помощью операторов:</p>
+<pre><code class="language-cs">using Teigha.Runtime;
+using HostMgd.ApplicationServices;
+using Teigha.DatabaseServices;
+using HostMgd.EditorInput;
+[CommandMethod("FilterForText")]
+public static void FilterForText()
+{
+    // Get the current document editor
+    Editor acDocEd = Application.DocumentManager.MdiActiveDocument.Editor;
+    // Create a TypedValue array to define the filter criteria
+    TypedValue[] acTypValAr = new TypedValue[4];
+    acTypValAr.SetValue(new TypedValue((int)DxfCode.Operator, "\&lt;or"), 0);
+    acTypValAr.SetValue(new TypedValue((int)DxfCode.Start, "TEXT"), 1);
+    acTypValAr.SetValue(new TypedValue((int)DxfCode.Start, "MTEXT"), 2);
+    acTypValAr.SetValue(new TypedValue((int)DxfCode.Operator, "or\&gt;"), 3);
+    // Assign the filter criteria to a SelectionFilter object
+    SelectionFilter acSelFtr = new SelectionFilter(acTypValAr);
+    // Request for objects to be selected in the drawing area
+    PromptSelectionResult acSSPrompt;
+    acSSPrompt = acDocEd.GetSelection(acSelFtr);
+    // If the prompt status is OK, objects were selected
+    if (acSSPrompt.Status == PromptStatus.OK)
+    {
+        SelectionSet acSSet = acSSPrompt.Value;
+        Application.ShowAlertDialog("Number of objects selected: " +
+                                    acSSet.Count.ToString());
+    }
+    else
+    {
+        Application.ShowAlertDialog("Number of objects selected: 0");
+    }
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_CreateAndEditAcadObjects_SelectSet_Removing_UsingSelFilters.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_CreateAndEditAcadObjects_SelectSet_Removing_Regular.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_CreateAndEditAcadObjects_SelectSet_Removing_UsingSelFilters.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_CreateAndEditAcadObjects_SelectSet_Removing_Regular.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

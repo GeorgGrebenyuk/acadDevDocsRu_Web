@@ -1,0 +1,412 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Работа с листами - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Работа-с-листами"><a class="header" href="#Работа-с-листами">Работа с листами</a></h1>
+<p>Вся геометрия чертежа содержится в листах. Пространство модели также является листом с фиксированным именем Model, его нельзя переименовать, в одном чертеже может находиться только одного пространство модели.</p>
+<p>В чертеже может быть несколько (до 255) различных листов со своими настройками.</p>
+<p>Запись BlockTableRecord из таблицы BlockTable с именем "*MODEL_SPACE" относится к пространству модели; запись с именем "*PAPER_SPACE" относится к активному листу (так как листов может быть несколько).</p>
+<p>Существует два подхода к работе с листами в чертеже. Если вы работаете с текущим чертежом, вы можете использовать диспетчер листов, который представлен классом LayoutManager. Если вы работаете не с текущим чертежом, а, например, считываете чертеж из-под его Database, вы можете работать с именованным словарем Layout. Впрочем, вы можете работать со словарём в любой момент, однако LayoutManager значительно упрощает выполнение некоторых задач (только для активного чертежа, так как он получается лишь для открытого файла с помощью статического поля Current).</p>
+<h2 id="Перебор-листов"><a class="header" href="#Перебор-листов">Перебор листов</a></h2>
+<p>В примере ниже в командную строку выводятся имена всех листов, имеющихся в документе</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
+// List all the layouts in the current drawing
+[CommandMethod("ListLayouts")]
+public void ListLayouts()
+{
+    // Get the current document and database
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    // Get the layout dictionary of the current database
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        DBDictionary lays = 
+            acTrans.GetObject(acCurDb.LayoutDictionaryId, 
+                OpenMode.ForRead) as DBDictionary;
+
+        acDoc.Editor.WriteMessage("\nLayouts:");
+
+        // Step through and list each named layout and Model
+        foreach (DBDictionaryEntry item in lays)
+        {
+            acDoc.Editor.WriteMessage("\n  " + item.Key);
+        }
+
+        // Abort the changes to the database
+        acTrans.Abort();
+    }
+}
+</code></pre>
+<h2 id="Создание-нового-листа"><a class="header" href="#Создание-нового-листа">Создание нового листа</a></h2>
+<p>В примере ниже создается новый лист с использованием функциональности класса LayoutManager, после чего лист делается активным пространством</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
+// Create a new layout with the LayoutManager
+[CommandMethod("CreateLayout")]
+public void CreateLayout()
+{
+    // Get the current document and database
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    // Get the layout and plot settings of the named pagesetup
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        // Reference the Layout Manager
+        LayoutManager acLayoutMgr = LayoutManager.Current;
+
+        // Create the new layout with default settings
+        ObjectId objID = acLayoutMgr.CreateLayout("newLayout");
+
+        // Open the layout
+        Layout acLayout = acTrans.GetObject(objID,
+                                            OpenMode.ForRead) as Layout;
+
+        // Set the layout current if it is not already
+        if (acLayout.TabSelected == false)
+        {
+            acLayoutMgr.CurrentLayout = acLayout.LayoutName;
+        }
+
+        // Output some information related to the layout object
+        acDoc.Editor.WriteMessage("\nTab Order: " + acLayout.TabOrder +
+                                  "\nTab Selected: " + acLayout.TabSelected +
+                                  "\nBlock Table Record ID: " +
+                                  acLayout.BlockTableRecordId.ToString());
+
+        // Save the changes made
+        acTrans.Commit();
+    }
+}
+</code></pre>
+<h2 id="Вставка-листа-из-другого-чертежа"><a class="header" href="#Вставка-листа-из-другого-чертежа">Вставка листа из другого чертежа</a></h2>
+<p>В примере ниже создается пустой чертеж, далее в текущий чертеж вставляется лист из созданного файла</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+
+// Import a layout from an external drawing
+[CommandMethod("ImportLayout")]
+public void ImportLayout()
+{
+    string tmpDwg = @"C:\Temp\test.dwg";
+    using (Database dbTmp = new Database())
+    {
+        dbTmp.SaveAs(tmpDwg, DwgVersion.Current);
+    }
+    // Get the current document and database
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+    // Specify the layout name and drawing file to work with
+    string layoutName = "Лист1";
+    // Create a new database object and open the drawing into memory
+    Database acExDb = new Database(false, true);
+    acExDb.ReadDwgFile(tmpDwg, FileOpenMode.OpenForReadAndAllShare, true, "");
+    // Create a transaction for the external drawing
+    using (Transaction acTransEx = acExDb.TransactionManager.StartTransaction())
+    {
+        // Get the layouts dictionary
+        DBDictionary layoutsEx =
+            acTransEx.GetObject(acExDb.LayoutDictionaryId,
+                                OpenMode.ForRead) as DBDictionary;
+        // Check to see if the layout exists in the external drawing
+        if (layoutsEx.Contains(layoutName) == true)
+        {
+            // Get the layout and block objects from the external drawing
+            Layout layEx =
+                layoutsEx.GetAt(layoutName).GetObject(OpenMode.ForRead) as Layout;
+            BlockTableRecord blkBlkRecEx =
+                acTransEx.GetObject(layEx.BlockTableRecordId,
+                                    OpenMode.ForRead) as BlockTableRecord;
+            // Get the objects from the block associated with the layout
+            ObjectIdCollection idCol = new ObjectIdCollection();
+            foreach (ObjectId id in blkBlkRecEx)
+            {
+                idCol.Add(id);
+            }
+            // Create a transaction for the current drawing
+            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+            {
+                // Get the block table and create a new block
+                // then copy the objects between drawings
+                BlockTable blkTbl =
+                    acTrans.GetObject(acCurDb.BlockTableId,
+                                      OpenMode.ForWrite) as BlockTable;
+                using (BlockTableRecord blkBlkRec = new BlockTableRecord())
+                {
+                    int layoutCount = layoutsEx.Count - 1;
+                    blkBlkRec.Name = "*Paper_Space" + layoutCount.ToString();
+                    blkTbl.Add(blkBlkRec);
+                    acTrans.AddNewlyCreatedDBObject(blkBlkRec, true);
+                    acExDb.WblockCloneObjects(idCol,
+                                              blkBlkRec.ObjectId,
+                                              new IdMapping(),
+                                              DuplicateRecordCloning.Ignore,
+                                              false);
+                    // Create a new layout and then copy properties between drawings
+                    DBDictionary layouts =
+                        acTrans.GetObject(acCurDb.LayoutDictionaryId,
+                                          OpenMode.ForWrite) as DBDictionary;
+                    using (Layout lay = new Layout())
+                    {
+                        lay.LayoutName = layoutName;
+                        lay.AddToLayoutDictionary(acCurDb, blkBlkRec.ObjectId);
+                        acTrans.AddNewlyCreatedDBObject(lay, true);
+                        lay.CopyFrom(layEx);
+                        DBDictionary plSets =
+                            acTrans.GetObject(acCurDb.PlotSettingsDictionaryId,
+                                              OpenMode.ForRead) as DBDictionary;
+                        // Check to see if a named page setup was assigned to the layout,
+                        // if so then copy the page setup settings
+                        if (lay.PlotSettingsName != "")
+                        {
+                            // Check to see if the page setup exists
+                            if (plSets.Contains(lay.PlotSettingsName) == false)
+                            {
+                                acTrans.GetObject(acCurDb.PlotSettingsDictionaryId, OpenMode.ForWrite);
+                                using (PlotSettings plSet = new PlotSettings(lay.ModelType))
+                                {
+                                    plSet.PlotSettingsName = lay.PlotSettingsName;
+                                    plSet.AddToPlotSettingsDictionary(acCurDb);
+                                    acTrans.AddNewlyCreatedDBObject(plSet, true);
+                                    DBDictionary plSetsEx =
+                                        acTransEx.GetObject(acExDb.PlotSettingsDictionaryId,
+                                                            OpenMode.ForRead) as DBDictionary;
+                                    PlotSettings plSetEx =
+                                        plSetsEx.GetAt(lay.PlotSettingsName).GetObject(
+                                                       OpenMode.ForRead) as PlotSettings;
+                                    plSet.CopyFrom(plSetEx);
+                                }
+                            }
+                        }
+                    }
+                }
+                // Regen the drawing to get the layout tab to display
+                acDoc.Editor.Regen();
+                // Save the changes made
+                acTrans.Commit();
+            }
+        }
+        else
+        {
+            // Display a message if the layout could not be found in the specified drawing
+            acDoc.Editor.WriteMessage("\\nLayout '" + layoutName +
+                                      "' could not be imported from '" + tmpDwg + "'.");
+        }
+        // Discard the changes made to the external drawing file
+        acTransEx.Abort();
+    }
+    // Close the external drawing file
+    acExDb.Dispose();
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_LayoutsPlot_Spaces.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_LayoutsPlot_Layouts_Settings.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_LayoutsPlot_Spaces.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_LayoutsPlot_Layouts_Settings.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

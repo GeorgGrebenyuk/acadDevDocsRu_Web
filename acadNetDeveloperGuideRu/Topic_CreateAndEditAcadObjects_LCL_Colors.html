@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Работа с цветами - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Работа-с-цветами"><a class="header" href="#Работа-с-цветами">Работа с цветами</a></h1>
+<p>Вы можете назначить цвет отдельному объекту в чертеже, используя его свойство Color, ColorIndex или цвета из альбома цветов. Свойство ColorIndex принимает значение т.н. AutoCAD Color Index (ACI) в виде числового значения от 0 до 256. Свойство Color используется для назначения объекту номера ACI, цвета RGB.</p>
+<p><strong>Примечание</strong>: Вариант задания цвета из альбома цветов, существовавший в AutoCAD .NET API не реализован.</p>
+<p>Объект Color имеет метод SetRGB, который позволяет определить цвет, состоящий из заданного числа красного, зеленого и синего оттенков. Вы также можете назначать цвет конкретному слою. Если вы хотите, чтобы объект унаследовал цвет слоя, на котором он находится, установите цвет объекта на ByLayer, задав значение цвета слоя ACI = 256. Один и тот же цвет может иметь неограниченное количество объектов и слоев.</p>
+<h2 id="Задание-цвета-объекты-несколькими-способами"><a class="header" href="#Задание-цвета-объекты-несколькими-способами">Задание цвета объекты несколькими способами</a></h2>
+<p>В примере ниже окружности задается цвет 3 разными способами: через индекс цвета ACI, RGB-код и альбом цветов.</p>
+<p><strong>Примечание</strong>: наименование альбома цвета и сам цвет скорректирован по шаблону <code>acadiso.dwt</code> из AutoCAD 2022, для оригинального примера такие значения отсутствуют.</p>
+<pre><code class="language-csharp">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.Colors;
+
+[CommandMethod("SetObjectColor")]
+public static void SetObjectColor()
+{
+    // Get the current document and database
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    // Start a transaction
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        // Define an array of colors for the layers
+        Color[] acColors = new Color[3];
+        acColors[0] = Color.FromColorIndex(ColorMethod.ByAci, 1);
+        acColors[1] = Color.FromRgb(23, 54, 232);
+        acColors[2] = Co"PANTONE Yellow C", "PANTONE+ Solid Coated"astel coated");
+
+        // Open the Block table for read
+        BlockTable acBlkTbl;
+        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
+                                        OpenMode.ForRead) as BlockTable;
+
+        // Open the Block table record Model space for write
+        BlockTableRecord acBlkTblRec;
+        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
+                                        OpenMode.ForWrite) as BlockTableRecord;
+
+        // Create a circle object and assign it the ACI value of 4
+        Point3d acPt = new Point3d(0, 3, 0);
+        using (Circle acCirc = new Circle())
+        {
+            acCirc.Center = acPt;
+            acCirc.Radius = 1;
+            acCirc.ColorIndex = 4;
+
+            acBlkTblRec.AppendEntity(acCirc);
+            acTrans.AddNewlyCreatedDBObject(acCirc, true);
+
+            int nCnt = 0;
+
+            while (nCnt &lt; 3)
+            {
+                // Create a copy of the circle
+                Circle acCircCopy;
+                acCircCopy = acCirc.Clone() as Circle;
+
+                // Shift the copy along the Y-axis
+                acPt = new Point3d(acPt.X, acPt.Y + 3, acPt.Z);
+                acCircCopy.Center = acPt;
+
+                // Assign the new color to the circle
+                acCircCopy.Color = acColors[nCnt];
+
+                acBlkTblRec.AppendEntity(acCircCopy);
+                acTrans.AddNewlyCreatedDBObject(acCircCopy, true);
+
+                nCnt = nCnt + 1;
+            }
+        }
+
+        // Save the changes and dispose of the transaction
+        acTrans.Commit();
+    }
+}
+</code></pre>
+<h2 id="Задание-активного-цвета-через-свойство-databasececolor"><a class="header" href="#Задание-активного-цвета-через-свойство-databasececolor">Задание активного цвета через свойство Database.Cecolor</a></h2>
+<p>Пример ниже содержит код, задающий активным цвет "По слою"</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.Colors;
+
+[CommandMethod("SetColorCurrent")]
+public static void SetColorCurrent()
+{
+    // Get the current document
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    // Set the current color
+    acDoc.Database.Cecolor = Color.FromColorIndex(ColorMethod.ByLayer, 256);
+}
+</code></pre>
+<h2 id="Задание-активного-цвета-через-переменную-cecolor"><a class="header" href="#Задание-активного-цвета-через-переменную-cecolor">Задание активного цвета через переменную CECOLOR</a></h2>
+<p>Пример ниже задает активный слой = Красный с помощью задания системной переменной CECOLOR</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+
+[CommandMethod("SetColorCurrent")]
+public static void SetColorCurrent()
+{
+    Application.SetSystemVariable("CECOLOR", "1");
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_CreateAndEditAcadObjects_LCL_Layers_Erase.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_CreateAndEditAcadObjects_LCL_Linetypes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_CreateAndEditAcadObjects_LCL_Layers_Erase.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_CreateAndEditAcadObjects_LCL_Linetypes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

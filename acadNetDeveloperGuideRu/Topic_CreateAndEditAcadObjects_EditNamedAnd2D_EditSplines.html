@@ -1,0 +1,329 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Редактирование сплайнов - Руководство разработчика AutoCAD .NET API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Редактирование-сплайнов"><a class="header" href="#Редактирование-сплайнов">Редактирование сплайнов</a></h1>
+<p>Вы можете редактировать свойства замкнутых или незамкнутых сплайнов и даже преобразовать их в полилинии. Используйте следующие свойства и методы для редактирования сплайнов:</p>
+<ul>
+<li>
+<p>Degree : возвращает порядок (степень кривизны) сплайна;</p>
+</li>
+<li>
+<p>EndFitTangent (StartFitTangent) : возвращает вектор касательной сплайна в последней (начальной) вершине;</p>
+</li>
+<li>
+<p>FitTolerance : возвращает или задает точность аппроксимации кривой;</p>
+</li>
+<li>
+<p>NumControlPoints : возвращает количество управляющих вершин у данного сплайна;</p>
+</li>
+<li>
+<p>NumFitPoints : возвращает количество определяющих вершин у данного сплайна;</p>
+</li>
+</ul>
+<p><strong>Методы для редактирования геометрии сплайна:</strong></p>
+<ul>
+<li>
+<p>InsertFitPointAt : задает определяющую вершину по данному индексу;</p>
+</li>
+<li>
+<p>ElevateDegree : задает новый порядок (степень кривизны) сплайна;</p>
+</li>
+<li>
+<p>GetControlPointAt : возвращает координаты управляющей вершины для заданного индекса (число управляющих точек хранится в значении свойства NumControlPoints);</p>
+</li>
+<li>
+<p>GetFitPointAt : возвращает координаты определяющей вершины для заданного индекса (число определяющих точек хранится в значении свойства NumFitPoints). Чтобы получить все определяющие вершины вызовите свойство FitData, а у него :: метод GetFitPoints;</p>
+</li>
+<li>
+<p>RemoveFitPointAt : удаляет определяющую вершину в заданной точке;</p>
+</li>
+<li>
+<p>ReverseCurve : обращает направление сплайна;</p>
+</li>
+<li>
+<p>SetControlPointAt : задает координаты управляющей вершины в заданной точке;</p>
+</li>
+<li>
+<p>SetFitPointAt : задает координаты определяющей вершины в заданной точке;</p>
+</li>
+<li>
+<p>SetWeightAt : задает вес определяющей точки сплайна (как каждая точка влияет на его форму: =1 не влияет, &gt; 1 сплайн "притягивается" к точке, &lt; 1 сплайн "отталкивается" от точки);</p>
+</li>
+</ul>
+<p><strong>Свойства "только для чтения":</strong></p>
+<ul>
+<li>
+<p>Area : площадь области, образуемой, если бы сплайн был бы замкнут;</p>
+</li>
+<li>
+<p>Closed : возвращает флаг, замкнут ли сплайн в контур;</p>
+</li>
+<li>
+<p>IsPeriodic : возвращает признак, является ли данный сплайн периодическим (замкнутая сплайн:кривая, в которой кривая и ее производные являются непрерывными в начальной/конечной точках);</p>
+</li>
+<li>
+<p>IsPlanar : возвращает признак, является ли данный сплайн плоским;</p>
+</li>
+<li>
+<p>IsRational : возвращает признак, является ли данный сплайн рациональным (используются такие веса в определяющих точках сплайна, что позволяет ему представлять точные конические сечения (окружности, эллипсы, параболы, гиперболы) и другие сложные кривые, которые не могут быть представлены обычными нерациональными сплайнами);</p>
+<h2 id="Редактирование-управляющей-вершины-сплайна"><a class="header" href="#Редактирование-управляющей-вершины-сплайна">Редактирование управляющей вершины сплайна</a></h2>
+</li>
+</ul>
+<p>В примере далее создается новый сплайн и затем изменяются координаты его первой определяющей точки</p>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
+[CommandMethod("EditSpline")]
+public static void EditSpline()
+{
+    // Get the current document and database
+    Document acDoc = Application.DocumentManager.MdiActiveDocument;
+    Database acCurDb = acDoc.Database;
+
+    // Start a transaction
+    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    {
+        // Open the Block table for read
+        BlockTable acBlkTbl;
+        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
+                                        OpenMode.ForRead) as BlockTable;
+
+        // Open the Block table record Model space for write
+        BlockTableRecord acBlkTblRec;
+        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
+                                        OpenMode.ForWrite) as BlockTableRecord;
+
+        // Create a Point3d Collection
+        Point3dCollection acPt3dColl = new Point3dCollection();
+        acPt3dColl.Add(new Point3d(1, 1, 0));
+        acPt3dColl.Add(new Point3d(5, 5, 0));
+        acPt3dColl.Add(new Point3d(10, 0, 0));
+
+        // Set the start and end tangency
+        Vector3d acStartTan = new Vector3d(0.5, 0.5, 0);
+        Vector3d acEndTan = new Vector3d(0.5, 0.5, 0);
+
+        // Create a spline
+        using (Spline acSpline = new Spline(acPt3dColl,
+                                        acStartTan,
+                                        acEndTan, 4, 0))
+        {
+
+            // Set a control point
+            acSpline.SetControlPointAt(0, new Point3d(0, 3, 0));
+
+            // Add the new object to the block table record and the transaction
+            acBlkTblRec.AppendEntity(acSpline);
+            acTrans.AddNewlyCreatedDBObject(acSpline, true);
+        }
+
+        // Save the new objects to the database
+        acTrans.Commit();
+    }
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_CreateAndEditAcadObjects_EditNamedAnd2D_EditPlines.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_CreateAndEditAcadObjects_EditNamedAnd2D_EditHatches.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_CreateAndEditAcadObjects_EditNamedAnd2D_EditPlines.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_CreateAndEditAcadObjects_EditNamedAnd2D_EditHatches.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
