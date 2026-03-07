@@ -6,4 +6,4 @@ HTML-выгрузка для проектов справочников в mdBook
 
 ## Содержимое
 
-* Руководство AutoCAD .NET API разработчика;
+* [Руководство AutoCAD .NET API разработчика](https://georggrebenyuk.github.io/acadDevDocsRu_Web/acadNetDeveloperGuideRu/);
