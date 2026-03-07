@@ -158,20 +158,21 @@
 <li><code>StartTransaction</code> : Запускает новую транзакцию, создавая новый экземпляр объекта <code>Transaction</code>. Используйте этот метод, когда вам нужно редактировать объект несколько раз в течение транзакции и иметь возможность применить или откатить изменения на любом шаге в ходе вложенных транзакций (если таковые будут);</li>
 <li><code>StartOpenCloseTransation</code> : создает объект <code>OpenCloseTransaction</code>, который ведет себя аналогично объекту Transaction, но дополнительно оборачивает объекты методами Open и Close объекта, что упрощает закрытие всех открытых объектов вместо необходимости явного закрытия каждого открытого объекта. Рекомендуется для использования во вспомогательных или служебных функциях, которые могут быть вызваны неизвестное количество раз, а также при работе с большинством из имеющихся обработчиками событий;</li>
 </ul>
-<p>Получив объект Transaction или OpenCloseTransaction, используйте метод GetObject для открытия хранящегося в БД чертежа объекта для чтения или записи. Метод <code>GetObject</code> вернет объект типа <code>DBObject</code> и вам необходимо будет самостоятельно привести его к нужному типу при помощи приведения <strong>as</strong>. Все объекты, открытые во время транзакции, закрываются в конце транзакции. Чтобы завершить транзакцию, вызовите метод <code>Dispose</code> объекта транзакции. Если вы используете объект транзакции в составе конструкции <code>using</code>, вам не нужно вызывать метод <code>Dispose.</code> Перед уничтожением транзакции необходимо зафиксировать все внесенные изменения с помощью метода <code>Commit</code>. Если изменения не будут зафиксированы (применен метод <code>Commit</code>) до уничтожения транзакции, все сделанные изменения будут откачены к состоянию, в котором они находились до начала транзакции. К этому же поведению приведет и использование метода Abort (его вы можете использовать, например, во вложенных транзакциях или на определенном шаге в текущей транзакции. Можно запустить более одной транзакции. Количество активных транзакций можно получить с помощью свойства NumberOfActiveTransactions объекта TransactionManager, а самую последнюю транзакцию можно получить с помощью свойства TopTransaction. Транзакции могут быть вложены одна в другую, чтобы откатить некоторые изменения, сделанные во время выполнения ранних процедур.</p>
+<p>Получив объект Transaction или OpenCloseTransaction, используйте метод GetObject для открытия хранящегося в БД чертежа объекта для чтения или записи. Метод <code>GetObject</code> вернет объект типа <code>DBObject</code> и вам необходимо будет самостоятельно привести его к нужному типу при помощи приведения <strong>as</strong>. Все объекты, открытые во время транзакции, закрываются в конце транзакции. Чтобы завершить транзакцию, вызовите метод <code>Dispose</code> объекта транзакции. Если вы используете объект транзакции в составе конструкции <code>using</code>, вам не нужно вызывать метод <code>Dispose.</code> Перед уничтожением транзакции необходимо зафиксировать все внесенные изменения с помощью метода <code>Commit</code>. Если изменения не будут зафиксированы (применен метод <code>Commit</code>) до уничтожения транзакции, все сделанные изменения будут откачены к состоянию, в котором они находились до начала транзакции. К этому же поведению приведет и использование метода Abort (его вы можете использовать, например, во вложенных транзакциях или на определенном шаге в текущей транзакции. Можно запустить более одной транзакции.</p>
+<p>Количество активных транзакций можно получить с помощью свойства NumberOfActiveTransactions объекта TransactionManager, а самую последнюю транзакцию можно получить с помощью свойства TopTransaction. Транзакции могут быть вложены одна в другую, чтобы откатить некоторые изменения, сделанные во время выполнения ранних процедур.</p>
 <h2 id="Запрос-объектов"><a class="header" href="#Запрос-объектов">Запрос объектов</a></h2>
 <p>В примере ниже показывается, как открывать и считывать данные об объектах при помощи транзакции. Сперва метод GetObject используется для получения таблицы блоков BlockTable, а из неё -- записи, соответствующей пространству модели.</p>
 <pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
- 
+
 [CommandMethod("StartTransactionManager")]
 public static void StartTransactionManager()
 {
     // Get the current document and database
     Document acDoc = Application.DocumentManager.MdiActiveDocument;
     Database acCurDb = acDoc.Database;
- 
+
     // Start a transaction
     using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
     {
@@ -179,12 +180,12 @@ public static void StartTransactionManager()
         BlockTable acBlkTbl;
         acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
                                      OpenMode.ForRead) as BlockTable;
- 
+
         // Open the Block table record Model space for read
         BlockTableRecord acBlkTblRec;
         acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
                                         OpenMode.ForRead) as BlockTableRecord;
- 
+
         // Step through the Block table record
         foreach (ObjectId asObjId in acBlkTblRec)
         {
@@ -193,7 +194,7 @@ public static void StartTransactionManager()
             acDoc.Editor.WriteMessage("\nHandle: " + asObjId.Handle.ToString());
             acDoc.Editor.WriteMessage("\n");
         }
- 
+
         // Dispose of the transaction
     }
 }
@@ -204,7 +205,7 @@ public static void StartTransactionManager()
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
- 
+
 [CommandMethod("AddNewCircleTransaction")]
 public static void AddNewCircleTransaction()
 {
