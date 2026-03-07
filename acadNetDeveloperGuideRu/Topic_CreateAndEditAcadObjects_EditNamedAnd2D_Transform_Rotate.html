@@ -158,10 +158,11 @@
 <p><img src="assets/2026-03-05-16-42-19-image.png" alt="" /></p>
 <h2 id="Поворот-полилинии-вокруг-базовой-точки"><a class="header" href="#Поворот-полилинии-вокруг-базовой-точки">Поворот полилинии вокруг базовой точки</a></h2>
 <p>Код ниже поворачивает плоскую полилинию на угол 45 градусов вокруг точки (4, 4.25, 0).</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("RotateObject")]
 public static void RotateObject()
 {

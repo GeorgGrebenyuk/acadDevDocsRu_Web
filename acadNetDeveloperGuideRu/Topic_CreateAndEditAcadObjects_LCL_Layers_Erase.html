@@ -156,9 +156,10 @@
 <p>Слой возможно удалить, если он не задан в качестве текущего, не содержит объектов, не является системным ("0", "DEFPOINTS"), не пришёл из внешних ссылок, не является одним из слоёв, где лежат определения блоков.</p>
 <p>Чтобы удалить слой, используйте метод <code>Erase</code>. Рекомендуется использовать функцию <code>Purge</code>, чтобы убедиться, что слой можно удалить, а также проверить, что это не системный или текущий слой.</p>
 <p>В примере ниже удаляется слой "ABC", если он имеется в чертеже. Транзакция закрывается в теле функции, поскольку ожидается удаление только одного объекта.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+
 [CommandMethod("EraseLayer")]
 public static void EraseLayer()
 {
@@ -191,7 +192,7 @@ public static void EraseLayer()
                     // Save the changes and dispose of the transaction
                     acTrans.Commit();
                 }
-                catch (Teigha.Runtime.Exception Ex)
+                catch (Autodesk.AutoCAD.Runtime.Exception Ex)
                 {
                     // Layer could not be deleted
                     Application.ShowAlertDialog("Error:\\n" + Ex.Message);

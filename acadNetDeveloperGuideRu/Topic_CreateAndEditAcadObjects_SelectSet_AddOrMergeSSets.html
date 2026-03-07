@@ -155,10 +155,11 @@
                         <h1 id="Объединение-нескольких-наборов-выбора"><a class="header" href="#Объединение-нескольких-наборов-выбора">Объединение нескольких наборов выбора</a></h1>
 <p>Вы можете объединить несколько наборов выбора, создав объект <code>ObjectIdCollection</code>, а затем добавив идентификаторы объектов из нескольких наборов выбора в него. Помимо добавления идентификаторов объектов в объект <code>ObjectIdCollection</code>, вы можете удалять идентификаторы объектов. После добавления всех идентификаторов объектов в объект <code>ObjectIdCollection</code> вы можете пройтись по каждому из ObjectId и получить объекты при необходимости.</p>
 <p>Код ниже запрашивает у Пользователя 2 разные группы объектов, а потом объединяет объекты групп в единый набор выбора ObjectIdCollection.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using HostMgd.EditorInput;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+
 [CommandMethod("MergeSelectionSets")]
 public static void MergeSelectionSets()
 {

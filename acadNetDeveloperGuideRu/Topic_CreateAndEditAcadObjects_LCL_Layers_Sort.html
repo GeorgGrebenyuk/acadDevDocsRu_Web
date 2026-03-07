@@ -154,9 +154,10 @@
                     <main>
                         <h1 id="Перебор-слоев"><a class="header" href="#Перебор-слоев">Перебор слоев</a></h1>
 <p>Получить информацию о слоях документа вы можете путем итеративного перебора таблицы слоев (LayerTable). Пример ниже собирает информацию об именах слоев и выводит её в диалоговое окно.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+
 [CommandMethod("DisplayLayerNames")]
 public static void DisplayLayerNames()
 {

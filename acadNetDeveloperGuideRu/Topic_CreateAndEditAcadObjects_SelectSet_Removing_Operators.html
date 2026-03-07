@@ -222,10 +222,11 @@ public static void FilterRelational()
 acTypValAr[1] = new TypedValue((int)DxfCode.Start, "TEXT, MTEXT");
 </code></pre>
 <p>Можно записать это же условие с помощью операторов:</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using HostMgd.EditorInput;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+
 [CommandMethod("FilterForText")]
 public static void FilterForText()
 {

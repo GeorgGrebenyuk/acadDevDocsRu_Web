@@ -176,10 +176,11 @@
 <li>Стиль размера (свойство DimensionStyleName или DimensionStyle);</li>
 </ul>
 <p>В примере ниже создается угловой размер в пространстве модели</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("CreateAngularDimension")]
 public static void CreateAngularDimension()
 {

@@ -156,10 +156,11 @@
 <p>Используйте любой из методов и свойств класса <code>BlockTableRecord</code> для переопределения блока. При переопределении блока все ссылки на этот блок (Вхождения блока) на чертеже немедленно обновятся в соответствии с новым определением.</p>
 <p>Переопределение влияет на все существовавшие ранние объекты и будет влиять на новые вхождения блоков. Постоянные атрибуты (constant) полностью заменяются новыми постоянными атрибутами. Переменные атрибуты остаются неизменными, даже если у нового определения блока отсутствуют атрибуты.</p>
 <p>В примере ниже, если в чертеже есть определение блока с именем "CircleBlock", то для всех объектов-окружностей, составляющих блок, увеличивается радиус в 2 раза, после чего с помощью служебного метода RecordGraphicsModified обновляются все вхождения блока, чтобы они изменились вслед за редактированием определения.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("RedefiningABlock")]
 public void RedefiningABlock()
 {

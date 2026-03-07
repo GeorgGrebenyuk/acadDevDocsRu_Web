@@ -153,8 +153,8 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="Взаимодействие-с-окном-приложения-autocad"><a class="header" href="#Взаимодействие-с-окном-приложения-autocad">Взаимодействие с окном приложения AutoCAD</a></h1>
-<p>Иногда исполняемому приложению бывает необходимо свернуть окно AutoCAD или запросить его состояние. Для этого используются методы статического класса Application. С их помощью можно изменять положение, размер и видимость окна приложения, также можно использовать свойство WindowState для получения и задания текущего состояния окна приложения.
-<strong>Примечание</strong>: Следующие примеры требуют наличия в проекте ссылки на библиотеку PresentationCore (PresentationCore.dll). Воспользуйтесь диалоговым окном Add Reference и выберите PresentationCore на вкладке .NET (при использовании .NET Framework). При использовании .NET6 в свойствах проекта csproj внесите строку UseWPF = True. Некоторые примеры также требуют ссылки на библиотеки WindowsForms, добавьте в проект на .NET6+ UseWindowsForms = True.</p>
+<p>Иногда исполняемому приложению бывает необходимо свернуть окно AutoCAD или запросить его состояние. Для этого используются методы статического класса Application. С их помощью можно изменять положение, размер и видимость окна приложения, также можно использовать свойство WindowState для получения и задания текущего состояния окна приложения.</p>
+<p><strong>Примечание</strong>: Следующие примеры требуют наличия в проекте ссылки на библиотеку PresentationCore (PresentationCore.dll). Воспользуйтесь диалоговым окном Add Reference и выберите PresentationCore на вкладке .NET (при использовании .NET Framework). При использовании .NET6 в свойствах проекта csproj внесите строку UseWPF = True. Некоторые примеры также требуют ссылки на библиотеки WindowsForms, добавьте в проект на .NET6+ UseWindowsForms = True.</p>
 <pre><code class="language-xml">  &lt;PropertyGroup&gt;
     &lt;TargetFramework&gt;net6.0-windows&lt;/TargetFramework&gt;
     &lt;UseWP&gt;true&lt;/UseWPF&gt;
@@ -162,10 +162,12 @@
   &lt;/PropertyGroup&gt;
 </code></pre>
 <h2 id="Установка-положения-и-размера-окна-приложения"><a class="header" href="#Установка-положения-и-размера-окна-приложения">Установка положения и размера окна приложения</a></h2>
-<p>Свойства Application.MainWindow.DeviceIndependentLocation, Application.MainWindow.DeviceIndependentSize в текущей версии .NET API не доступны для редактирования (в отличие от AutoCAD .NET API). ##  Разворачивание на полный экран и свертывание приложения</p>
-<pre><code class="language-cs">using HostMgd.Windows;
-using HostMgd.ApplicationServices;
-using Teigha.Runtime;
+<p>Свойства Application.MainWindow.DeviceIndependentLocation, Application.MainWindow.DeviceIndependentSize в текущей версии .NET API не доступны для редактирования (в отличие от AutoCAD .NET API).</p>
+<h2 id="Разворачивание-на-полный-экран-и-свертывание-приложения"><a class="header" href="#Разворачивание-на-полный-экран-и-свертывание-приложения">Разворачивание на полный экран и свертывание приложения</a></h2>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Windows;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.Runtime;
+
 [CommandMethod("MinMaxApplicationWindow")]
 public static void MinMaxApplicationWindow()
 {

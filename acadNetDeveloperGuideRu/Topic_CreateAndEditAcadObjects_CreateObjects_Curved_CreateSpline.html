@@ -154,10 +154,11 @@
                     <main>
                         <h1 id="Создание-сплайна"><a class="header" href="#Создание-сплайна">Создание сплайна</a></h1>
 <p>Код ниже создает сплайн по Определяющим точкам в пространстве Модели на основе трёх точек (0, 0, 0), (5, 5, 0), (10, 0, 0). Начальный и конечный векторы касательной сплайна задаются (0.5, 0.5, 0.0).</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("AddSpline")]
 public static void AddSpline()
 {

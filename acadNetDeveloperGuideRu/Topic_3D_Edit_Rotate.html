@@ -156,10 +156,11 @@
 <p>С помощью метода <code>TransformBy</code> или, конкретнее, метода <code>Rotation</code> матрицы трансформации можно применять к двумерным объектам поворот вокруг заданной точки. Направление вращения для двумерных объектов — вокруг оси Z. Для трехмерных объектов ось вращения не ограничивается осью Z, в качестве оси вращения может быть указан произвольный трехмерный вектор.</p>
 <p><img src="assets/2026-03-05-21-14-27-image.png" alt="" /></p>
 <p>В примере ниже создается солид в виде параллепипеда, и далее он вращается на 30 градусов вокруг вектора, заданного двумя точками.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("Rotate_3DBox")]
 public static void Rotate_3DBox()
 {

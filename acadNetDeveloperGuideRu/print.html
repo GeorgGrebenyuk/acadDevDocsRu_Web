@@ -239,7 +239,7 @@ var acEntity = ent.AcadObject as AutoCAD.AcadEntity;
 <h2 id="Загрузка-библиотек"><a class="header" href="#Загрузка-библиотек">Загрузка библиотек</a></h2>
 <p>Для загрузки управляемых сборок имеется отдельная команда NETLOAD.</p>
 <h2 id="Инициализация-управляемых-приложений"><a class="header" href="#Инициализация-управляемых-приложений">Инициализация управляемых приложений</a></h2>
-<p>Для корректной загрузки .NET-приложений в одном из классов необходимо реализовать интерфейс Teigha.Runtime.IExtensionApplication (предоставляет методы Initialize() и Terminate()). Поскольку управляемые приложения нельзя выгрузить вручную, любая реализация метода Terminate() вызывается при закрытии AutoCAD.</p>
+<p>Для корректной загрузки .NET-приложений в одном из классов необходимо реализовать интерфейс Autodesk.AutoCAD.Runtime.IExtensionApplication (предоставляет методы Initialize() и Terminate()). Поскольку управляемые приложения нельзя выгрузить вручную, любая реализация метода Terminate() вызывается при закрытии AutoCAD.</p>
 <p>Если ваше приложение определяет большое количество типов данных, вы можете оптимизировать его производительность при загрузке, реализовав IExtensionApplication и используя 2 необязательных пользовательских атрибута: <strong>ExtensionApplication</strong> и <strong>CommandClass</strong> - помогают AutoCAD найти процедуру инициализации приложения и обработчики команд. Любые управляемые приложения могут использовать эти атрибуты. Однако эффект их использования будет заметен только в приложениях со сложной логикой.</p>
 <h2 id="Использование-extensionapplication-и-commandclass"><a class="header" href="#Использование-extensionapplication-и-commandclass">Использование ExtensionApplication и CommandClass</a></h2>
 <p>Когда программа AutoCAD загружает управляемое приложение, она запрашивает сборку приложения на наличие атрибута <code>ExtensionApplication</code>. Если такой атрибут найден, AutoCAD устанавливает связанный с ним тип в качестве точки входа приложения. Если такой атрибут не найден, AutoCADищет во всех экспортируемых типах реализацию <code>IExtensionApplication</code>. Если реализация не найдена, программа AutoCAD пропускает шаг инициализации, специфичный для приложения. Атрибут <code>ExtensionApplication</code> может быть присоединен только к одному классу. Класс, к которому он присоединен, должен реализовывать интерфейс IExtensionApplication. Помимо поиска реализации IExtensionApplication в приложении, AutoCAD запрашивает сборку приложения на наличие одного или нескольких атрибутов <code>CommandClass</code>. Если экземпляры этого атрибута найдены, программа AutoCAD ищет методы команд только в связанных с ними типах. В противном случае выполняется поиск во всех экспортируемых типах. Атрибут <code>CommandClass</code> может быть объявлен для любого класса, содержащего обработчики команд AutoCAD. Ниже описано, как используются эти атрибуты.</p>
@@ -367,7 +367,7 @@ AutoCAD.AcadDatabase dbCOM = db.AcadDatabase as AutoCAD.AcadDatabase;
 <li>UcsTable : таблица для хранения в базе данных чертежа пользовательских систем координат (UCS);</li>
 <li>TextStyleTable : таблица со стилями текста;</li>
 </ul>
-<p>Для каждой таблицы существуют классы:обработчики записей таблицы : они имеют суффикс Record. Подробнее о таблицах объектов <a href=".%5CTopic_PartBasics_HierAbout_CollectionObjects.html">см. статью Коллекции объектов</a>.
+<p>Для каждой таблицы существуют классы:обработчики записей таблицы : они имеют суффикс Record. Подробнее о таблицах объектов <a href="./Topic_PartBasics_HierAbout_CollectionObjects.html">см. статью Коллекции объектов</a>.
 Отдельно в AutoCAD имеется <code>PlotStyleTable</code> - таблица параметров печати; это специфичный объект AutoCAD, для неё не предусмотрено класса-обработчика записей в составе таблицы.
 Все графические объекты (линии, окружности, дуги и так далее) принадлежат записям таблицы блоков (BlockTable). По умолчанию каждый чертеж содержит предопределенные таблицы блоков (BlockTable) для пространства Model и каждого из листов PaperSpace. Словари :: это специальный объект, описываемый соответствующим набором классов, который представляют собой расширенные описания объекта. У словарей есть ограничение на емкость и свои особенности поведения. Словари могут быть как у графических, так и у неграфичеких объектов AutoCAD, включая и саму базу данных чертежа, а также у записей XRecord, их количество не ограниченно, их можно свободно создавать, редактировать, удалять (кроме нескольких "служебных" словарей у объектов чертежа). Словари могут быть и вложенными друг в друга. Хранится словари могут в двух местах:</p>
 <ul>
@@ -385,7 +385,7 @@ AutoCAD.AcadEntity entityCOM = someArcObject.AcadObject as AutoCAD.AcadEntity;
 </code></pre>
 <p>Также имеется возможность приведения COM-интерфейса объекта к специфичному COM-интерфейсу, описывающему данный объект со своей стороны. Например, выше мы получили общий интерфейс AutoCAD.AcadEntity у объекта "Дуга", а могли бы привести его к AutoCAD.AcadArc и были бы правы.</p>
 <h2 id="Неграфические-объекты"><a class="header" href="#Неграфические-объекты">Неграфические объекты</a></h2>
-<p>Неграфические объекты - это невидимые (информационные) объекты, являющиеся частью чертежа, такие как слои, типы линий, стили размеров, стили таблиц и так далее. Чтобы создать новую запись в таблице символов, используйте метод Add у таблицы-контейнера данных объектов (перечень см. в статей <a href=".%5CTopic_PartBasics_HierAbout_Database.html">"Объект базы данных чертежа"</a>) или метод SetAt для добавления словаря в словарь именованных объектов. Чтобы изменить или получить какую-либо информацию об объекте, используйте методы или свойства самого объекта. Каждый неграфический объект имеет методы и свойства, специфичные для его класса; все они имеют методы для получения расширенных данных (xdata) и своего удаления. Подробнее о них <a href=".%5CTopic_CreateAndEditNcObjects_EditNamedAnd2D_Named.html">см. раздел</a>.</p>
+<p>Неграфические объекты - это невидимые (информационные) объекты, являющиеся частью чертежа, такие как слои, типы линий, стили размеров, стили таблиц и так далее. Чтобы создать новую запись в таблице символов, используйте метод Add у таблицы-контейнера данных объектов (перечень см. в статей <a href="./Topic_PartBasics_HierAbout_Database.html">"Объект базы данных чертежа"</a>) или метод SetAt для добавления словаря в словарь именованных объектов. Чтобы изменить или получить какую-либо информацию об объекте, используйте методы или свойства самого объекта. Каждый неграфический объект имеет методы и свойства, специфичные для его класса; все они имеют методы для получения расширенных данных (xdata) и своего удаления. Подробнее о них <a href="./Topic_CreateAndEditAcadObjects_EditNamedAnd2D_Named.html">см. раздел</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Коллекции-объектов"><a class="header" href="#Коллекции-объектов">Коллекции объектов</a></h1>
 <p>В AutoCAD большинство объектов (графических и неграфических) хранятся в составе коллекций (специальные объекты-контейнеры). Хотя коллекции и содержат различные типы данных, их можно обрабатывать с помощью схожих методов. Каждая коллекция имеет метод для добавления объекта в коллекцию или получения элемента из коллекции. Большинство коллекций используют методы Add (обычные коллекции -- Table) или SetAt (словари) для добавления объекта в коллекцию. На уровне исходного кода, классы-коллекции являются наследниками интерфейсов IEnumerable, ICollection. Большинство коллекций имеют схожие методы и свойства, что упрощает их использование и изучение; например, для перебора коллекции удобно использовать цикл <i>foreach</i>. Примерами членов коллекции в AutoCAD .NET API являются:</p>
 <ul>
@@ -443,7 +443,7 @@ using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
 ObjectId acObjId;
 if (acLyrTbl.Has("MyLayer")) acObjId = acLyrTbl["MyLayer"];
 </code></pre>
-<p>Для итеративного перебора объектов коллекции возможно использование цикла foreach. Существует устойчивое название "запись", которым обозначают объект коллекции, хранящейся в Таблице данных (подробнее о таблицах см. соответствующий раздел в статье <a href="%5CTopic_PartBasics_HierAbout_Database.html">База данных чертежа</a>. Подобные объекты-записи имеют специфичный тип, равный названию класса таблицы + суффикс Record. Для каждой из 11 таблиц существуют соответствующие классы-записи с суффиксами Record. Рассмотрим перебор слоев таблицы слоев, а также проверку, имеется ли среди таблицы слоев слой с фиксированным именем:</p>
+<p>Для итеративного перебора объектов коллекции возможно использование цикла foreach. Существует устойчивое название "запись", которым обозначают объект коллекции, хранящейся в Таблице данных (подробнее о таблицах см. соответствующий раздел в статье <a href="./Topic_PartBasics_HierAbout_Database.html">База данных чертежа</a>. Подобные объекты-записи имеют специфичный тип, равный названию класса таблицы + суффикс Record. Для каждой из 11 таблиц существуют соответствующие классы-записи с суффиксами Record. Рассмотрим перебор слоев таблицы слоев, а также проверку, имеется ли среди таблицы слоев слой с фиксированным именем:</p>
 <pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -592,9 +592,9 @@ Autodesk.AutoCAD.DatabaseServices.Database db = Application.DocumentManager.MdiA
 objId = db.AttachXref(strFName, "drawing1");
 </code></pre>
 <p>Для получения объектов в пространстве модели (или любого из листов) необходимо обратиться получить запись таблицы блоков (BlockTableRecord) для целевого пространства и пройтись по ней в цикле.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
 
 [CommandMethod("ListEntities")]
 public static void ListEntities()
@@ -632,7 +632,7 @@ public static void ListEntities()
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Понятие-свойств-и-методов"><a class="header" href="#Понятие-свойств-и-методов">Понятие свойств и методов</a></h1>
 <p>Программный доступ к объектам AutoCAD осуществляется с использованием подхода объектно-ориентированного программирования, то есть каждому объекту\коллекции\вспомогательному набору инструментов соответствует определенный класс со своими свойствами и методами. Свойства описывают признаки объекта, а методы -- действия, которые можно над ним выполнить. После создания объекта (вручную или программно) вы можете свободно редактировать его свойства и вызывать методы.</p>
-<p>Например, у объекта окружности Circle есть свойство Center. Это свойство представляет собой точку в мировой системе координат (WCS) в центре этой окружности. Чтобы изменить центр окружности, просто установите свойству Center новое значение точки (экземпляр класса Point3d). У объекта Circle также есть метод GetOffsetCurves. Этот метод создает кривые на заданном расстоянии смещения от существующей окружности. К слову, <a href=".%5CTopic_CreateAndEditNcObjects_EditNamedAnd2D_Offset.html">метод GetOffsetCurves</a> применим не только к окружности, но также и ко всем графическим примитивам, созданным на основе кривых (полилинии, сплайны, отрезки и пр.).</p>
+<p>Например, у объекта окружности Circle есть свойство Center. Это свойство представляет собой точку в мировой системе координат (WCS) в центре этой окружности. Чтобы изменить центр окружности, просто установите свойству Center новое значение точки (экземпляр класса Point3d). У объекта Circle также есть метод GetOffsetCurves. Этот метод создает кривые на заданном расстоянии смещения от существующей окружности. К слову, <a href="./Topic_CreateAndEditAcadObjects_EditNamedAnd2D_Offset.html">метод GetOffsetCurves</a> применим не только к окружности, но также и ко всем графическим примитивам, созданным на основе кривых (полилинии, сплайны, отрезки и пр.).</p>
 <p>Чтобы просмотреть список всех свойств и методов объекта Circle, обратитесь к справке по объекту Circle или воспользуйтесь браузером объектов в Microsoft Visual Studio.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Межпроцессорное-взаимодействие"><a class="header" href="#Межпроцессорное-взаимодействие">Межпроцессорное взаимодействие</a></h1>
 <p>При разработке нового приложения (на поддерживаемых языках программирования) оно может выполняться как в основном процессе AutoCAD, так и вне процесса. Настоящее .NET API предназначено только для работы в одном процессе с AutoCAD; вместе с тем использование ActiveX Automation позволяет работать как в данном процессе, так и вне его.</p>
@@ -822,7 +822,7 @@ public static void DisplayFullName(ResultBuffer rbArgs)
 <pre><code class="language-cs">(displayfullname "First" "Last")
 </code></pre>
 <h2 id="Получение-значений-переданных-в-lisp-функцию"><a class="header" href="#Получение-значений-переданных-в-lisp-функцию">Получение значений, переданных в LISP-функцию</a></h2>
-<p>Используйте цикл foreach для перебора значений, возвращаемых в ResultBuffer функцией AutoLISP. <a href="/Topic_CreateAndEditNcObjects_ResultBuffer.html">ResultBuffer</a> - это коллекция объектов TypedValue. Свойство TypeCode объекта TypedValue можно использовать для определения типа значения для каждого значения, переданного в функцию AutoLISP. Свойство Value используется для возврата значения объекта TypedValue. Поддерживаются следующие типы данных:</p>
+<p>Используйте цикл foreach для перебора значений, возвращаемых в ResultBuffer функцией AutoLISP. <a href="./Topic_CreateAndEditAcadObjects_ResultBuffer.html">ResultBuffer</a> - это коллекция объектов TypedValue. Свойство TypeCode объекта TypedValue можно использовать для определения типа значения для каждого значения, переданного в функцию AutoLISP. Свойство Value используется для возврата значения объекта TypedValue. Поддерживаются следующие типы данных:</p>
 <ul>
 <li>
 <p>Boolean или bool</p>
@@ -875,7 +875,7 @@ public class Loader
             int nCnt = 0;
             foreach (TypedValue rb in rbArgs)
             {
-                if (rb.TypeCode == (int)HostMgd.Runtime.LispDataType.Text)
+                if (rb.TypeCode == (int)Autodesk.AutoCAD.Runtime.LispDataType.Text)
                 {
                     switch (nCnt)
                     {
@@ -904,8 +904,8 @@ public class Loader
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Взаимодействие-со-средой-autocad"><a class="header" href="#Взаимодействие-со-средой-autocad">Взаимодействие со средой AutoCAD</a></h1>
 <p>В этой главе описываются основы разработки приложений, которое выполняется в запущенном AutoCAD. В ней объясняются многие концепции управления и эффективной работы со средой AutoCAD.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Взаимодействие-с-окном-приложения-autocad"><a class="header" href="#Взаимодействие-с-окном-приложения-autocad">Взаимодействие с окном приложения AutoCAD</a></h1>
-<p>Иногда исполняемому приложению бывает необходимо свернуть окно AutoCAD или запросить его состояние. Для этого используются методы статического класса Application. С их помощью можно изменять положение, размер и видимость окна приложения, также можно использовать свойство WindowState для получения и задания текущего состояния окна приложения.
-<strong>Примечание</strong>: Следующие примеры требуют наличия в проекте ссылки на библиотеку PresentationCore (PresentationCore.dll). Воспользуйтесь диалоговым окном Add Reference и выберите PresentationCore на вкладке .NET (при использовании .NET Framework). При использовании .NET6 в свойствах проекта csproj внесите строку UseWPF = True. Некоторые примеры также требуют ссылки на библиотеки WindowsForms, добавьте в проект на .NET6+ UseWindowsForms = True.</p>
+<p>Иногда исполняемому приложению бывает необходимо свернуть окно AutoCAD или запросить его состояние. Для этого используются методы статического класса Application. С их помощью можно изменять положение, размер и видимость окна приложения, также можно использовать свойство WindowState для получения и задания текущего состояния окна приложения.</p>
+<p><strong>Примечание</strong>: Следующие примеры требуют наличия в проекте ссылки на библиотеку PresentationCore (PresentationCore.dll). Воспользуйтесь диалоговым окном Add Reference и выберите PresentationCore на вкладке .NET (при использовании .NET Framework). При использовании .NET6 в свойствах проекта csproj внесите строку UseWPF = True. Некоторые примеры также требуют ссылки на библиотеки WindowsForms, добавьте в проект на .NET6+ UseWindowsForms = True.</p>
 <pre><code class="language-xml">  &lt;PropertyGroup&gt;
     &lt;TargetFramework&gt;net6.0-windows&lt;/TargetFramework&gt;
     &lt;UseWP&gt;true&lt;/UseWPF&gt;
@@ -913,10 +913,12 @@ public class Loader
   &lt;/PropertyGroup&gt;
 </code></pre>
 <h2 id="Установка-положения-и-размера-окна-приложения"><a class="header" href="#Установка-положения-и-размера-окна-приложения">Установка положения и размера окна приложения</a></h2>
-<p>Свойства Application.MainWindow.DeviceIndependentLocation, Application.MainWindow.DeviceIndependentSize в текущей версии .NET API не доступны для редактирования (в отличие от AutoCAD .NET API). ##  Разворачивание на полный экран и свертывание приложения</p>
-<pre><code class="language-cs">using HostMgd.Windows;
-using HostMgd.ApplicationServices;
-using Teigha.Runtime;
+<p>Свойства Application.MainWindow.DeviceIndependentLocation, Application.MainWindow.DeviceIndependentSize в текущей версии .NET API не доступны для редактирования (в отличие от AutoCAD .NET API).</p>
+<h2 id="Разворачивание-на-полный-экран-и-свертывание-приложения"><a class="header" href="#Разворачивание-на-полный-экран-и-свертывание-приложения">Разворачивание на полный экран и свертывание приложения</a></h2>
+<pre><code class="language-cs">using Autodesk.AutoCAD.Windows;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.Runtime;
+
 [CommandMethod("MinMaxApplicationWindow")]
 public static void MinMaxApplicationWindow()
 {
@@ -987,27 +989,27 @@ public static void CurrentDocWindowState()
 <p>Доступ к текущему виду видового экрана (ВЭ далее) в пространстве модели или листа осуществляется с помощью метода Editor.GetCurrentView. Метод GetCurrentView возвращает объект ViewTableRecord, у которого можно отредактировать масштабирование, положение и ориентацию вида. Для применения новых настроек, измененный объект ViewTableRecord необходимо задать текущему виду в активном ВЭ с помощью метода Editor.SetCurrentView. Для изменения доступны следующие настройки вида:</p>
 <ul>
 <li>
-<p>CenterPoint : Центр вида в координатах DCS (см. <a href="%5CTopic_3D_ConvertCoords.html">термины</a>);</p>
+<p>CenterPoint : Центр вида в координатах DCS (см. <a href="./Topic_3D_ConvertCoords.html">термины</a>);</p>
 </li>
 <li>
-<p>Height : Высота вида в координатах DCS (см. <a href="%5CTopic_3D_ConvertCoords.html">термины</a>);</p>
+<p>Height : Высота вида в координатах DCS (см. <a href="./Topic_3D_ConvertCoords.html">термины</a>);</p>
 </li>
 <li>
 <p>Target : Целевая точка перспективной проекции для данного ВЭ;</p>
 </li>
 <li>
-<p>ViewDirection : вектор от точки Target до камеры вида в координатах DCS (см. <a href="%5CTopic_3D_ConvertCoords.html">термины</a>);</p>
+<p>ViewDirection : вектор от точки Target до камеры вида в координатах DCS (см. <a href="./Topic_3D_ConvertCoords.html">термины</a>);</p>
 </li>
 <li>
 <p>ViewTwist : угол поворота в радианах для вида;</p>
 </li>
 <li>
-<p>Width : Ширина вида в координатах DCS (см. <a href="%5CTopic_3D_ConvertCoords.html">термины</a>);
+<p>Width : Ширина вида в координатах DCS (см. <a href="./Topic_3D_ConvertCoords.html">термины</a>);
 Увеличение высоты (Height) или ширины (Width) приводит к уменьшению масштаба отображения объектов; уменьшение :: к увеличению масштаба.</p>
 </li>
 <li>
 <h2 id="Функции-api-для-управления-текущим-видом"><a class="header" href="#Функции-api-для-управления-текущим-видом">Функции API для управления текущим видом</a></h2>
-<p>Пример ниже содержит общие функции, используемые в примерах далее. Функция Zoom принимает четыре параметра для выполнения масштабирования по заданной границе (точки pMin, pMax), точке центра вида чертежа, а также параметр масштабирования вида чертежа в заданном масштабном значении. Процедура Zoom ожидает, что все значения координат будут предоставлены в координатах WCS (см. <a href="%5CTopic_3D_ConvertCoords.html">термины</a>). В коде содержится инструкция чтения свойства Database.TileMode (оно же значение системной переменной TILEMODE), указывающей какое пространство сейчас активно (модель = 1 (true), лист = 0 (false)). Также в коде используется значение переменной CVPORT, возвращающей идентификатор текущего ВЭ. Если её значение = 1, то это признак общего ВЭ (т.е. когда экран не разделен никаким образом на несколько экранов).</p>
+<p>Пример ниже содержит общие функции, используемые в примерах далее. Функция Zoom принимает четыре параметра для выполнения масштабирования по заданной границе (точки pMin, pMax), точке центра вида чертежа, а также параметр масштабирования вида чертежа в заданном масштабном значении. Процедура Zoom ожидает, что все значения координат будут предоставлены в координатах WCS (см. <a href="./Topic_3D_ConvertCoords.html">термины</a>). В коде содержится инструкция чтения свойства Database.TileMode (оно же значение системной переменной TILEMODE), указывающей какое пространство сейчас активно (модель = 1 (true), лист = 0 (false)). Также в коде используется значение переменной CVPORT, возвращающей идентификатор текущего ВЭ. Если её значение = 1, то это признак общего ВЭ (т.е. когда экран не разделен никаким образом на несколько экранов).</p>
 </li>
 </ul>
 <pre><code class="language-cs">using Autodesk.AutoCAD.ApplicationServices;
@@ -1562,7 +1564,7 @@ public static void Regen()
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Операции-открытия-сохранения-и-закрытия-чертежей"><a class="header" href="#Операции-открытия-сохранения-и-закрытия-чертежей">Операции открытия, сохранения и закрытия чертежей</a></h1>
 <p>Работа с файлами документов осуществляется через методы классов DocumentCollection, Document, и Database.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Создание-и-открытие-чертежей"><a class="header" href="#Создание-и-открытие-чертежей">Создание и открытие чертежей</a></h1>
-<p>Для создания нового чертежа или открытия существующего используйте методы класса DocumentCollection (возвращается как свойство HostMgd.ApplicationServices.Application.DocumentManager). Метод Add создает новый чертеж из файла шаблона DWT, перегрузки методов Open предназначены для открытия существующего DWG-файла.</p>
+<p>Для создания нового чертежа или открытия существующего используйте методы класса DocumentCollection (возвращается как свойство Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager). Метод Add создает новый чертеж из файла шаблона DWT, перегрузки методов Open предназначены для открытия существующего DWG-файла.</p>
 <h2 id="Создание-нового-чертежа"><a class="header" href="#Создание-нового-чертежа">Создание нового чертежа</a></h2>
 <p>В примере ниже новый чертеж создается и становится активным. Если указанный шаблон в аргументе templateFileName не был найден, то чертеж будет создан на базе шаблона по умолчанию.</p>
 <pre><code class="language-cs">using Autodesk.AutoCAD.ApplicationServices;
@@ -2245,7 +2247,7 @@ public void InitBoundary()
         acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
                                         OpenMode.ForWrite) as BlockTableRecord;
         var point = acDoc.Editor.GetPoint("Укажите точку внутри контура");
-        if (point.Status != HostMgd.EditorInput.PromptStatus.OK) return;
+        if (point.Status != Autodesk.AutoCAD.EditorInput.PromptStatus.OK) return;
         var plines = acDoc.Editor.TraceBoundary(point.Value, false);
         if (plines == null || plines.Count \&lt; 1) return;
         foreach (DBObject createdPline in plines)
@@ -2361,7 +2363,7 @@ palset.Add("WPF-control", hostView);
 <p><strong>Notify</strong>. Объект открывается для информирования в случаях, когда объект закрыт или уже открыт для чтении или записи, но когда не был открыт для данного режима Notify. Этот режим предназначен для использования в тех случаях, когда объект может изменять себя из собственного кода, например при определении пользовательского объекта, который не поддерживается управляемым AutoCAD .NET API;</p>
 </li>
 </ul>
-<p>Следует открывать объект в том режиме, для которого нужен соответствующий доступ. Несмотря на удобство режима Write для чтения и записи, при его использовании затрачивается больше ресурсов на стороне нативного кода. Если вы не уверены, что открываемый объект : это тот, с которым вы хотите работать, откройте его сперва в режиме чтения, а затем переведите объект из режима чтения в режим записи. Дополнительные сведения об изменении способа открытия объекта см. <a href="%5CTopic_CreateAndEditNcObjects_EditOpeningMode.html">в разделе</a>. Обе функции <strong>GetObject</strong> и <strong>Open</strong> возвращают объект (подробнее о каждой см. <a href="%5CTopic_CreateAndEditNcObjects_OpenCloseWithoutTr.html">раздел</a>). При разработке на C# вам необходимо будет дополнительно приводить тип возвращаемого объекта к нужному классу с помощью модификатора <strong>as</strong>.</p>
+<p>Следует открывать объект в том режиме, для которого нужен соответствующий доступ. Несмотря на удобство режима Write для чтения и записи, при его использовании затрачивается больше ресурсов на стороне нативного кода. Если вы не уверены, что открываемый объект : это тот, с которым вы хотите работать, откройте его сперва в режиме чтения, а затем переведите объект из режима чтения в режим записи. Дополнительные сведения об изменении способа открытия объекта см. <a href="./Topic_CreateAndEditAcadObjects_EditOpeningMode.html">в разделе</a>. Обе функции <strong>GetObject</strong> и <strong>Open</strong> возвращают объект (подробнее о каждой см. <a href="./Topic_CreateAndEditAcadObjects_OpenCloseWithoutTr.html">раздел</a>). При разработке на C# вам необходимо будет дополнительно приводить тип возвращаемого объекта к нужному классу с помощью модификатора <strong>as</strong>.</p>
 <p>При работе с Dynamic Runtime Language (DLR) вам нет необходимости беспокоиться, открыт объект дли записи или для чтения. Открытие объекта происходит автоматически и незаметно для пользователя, как и процесс фиксации изменений, внесенных в объект, без использования транзакций. Подробнее см. статью.
 В следующих примерах показано, как получить запись LayerTableRecord для нулевого слоя текущей базы данных. В следующем примере транзакция удаляется вручную после того, как она больше не нужна.</p>
 <pre><code class="language-cs">Document acCurDb = Application.DocumentManager.MdiActiveDocument.Database;
@@ -2479,7 +2481,7 @@ public static void AddNewCircleTransaction()
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Освобождение-памяти-от-объектов"><a class="header" href="#Освобождение-памяти-от-объектов">Освобождение памяти от объектов</a></h1>
 <p>При создании новых объектов в .NET необходимо правильно освобождать их из памяти. При использовании метода <code>Dispose</code> или при выполнении действий над объектов в теле оператора Using, системный сборщик мусора понимает, когда вы хотите освободиться от объекта. Предпочтительнее использовать конструкцию using, поскольку она выполняет все необходимые вызовы системных процедур для закрытия и утилизации объекта, когда он больше не нужен. Необходимо освобождать память от объекта (dispose) во всех приведенных ниже случаях:</p>
 <ul>
-<li>Всегда при работе с объектами Transaction или <a href="%5CTopic_ControlNcEnvironmental_LockUnlockDocs.html">DocumentLock</a>;</li>
+<li>Всегда при работе с объектами Transaction или <a href="./Topic_ControlAcadEnvironmental_LockUnlockDocs.html">DocumentLock</a>;</li>
 <li>Всегда с созданными объектами базы данных чертежа, производными от DBObject, которые добавляются в транзакцию;</li>
 <li>Всегда с созданными объектами базы данных чертежа, производными от DBObject, которые не добавляются в базу данных чертежа;</li>
 <li>Не обязательно с существующими объектами базы данных чертежа, объектами, производными от DBObject, открытыми с помощью Transaction.GetObject;</li>
@@ -3270,10 +3272,11 @@ public static void AddArc()
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Создание-сплайна"><a class="header" href="#Создание-сплайна">Создание сплайна</a></h1>
 <p>Код ниже создает сплайн по Определяющим точкам в пространстве Модели на основе трёх точек (0, 0, 0), (5, 5, 0), (10, 0, 0). Начальный и конечный векторы касательной сплайна задаются (0.5, 0.5, 0.0).</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("AddSpline")]
 public static void AddSpline()
 {
@@ -3367,10 +3370,11 @@ public static void AddPointAndSetPointStyle()
 <p><img src="assets/2026-03-05-13-45-02-image.png" alt="" /></p>
 <p>Первые 2 вершины определяют первое ребро полигона. Третья точка определяет диагональ напротив второй точки. Если четвертая точка = третьей точке, то создается треугольное заполнение. ##  Создание заполнения<br />
 Пример ниже формирует четырёхугольное тело (фигуру типа "галстук-бабочка") по опорным координатам (0, 0, 0), (5, 0, 0), (5, 8, 0), (0, 8, 0). Также создается заполнение в прямоугольнике, ограниченном координатами (10, 0, 0), (15, 0, 0), (10, 8, 0), (15, 8, 0).</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("Add2DSolid")]
 public static void Add2DSolid()
 {
@@ -3653,7 +3657,7 @@ public static void AddHatch()
 <h2 id="Пользовательский-ввод-и-фильтры-выбора"><a class="header" href="#Пользовательский-ввод-и-фильтры-выбора">Пользовательский ввод и фильтры выбора</a></h2>
 <p>Различные типы вводимых данных реализованы через специальные методы класса Editor пространства имён Autodesk.AutoCAD.EditorInput.</p>
 <p>Объект <code>PromptSelectionOptions</code> используется для формулировки запроса, который будет предложен Пользователю при начале операции выбора, а класс <code>SelectionFilter</code> может использоваться для фильтрации набора выбора по различным свойствам объекта.</p>
-<p>Класс <code>PromptSelectionOptions</code> предоставляет метод <code>SetKeywords</code> для указания ключевых слов запроса, а также свойства <code>MessageForAdding</code> и <code>MessageForRemoval</code> для вывода некоего сообщения вместе с операцией запроса. Класс <code>SelectionFilter</code> принимает параметры фильтра в виде массива объектов TypedValue, как описано в разделе <a href="%5CTopic_CreateAndEditNcObjects_ResultBuffer.html">О типе данных ResultBuffer</a>. Каждый объект TypedValue представляет одно условие фильтра. Для выбора может быть указано любое количество условий разных типов (несколько условий для одного TypedValue.Key должно быть записано в единое значение TypedValue.Value).</p>
+<p>Класс <code>PromptSelectionOptions</code> предоставляет метод <code>SetKeywords</code> для указания ключевых слов запроса, а также свойства <code>MessageForAdding</code> и <code>MessageForRemoval</code> для вывода некоего сообщения вместе с операцией запроса. Класс <code>SelectionFilter</code> принимает параметры фильтра в виде массива объектов TypedValue, как описано в разделе <a href="./Topic_CreateAndEditAcadObjects_ResultBuffer.html">О типе данных ResultBuffer</a>. Каждый объект TypedValue представляет одно условие фильтра. Для выбора может быть указано любое количество условий разных типов (несколько условий для одного TypedValue.Key должно быть записано в единое значение TypedValue.Value).</p>
 <p>Когда приложение готово запросить набор выбора, вызывается метод <code>GetSelection</code> объекта <code>Editor</code>. Метод <code>Editor.GetSelection</code> существует в нескольких перегрузках. Для простой выборки без фильтрации с использованием стандартного запроса AutoCAD используется перегрузка без параметров. В случаях, когда требуется предоставить пользовательские сообщения запроса, включая ключевые слова, используется перегрузка, которая принимает объект <code>PromptSelectionOptions</code>. Для указания фильтра используется перегрузка, которая принимает также и объект <code>SelectionFilter</code>.</p>
 <p>Существуют и другие методы пользовательского ввода: метод <code>Editor.SelectImplied</code> обеспечивает доступ к набору выбора или набору выбора, который Пользователь сформировал до вызова команды. Метод <code>Editor.SelectPrevious</code> возвращает объекты, выбранные в предыдущем наборе выбора. Такие методы, как <code>SelectCrossingWindow</code> и <code>SelectFence</code>, позволяют выбирать объекты, видимые в текущем окне, пересекаемые заданным многоугольником и т.д.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Получение-доступа-к-выбранным-объектам-pickfirst"><a class="header" href="#Получение-доступа-к-выбранным-объектам-pickfirst">Получение доступа к выбранным объектам (PickFirst)</a></h1>
@@ -3940,10 +3944,11 @@ public static void SelectionKeywordInput()
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Объединение-нескольких-наборов-выбора"><a class="header" href="#Объединение-нескольких-наборов-выбора">Объединение нескольких наборов выбора</a></h1>
 <p>Вы можете объединить несколько наборов выбора, создав объект <code>ObjectIdCollection</code>, а затем добавив идентификаторы объектов из нескольких наборов выбора в него. Помимо добавления идентификаторов объектов в объект <code>ObjectIdCollection</code>, вы можете удалять идентификаторы объектов. После добавления всех идентификаторов объектов в объект <code>ObjectIdCollection</code> вы можете пройтись по каждому из ObjectId и получить объекты при необходимости.</p>
 <p>Код ниже запрашивает у Пользователя 2 разные группы объектов, а потом объединяет объекты групп в единый набор выбора ObjectIdCollection.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using HostMgd.EditorInput;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+
 [CommandMethod("MergeSelectionSets")]
 public static void MergeSelectionSets()
 {
@@ -4156,10 +4161,11 @@ public static void FilterRelational()
 acTypValAr[1] = new TypedValue((int)DxfCode.Start, "TEXT, MTEXT");
 </code></pre>
 <p>Можно записать это же условие с помощью операторов:</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using HostMgd.EditorInput;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+
 [CommandMethod("FilterForText")]
 public static void FilterForText()
 {
@@ -4608,7 +4614,7 @@ public static void MultipleCopy()
 <li>ObjectIdCollection : Перечень идентификаторов копируемых объектов;</li>
 <li>ObjectId : Идентификатор нового родительского объекта, куда объекты будут копироваться;</li>
 <li>IdMapping : Сопоставление текущих идентификаторов объектов с их новыми идентификаторами (заполнятся после работы метода WblockCloneObjects);</li>
-<li>DuplicateRecordCloning : Задаёт правило обработки дублирующихся объектов (в виде enum Teigha.DatabaseServices.DuplicateRecordCloning);</li>
+<li>DuplicateRecordCloning : Задаёт правило обработки дублирующихся объектов (в виде enum Autodesk.AutoCAD.DatabaseServices.DuplicateRecordCloning);</li>
 <li>deferTranslation : Флаг, отложить ли заполнение IdMapping идентификаторами для новых объектов (по умолчанию false - т.е. заполнить сразу);
 Код ниже содержит операцию создания двух новых окружностей, затем с помощью метода WblockCloneObjects они копируются в новый чертёж, который создается автоматически на базе стандартного шаблона</li>
 </ul>
@@ -4910,10 +4916,11 @@ public static void MoveObject()
 <p><img src="assets/2026-03-05-16-42-19-image.png" alt="" /></p>
 <h2 id="Поворот-полилинии-вокруг-базовой-точки"><a class="header" href="#Поворот-полилинии-вокруг-базовой-точки">Поворот полилинии вокруг базовой точки</a></h2>
 <p>Код ниже поворачивает плоскую полилинию на угол 45 градусов вокруг точки (4, 4.25, 0).</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("RotateObject")]
 public static void RotateObject()
 {
@@ -5663,7 +5670,7 @@ public static void EditSpline()
 <p>Вы можете добавляет, переопределять, удалять контуры у штриховки. Ассоциативные штриховки обновятся при любых изменениях, внесенных в из границы; неассоциативные штриховки не обновятся.
 Чтобы отредактировать границу штриховки или получить свойства о них, используйте следующие методы и свойства:</p>
 <ul>
-<li>AppendLoop - добавляет новый контур к определению штриховки. Тип добавляемой петли определяется первым аргументом метода AppendLoop (константами, определенными перечислением Teigha.DatabaseServices.HatchLoopTypes);</li>
+<li>AppendLoop - добавляет новый контур к определению штриховки. Тип добавляемой петли определяется первым аргументом метода AppendLoop (константами, определенными перечислением Autodesk.AutoCAD.DatabaseServices.HatchLoopTypes);</li>
 <li>GetLoopAt - возвращает контур по заданному индексу;</li>
 <li>InsertLoopAt - переопределяет контур по заданному индексу;</li>
 <li>RemoveLoopAt - удаляет контур по заданному индексу;</li>
@@ -5845,9 +5852,10 @@ public static void EditHatchPatternScale()
 <p>Все графические объекты располагаются на некотором слое. Каждый из слоев имеет ряд общих характеристик: цвет, тип линии, вес линии и пр. Слои принято использовать для отрисовки разных по типу\смыслу объектов. Все слои и типы линий хранятся в различных таблицах символов. Слои хранятся в таблице LayerTable, а типы линий — в таблице LinetypeTable</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Перебор-слоев"><a class="header" href="#Перебор-слоев">Перебор слоев</a></h1>
 <p>Получить информацию о слоях документа вы можете путем итеративного перебора таблицы слоев (LayerTable). Пример ниже собирает информацию об именах слоев и выводит её в диалоговое окно.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+
 [CommandMethod("DisplayLayerNames")]
 public static void DisplayLayerNames()
 {
@@ -5876,7 +5884,7 @@ public static void DisplayLayerNames()
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Создание-слоя"><a class="header" href="#Создание-слоя">Создание слоя</a></h1>
-<p>Вы можете создавать новые слои и назначать им цвет, тип линии и прочие свойства. Каждый из слоев отображается в диалоговое окне "Слои". Имя слоя подчиняется правилам для неграфических элементов (см. <a href="%5CTopic_CreateAndEditNcObjects_EditNamedAnd2D_Named_Rename.html">статью</a>). Пример ниже содержит код, создающий новый слой зеленого цвета и задающий его для окружности</p>
+<p>Вы можете создавать новые слои и назначать им цвет, тип линии и прочие свойства. Каждый из слоев отображается в диалоговое окне "Слои". Имя слоя подчиняется правилам для неграфических элементов (см. <a href="./Topic_CreateAndEditAcadObjects_EditNamedAnd2D_Named_Rename.html">статью</a>). Пример ниже содержит код, создающий новый слой зеленого цвета и задающий его для окружности</p>
 <pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -5990,10 +5998,11 @@ Application.SetSystemVariable("CLAYER", "Center");
 <p>Процедура РЕГЕН распространяется на объекты на отключенных слоях, но они не отображаются пользователю и не выводятся на печать. Отключение слоя позволяет избежать принудительной перерисовки чертежа при разморозке слоя.</p>
 <p>При включении слоя, AutoCAD запускает отрисовку объектов на данном слое. Для управления видимостью слоя (описываемого классом LayerTableRecord) используйте свойство IsOff. Если ввести значение true, то слой будет выключен; если false - то включен.</p>
 <p>Пример ниже содержит создание нового слоя "ABC" и его отключение, затем создание окружности на данном слое, которую не будет видно, пока слой не будет вновь включен.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("TurnLayerOff")]
 public static void TurnLayerOff()
 {
@@ -6326,9 +6335,10 @@ public static void SetLayerLinetype()
 <p>Слой возможно удалить, если он не задан в качестве текущего, не содержит объектов, не является системным ("0", "DEFPOINTS"), не пришёл из внешних ссылок, не является одним из слоёв, где лежат определения блоков.</p>
 <p>Чтобы удалить слой, используйте метод <code>Erase</code>. Рекомендуется использовать функцию <code>Purge</code>, чтобы убедиться, что слой можно удалить, а также проверить, что это не системный или текущий слой.</p>
 <p>В примере ниже удаляется слой "ABC", если он имеется в чертеже. Транзакция закрывается в теле функции, поскольку ожидается удаление только одного объекта.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+
 [CommandMethod("EraseLayer")]
 public static void EraseLayer()
 {
@@ -6361,7 +6371,7 @@ public static void EraseLayer()
                     // Save the changes and dispose of the transaction
                     acTrans.Commit();
                 }
-                catch (Teigha.Runtime.Exception Ex)
+                catch (Autodesk.AutoCAD.Runtime.Exception Ex)
                 {
                     // Layer could not be deleted
                     Application.ShowAlertDialog("Error:\\n" + Ex.Message);
@@ -6476,11 +6486,11 @@ public static void SetColorCurrent()
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-с-типами-линий"><a class="header" href="#Работа-с-типами-линий">Работа с типами линий</a></h1>
 <p>Тип линии — это повторяющийся узор из набора штрихов, точек и пробелов. Чтобы использовать тип линии, сначала необходимо его загрузить в чертеж. Определение типа линии хранится в специальном файле с расширением LIN. Чтобы загрузить тип линии в чертеж, используйте метод <code>LoadLineTypeFile</code> объекта <code>Database</code>.</p>
-<p>Следует помнить также и о масштабе типа линии, он задается в отдельном свойстве (<code>LinetypeScale</code> у графических объектов и Celtscale в свойствах БД чертежа), подробнее см. статью <a href="%5CTopic_CreateAndEditNcObjects_LCL_Linetypes_Edits.html">Редактирование типа линии</a>, раздел "Масштаб типа линии"</p>
+<p>Следует помнить также и о масштабе типа линии, он задается в отдельном свойстве (<code>LinetypeScale</code> у графических объектов и Celtscale в свойствах БД чертежа), подробнее см. статью <a href="./Topic_CreateAndEditAcadObjects_LCL_Linetypes_Edits.html">Редактирование типа линии</a>, раздел "Масштаб типа линии"</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Загрузка-и-установка-активного-типа-линии"><a class="header" href="#Загрузка-и-установка-активного-типа-линии">Загрузка и установка активного типа линии</a></h1>
 <p>Чтобы вновь создаваемые объекты имели заданный тип линии, его необходимо задать в качестве значения по умолчанию. Существует два различных способа установки типа линии к объекту: напрямую (перезаписать тип линии слоя) или унаследованный от слоя (объект наследует тип линии слоя, на котором он находится, путем установки свойства Linetype или LinetypeId, для типа линии ByLayer).</p>
 <p><strong>Примечание</strong>: типы линий из внешних ссылок не могут использоваться в данном чертеже.</p>
-<p>В каждом чертеже обязательно существует как минимум три типа линий: BYBLOCK, BYLAYER и CONTINUOUS. Доступ к каждому из этих типов линий можно получить из таблицы типов линий LinetypeTable или с помощью статических методов вспомогательного SymbolUtilityServices из пространства имён Teigha.DatabaseServices. Следующие методы позволяют получить идентификатор объекта для этих типов линий по умолчанию:</p>
+<p>В каждом чертеже обязательно существует как минимум три типа линий: BYBLOCK, BYLAYER и CONTINUOUS. Доступ к каждому из этих типов линий можно получить из таблицы типов линий LinetypeTable или с помощью статических методов вспомогательного SymbolUtilityServices из пространства имён Autodesk.AutoCAD.DatabaseServices. Следующие методы позволяют получить идентификатор объекта для этих типов линий по умолчанию:</p>
 <ul>
 <li>GetLinetypeByBlockId — возвращает идентификатор объекта для типа линии BYBLOCK;</li>
 <li>GetLinetypeByLayerId — возвращает идентификатор объекта для типа линии BYLAYER;</li>
@@ -7316,7 +7326,7 @@ public static void BackwardsText()
 <p>Текстовые объекты чертежа имеет связанный с ними стиль текста: шрифт, размер, угол, ориентация и другие характеристики. Вы можете использовать стиль по умолчанию, установить иной активный стиль, создать или отредактировать имеющийся, удалить его.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Создание-и-редактирование-стилей"><a class="header" href="#Создание-и-редактирование-стилей">Создание и редактирование стилей</a></h1>
 <p>Чтобы создать новый текстовый стиль, создайте новый экземпляр класса TextStyleTableRecord. Присвойте новому стилю текста имя с помощью свойства Name, задайте иные требуемые свойства. Затем откройте объект TextStyleTable для записи и используйте метод Add для добавления нового стиля текста.</p>
-<p>Имена стилей, как и слои, а также иные служебные неграфические объекты подчиняются единым правилам (см. <a href="%5CTopic_CreateAndEditNcObjects_EditNamedAnd2D_Named_Rename.html">статью</a>). Вы можете изменить существующий стиль, изменив свойства объекта <code>TextStyleTableRecord</code>, полученного для записи. Если вы хотите работать с активным стилем текста, получите его <code>TextStyleTableRecord</code>, воспользовавшись идентификатором (ObjectId) активного стиля по свойству TextStyle объекта Database.</p>
+<p>Имена стилей, как и слои, а также иные служебные неграфические объекты подчиняются единым правилам (см. <a href="./Topic_CreateAndEditAcadObjects_EditNamedAnd2D_Named_Rename.html">статью</a>). Вы можете изменить существующий стиль, изменив свойства объекта <code>TextStyleTableRecord</code>, полученного для записи. Если вы хотите работать с активным стилем текста, получите его <code>TextStyleTableRecord</code>, воспользовавшись идентификатором (ObjectId) активного стиля по свойству TextStyle объекта Database.</p>
 <p>Некоторые из свойств текстового стиля, которые можно редактировать, перечислены ниже:</p>
 <ul>
 <li>BigFontFileName : задает имя файла с определением шрифта для заглавных букв для не0ASCII символов;</li>
@@ -7350,12 +7360,12 @@ public static void UpdateTextFont()
         acTextStyleTblRec = acTrans.GetObject(acCurDb.Textstyle,
                                               OpenMode.ForWrite) as TextStyleTableRecord;
         // Get the current font settings
-        Teigha.GraphicsInterface.FontDescriptor acFont;
+        Autodesk.AutoCAD.GraphicsInterface.FontDescriptor acFont;
         acFont = acTextStyleTblRec.Font;
         // Update the text style's typeface with "PlayBill"
-        Teigha.GraphicsInterface.FontDescriptor acNewFont;
+        Autodesk.AutoCAD.GraphicsInterface.FontDescriptor acNewFont;
         acNewFont = new
-          Teigha.GraphicsInterface.FontDescriptor("Calibri",
+          Autodesk.AutoCAD.GraphicsInterface.FontDescriptor("Calibri",
                                                             acFont.Bold,
                                                             acFont.Italic,
                                                             acFont.CharacterSet,
@@ -7590,10 +7600,11 @@ public static void CreateRadialDimension()
 <li>Стиль размера (свойство DimensionStyleName или DimensionStyle);</li>
 </ul>
 <p>В примере ниже создается угловой размер в пространстве модели</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("CreateAngularDimension")]
 public static void CreateAngularDimension()
 {
@@ -7858,7 +7869,7 @@ public static void OverrideDimensionText()
 <p>Новые размеры наследуют настройки активного стиля размеров; в AutoCAD активным стилем считается "Standard". Для задания активного стиля (его идентификатора ObjectId) используйте свойство Dimstyle текущей базы данных.</p>
 <p>Для внесения изменений в размерный стиль его сперва необходимо его получить, а после редактирования -- сохранить. Новый размерный стиль может быть основан на одном из имеющихся стилей.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Создание-редактирование-и-копирование-размерных-стилей"><a class="header" href="#Создание-редактирование-и-копирование-размерных-стилей">Создание, редактирование и копирование размерных стилей</a></h1>
-<p>Для создания нового размерного стиля создайте новый экземпляр классса DimStyleTableRecord и добавьте его в коллекцию размерных стилей DimStyleTable с помощью метода Add. Перед добавлением стиля размеров в таблицу стилей необходимо задать ему имя с помощью свойства Name, требования к имени стандартные (см. <a href="%5CTopic_CreateAndEditNcObjects_EditNamedAnd2D_Named_Rename.html">статью</a>).</p>
+<p>Для создания нового размерного стиля создайте новый экземпляр классса DimStyleTableRecord и добавьте его в коллекцию размерных стилей DimStyleTable с помощью метода Add. Перед добавлением стиля размеров в таблицу стилей необходимо задать ему имя с помощью свойства Name, требования к имени стандартные (см. <a href="./Topic_CreateAndEditAcadObjects_EditNamedAnd2D_Named_Rename.html">статью</a>).</p>
 <p>Вы также можете скопировать существующий или переопределённый стиль. Используйте метод CopyFrom для копирования в текущий стиль настроек из целевого размерного стиля (он указывается в аргументе метода). Исходным объектом может быть другой объект DimStyleTableRecord, объект Dimension (иной размер), Tolerance (допуск) или Leader (выноска), или даже объект Database (в этом случае задаются активные настройки размеров, заданные через системные переменные).</p>
 <h2 id="Копирование-размерных-стилей-с-последующим-их-переопределением"><a class="header" href="#Копирование-размерных-стилей-с-последующим-их-переопределением">Копирование размерных стилей с последующим их переопределением</a></h2>
 <p>В примере ниже создаются три новых размерных стиля, и в каждый новый стиль размеров копируются настройки из трех источников: текущей базы данных, заданного размерного стиля и заданного объекта размера соответственно.</p>
@@ -8058,11 +8069,12 @@ public static void CopyDimStyles()
 <p><strong>Примечание</strong>: в nanoCAD .NET API свойства Dimtoh, TextPrecision не реализованы;</p>
 <h2 id="Добавление-суффикса-для-линейного-размера"><a class="header" href="#Добавление-суффикса-для-линейного-размера">Добавление суффикса для линейного размера</a></h2>
 <p>В примере ниже редактируется формат отображения линейных размеров, добавляется суффикс, равный значению, которое пользователь введёт из строки (обработка с помощью Editor.GetString)</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
-using HostMgd.EditorInput;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.EditorInput;
+
 [CommandMethod("AddDimensionTextSuffix")]
 public static void AddDimensionTextSuffix()
 {
@@ -8232,7 +8244,7 @@ public static void AddLeaderAnnotation()
 <p>Используйте метод <code>EvaluateLeader</code> для обновления связи выноски с связанной с ней аннотацией.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Редактирование-выносок"><a class="header" href="#Редактирование-выносок">Редактирование выносок</a></h1>
 <p>Любые изменения анотации, влияющие на её положение, затрагивают положение конечной точки связанного с ней выноски. Кроме того, вращение аннотации приводит к вращению линии-полки выноски (если таковая имеется).</p>
-<p>При масштабировании выноски аннотация останется в том же положении относительно конечной точки выноски, и её масштабирование не произойдет. Помимо масштабирования, вы также можете перемещать, зеркально отображать и вращать выноску. Используйте метод <a href="%5CTopic_CreateAndEditNcObjects_EditNamedAnd2D_Transform.html">TransformBy</a> для редактирования положения выноски. Связанную аннотацию редактируйте, используя её свойства и методы для соответствующего класса.</p>
+<p>При масштабировании выноски аннотация останется в том же положении относительно конечной точки выноски, и её масштабирование не произойдет. Помимо масштабирования, вы также можете перемещать, зеркально отображать и вращать выноску. Используйте метод <a href="./Topic_CreateAndEditAcadObjects_EditNamedAnd2D_Transform.html">TransformBy</a> для редактирования положения выноски. Связанную аннотацию редактируйте, используя её свойства и методы для соответствующего класса.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Использование-допусков"><a class="header" href="#Использование-допусков">Использование допусков</a></h1>
 <p>Допуски - это вспомогательные анотативные объекты в рамке, которые отображают отклонения различных геометрических параметров объектов, как правило допуск связаны с конкретным размером.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Создание-допусков"><a class="header" href="#Создание-допусков">Создание допусков</a></h1>
@@ -8308,10 +8320,11 @@ public static void CreateGeometricTolerance()
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Использование-пространственных-координат"><a class="header" href="#Использование-пространственных-координат">Использование пространственных координат</a></h1>
 <p>Ввод трехмерных координат мировой системы координат (WCS) аналогичен вводу двумерных координат WCS. Помимо значений X и Y, вы также указываете значение Z. Двумерные координаты представляются структурой Point2d, а для представления трехмерных координат используется структура Point3d. Большинство свойств и методов объектов в AutoCAD .NET API используют трехмерные координаты.</p>
 <p>В примере ниже создаются 2 трехмерные полилинии, первая полилиния -- классическая плоская полилиния на фиксированной отметке (описывается классом Polyline), вторая -- трехмерная полилиния (описывается классом Polyline3d). После создания объектов показывается механизм чтения координат созданных полилиний, информация о количество точек выводится в диалоговые окна.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("Polyline_2D_3D")]
 public static void Polyline_2D_3D()
 {
@@ -8392,7 +8405,7 @@ public static void Polyline_2D_3D()
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Задание-пользовательских-систем-координат"><a class="header" href="#Задание-пользовательских-систем-координат">Задание пользовательских систем координат</a></h1>
 <p>Вы можете определить пользовательскую систему координат (ПСК), чтобы переопределить положение начальной точки (0, 0, 0) и ориентацию плоскости XY и оси Z. Вы можете разместить ПСК в любом месте трехмерного пространства чертежа, а также создать их столько, сколько вам нужно. Ввод координат и их отображение будут относительными по отношению к текущей ПСК.</p>
 <p>Чтобы включить показ начала координат и ориентацию ПСК, вы можете отобразить значок ПСК в её начальной точке, используя свойство <code>IconAtOrigin</code> для текущего видового экрана Viewport или через системную переменную <code>UCSICON</code>. Если значок ПСК включен (свойство <code>IconVisible</code>) и не отображается в начале координат, он отображается в координатах МСК (мировой системы координат), определенных системной переменной UCSORG.</p>
-<p>Вы можете создать новую пользовательскую систему координат, используя метод <code>Add</code> коллекции <code>UCSTable</code>. Этот метод принимает на вход четыре значения: координаты начала координат, координаты по осям X и Y (задающие векторы направления), а также имя пользовательской системы координат. Имя подчиняется единым правилам для неграфических элементов (см. <a href="%5CTopic_CreateAndEditNcObjects_EditNamedAnd2D_Named_Rename.html">статью</a>).</p>
+<p>Вы можете создать новую пользовательскую систему координат, используя метод <code>Add</code> коллекции <code>UCSTable</code>. Этот метод принимает на вход четыре значения: координаты начала координат, координаты по осям X и Y (задающие векторы направления), а также имя пользовательской системы координат. Имя подчиняется единым правилам для неграфических элементов (см. <a href="./Topic_CreateAndEditNcObjects_EditNamedAnd2D_Named_Rename.html">статью</a>).</p>
 <p>Чтобы сделать пользовательскую систему координат активной, используйте свойство <code>ActiveUCS</code> у текущего документа AutoCAD (описывается классом <code>Document</code>). Если в определение ПСК были внесены изменения, то необходимо повторить процедуру задания свойства <code>ActiveUCS</code>. В примере ниже создается новая ПСК, делается активной с выводом модального информационного окна, затем у Пользователя запрашивается точка в пространстве чертежа и другом модальном окне выводятся её координаты в значениях текущей ПСК и МСК (мировой системы координат)</p>
 <pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
@@ -8872,10 +8885,11 @@ public static void CreateWedge()
 <p>С помощью метода <code>TransformBy</code> или, конкретнее, метода <code>Rotation</code> матрицы трансформации можно применять к двумерным объектам поворот вокруг заданной точки. Направление вращения для двумерных объектов — вокруг оси Z. Для трехмерных объектов ось вращения не ограничивается осью Z, в качестве оси вращения может быть указан произвольный трехмерный вектор.</p>
 <p><img src="assets/2026-03-05-21-14-27-image.png" alt="" /></p>
 <p>В примере ниже создается солид в виде параллепипеда, и далее он вращается на 30 градусов вокруг вектора, заданного двумя точками.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("Rotate_3DBox")]
 public static void Rotate_3DBox()
 {
@@ -9077,10 +9091,11 @@ public static void CreateRectangular3DArray()
 <p>С помощью метода TransformBy объекта и метода Mirroring матрицы трансформации можно зеркально отображать объекты вдоль заданной плоскости, определяемой тремя точками.
 <img src="assets/2026-03-05-21-15-51-image.png" alt="" /></p>
 <p>В примере ниже создается солид в виде параллепипеда, затем создается его зеркальная копия, для контраста, красного цвета.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("MirrorABox3D")]
 public static void MirrorABox3D()
 {
@@ -9271,10 +9286,11 @@ public static void SliceABox()
 <p>Чтобы создать новый блок, создайте экземпляр класса <code>BlockTableRecord</code> и используйте метод <code>Add</code> для добавления его к таблице <code>BlockTable</code>. После создания BlockTableRecord используйте свойство Name, чтобы присвоить имя (в дальнейшем при вставке в модель Вхождений блоков у них будет данное имя).</p>
 <p>Затем, после создания <code>BlockTableRecord</code>, добавьте к блоку один или несколько объектов с помощью метода <code>AppendEntity</code>. После этого вы сможете создать Вхождение блока (<code>BlockReference</code>), разместив его в пространстве модели, или на любом из листов (в соответствующем листе <code>BlockTableRecord</code>). Вы также можете создать блок, используя метод <code>WBlock</code> для сохранения набора объектов в отдельный файл чертежа, который затем вставить в данный в виде внешней ссылки или определения блока.</p>
 <p>В примере ниже создается новое определение блока с именем "CircleBlock", если оно ещё не существует, в определение блока добавляется окружность.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("CreatingABlock")]
 public void CreatingABlock()
 {
@@ -9483,10 +9499,11 @@ public void ExplodingABlock()
 <p>Используйте любой из методов и свойств класса <code>BlockTableRecord</code> для переопределения блока. При переопределении блока все ссылки на этот блок (Вхождения блока) на чертеже немедленно обновятся в соответствии с новым определением.</p>
 <p>Переопределение влияет на все существовавшие ранние объекты и будет влиять на новые вхождения блоков. Постоянные атрибуты (constant) полностью заменяются новыми постоянными атрибутами. Переменные атрибуты остаются неизменными, даже если у нового определения блока отсутствуют атрибуты.</p>
 <p>В примере ниже, если в чертеже есть определение блока с именем "CircleBlock", то для всех объектов-окружностей, составляющих блок, увеличивается радиус в 2 раза, после чего с помощью служебного метода RecordGraphicsModified обновляются все вхождения блока, чтобы они изменились вслед за редактированием определения.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("RedefiningABlock")]
 public void RedefiningABlock()
 {
@@ -10489,7 +10506,7 @@ public void ClippingExternalReference()
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-с-xdata"><a class="header" href="#Работа-с-xdata">Работа с XData</a></h1>
 <p>Возможно использовать т.н. "xdata" для сохранения различной информации в чертеже. Для того, чтобы сохранить некоторую информацию, в чертеже должно быть зерегистрировано приложение (иметься запись RegAppTableRecord).</p>
-<p>В примере ниже получается набор объектов из пользовательского выбора, и в свойство XData каждого из объектов добавляется ResultBuffer из пары значений -- имени приложения и некоторой текстовой строки (или иного типа данных для ResultBuffer, см. <a href="%5CTopic_CreateAndEditNcObjects_ResultBuffer.html">соответствующую статью</a>.</p>
+<p>В примере ниже получается набор объектов из пользовательского выбора, и в свойство XData каждого из объектов добавляется ResultBuffer из пары значений -- имени приложения и некоторой текстовой строки (или иного типа данных для ResultBuffer, см. <a href="./Topic_CreateAndEditAcadObjects_ResultBuffer.html">соответствующую статью</a>.</p>
 <pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -12036,7 +12053,7 @@ public void ErrorTryCatchFinally()
             acDb.ReadDwgFile("c:\\Drawing123.dwg",
                              System.IO.FileShare.None, false, "");
         }
-        catch (Teigha.Runtime.Exception Ex)
+        catch (Autodesk.AutoCAD.Runtime.Exception Ex)
         {
             Application.ShowAlertDialog("The following exception was caught:\\n" +
                                         Ex.Message);

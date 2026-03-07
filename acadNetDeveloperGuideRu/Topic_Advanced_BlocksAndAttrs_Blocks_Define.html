@@ -156,10 +156,11 @@
 <p>Чтобы создать новый блок, создайте экземпляр класса <code>BlockTableRecord</code> и используйте метод <code>Add</code> для добавления его к таблице <code>BlockTable</code>. После создания BlockTableRecord используйте свойство Name, чтобы присвоить имя (в дальнейшем при вставке в модель Вхождений блоков у них будет данное имя).</p>
 <p>Затем, после создания <code>BlockTableRecord</code>, добавьте к блоку один или несколько объектов с помощью метода <code>AppendEntity</code>. После этого вы сможете создать Вхождение блока (<code>BlockReference</code>), разместив его в пространстве модели, или на любом из листов (в соответствующем листе <code>BlockTableRecord</code>). Вы также можете создать блок, используя метод <code>WBlock</code> для сохранения набора объектов в отдельный файл чертежа, который затем вставить в данный в виде внешней ссылки или определения блока.</p>
 <p>В примере ниже создается новое определение блока с именем "CircleBlock", если оно ещё не существует, в определение блока добавляется окружность.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("CreatingABlock")]
 public void CreatingABlock()
 {

@@ -208,11 +208,12 @@
 <p><strong>Примечание</strong>: в nanoCAD .NET API свойства Dimtoh, TextPrecision не реализованы;</p>
 <h2 id="Добавление-суффикса-для-линейного-размера"><a class="header" href="#Добавление-суффикса-для-линейного-размера">Добавление суффикса для линейного размера</a></h2>
 <p>В примере ниже редактируется формат отображения линейных размеров, добавляется суффикс, равный значению, которое пользователь введёт из строки (обработка с помощью Editor.GetString)</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
-using HostMgd.EditorInput;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.EditorInput;
+
 [CommandMethod("AddDimensionTextSuffix")]
 public static void AddDimensionTextSuffix()
 {

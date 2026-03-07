@@ -156,10 +156,11 @@
 <p>Процедура РЕГЕН распространяется на объекты на отключенных слоях, но они не отображаются пользователю и не выводятся на печать. Отключение слоя позволяет избежать принудительной перерисовки чертежа при разморозке слоя.</p>
 <p>При включении слоя, AutoCAD запускает отрисовку объектов на данном слое. Для управления видимостью слоя (описываемого классом LayerTableRecord) используйте свойство IsOff. Если ввести значение true, то слой будет выключен; если false - то включен.</p>
 <p>Пример ниже содержит создание нового слоя "ABC" и его отключение, затем создание окружности на данном слое, которую не будет видно, пока слой не будет вновь включен.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("TurnLayerOff")]
 public static void TurnLayerOff()
 {

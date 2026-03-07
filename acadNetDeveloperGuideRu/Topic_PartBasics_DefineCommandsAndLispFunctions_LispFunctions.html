@@ -164,7 +164,7 @@ public static void DisplayFullName(ResultBuffer rbArgs)
 <pre><code class="language-cs">(displayfullname "First" "Last")
 </code></pre>
 <h2 id="Получение-значений-переданных-в-lisp-функцию"><a class="header" href="#Получение-значений-переданных-в-lisp-функцию">Получение значений, переданных в LISP-функцию</a></h2>
-<p>Используйте цикл foreach для перебора значений, возвращаемых в ResultBuffer функцией AutoLISP. <a href="/Topic_CreateAndEditNcObjects_ResultBuffer.html">ResultBuffer</a> - это коллекция объектов TypedValue. Свойство TypeCode объекта TypedValue можно использовать для определения типа значения для каждого значения, переданного в функцию AutoLISP. Свойство Value используется для возврата значения объекта TypedValue. Поддерживаются следующие типы данных:</p>
+<p>Используйте цикл foreach для перебора значений, возвращаемых в ResultBuffer функцией AutoLISP. <a href="./Topic_CreateAndEditAcadObjects_ResultBuffer.html">ResultBuffer</a> - это коллекция объектов TypedValue. Свойство TypeCode объекта TypedValue можно использовать для определения типа значения для каждого значения, переданного в функцию AutoLISP. Свойство Value используется для возврата значения объекта TypedValue. Поддерживаются следующие типы данных:</p>
 <ul>
 <li>
 <p>Boolean или bool</p>
@@ -217,7 +217,7 @@ public class Loader
             int nCnt = 0;
             foreach (TypedValue rb in rbArgs)
             {
-                if (rb.TypeCode == (int)HostMgd.Runtime.LispDataType.Text)
+                if (rb.TypeCode == (int)Autodesk.AutoCAD.Runtime.LispDataType.Text)
                 {
                     switch (nCnt)
                     {

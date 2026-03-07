@@ -155,10 +155,11 @@
                         <h1 id="Использование-пространственных-координат"><a class="header" href="#Использование-пространственных-координат">Использование пространственных координат</a></h1>
 <p>Ввод трехмерных координат мировой системы координат (WCS) аналогичен вводу двумерных координат WCS. Помимо значений X и Y, вы также указываете значение Z. Двумерные координаты представляются структурой Point2d, а для представления трехмерных координат используется структура Point3d. Большинство свойств и методов объектов в AutoCAD .NET API используют трехмерные координаты.</p>
 <p>В примере ниже создаются 2 трехмерные полилинии, первая полилиния -- классическая плоская полилиния на фиксированной отметке (описывается классом Polyline), вторая -- трехмерная полилиния (описывается классом Polyline3d). После создания объектов показывается механизм чтения координат созданных полилиний, информация о количество точек выводится в диалоговые окна.</p>
-<pre><code class="language-cs">using Teigha.Runtime;
-using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
+<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
+
 [CommandMethod("Polyline_2D_3D")]
 public static void Polyline_2D_3D()
 {
