@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Получение контура - Руководство разработчика AutoCAD .NET API</title>
+        <title>Запрос нескольких объектов - Руководство разработчика AutoCAD .NET API</title>
 
 
         <!-- Custom HTML head -->
@@ -152,42 +152,43 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="Получение-контура"><a class="header" href="#Получение-контура">Получение контура</a></h1>
-<p>Отдельного внимания заслуживает метод <code>TraceBoundary</code> класса Editor, позволяющий получить полилинию, внутри некоторого контура образованного одним или несколькими объектами. Метод возвращает набор полилиний в виде DBObjectCollection, объекты которых необходимо самостоятельно добавить в модель. Пример вызова данного метода приведен в коде ниже</p>
-<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+                        <h1 id="Запрос-нескольких-объектов"><a class="header" href="#Запрос-нескольких-объектов">Запрос нескольких объектов</a></h1>
+<p>Выбор нескольких объектов осуществляется с помощью метода <code>Editor.GetSelection</code> с перегрузкой для <code>SelectionFilter</code>.</p>
+<p><code>SelectionFilter</code> задается с помощью массива <code>TypedValue</code>, как и <code>ResultBuffer</code>. Если необходимо выбрать несколько типов, то их надо задавать либо в 1 строку для DxfCode.Start с перечислением запятыми, либо с помощью <a href="./Topic_CreateAndEditAcadObjects_SelectSet_Removing_Operators.html">логических операторов</a>. Выбор для нескольких условий см. в <a href="./Topic_CreateAndEditAcadObjects_SelectSet_Removing_UsingSelFilters.html">статье про SelectionFilter</a>.</p>
+<p>Для быстрого перехода от типа объекта (<code>typeof(Polyline)</code>) к соответствующему ему <code>DxfName</code> для задания в фильтре <code>TypedValue</code>) можно воспользоваться следующим приведением:</p>
+<pre><code class="language-csharp">Type t;
+string dxfName = Autodesk.AutoCAD.Runtime.RXObject.GetClass(t).DxfName;
+</code></pre>
+<p>В примере ниже осуществляется выбор нескольких полилиний и окружностей с выводом в командную строку количества отфильтрованных объектов.</p>
+<pre><code class="language-csharp">using System.Linq;
+using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
 
-[CommandMethod("InitBoundary")]
-public void InitBoundary()
+[CommandMethod("SelectPolylines")]
+public void SelectPolylines()
 {
-    // Get the current document and database
-    Document acDoc = Application.DocumentManager.MdiActiveDocument;
-    Database acCurDb = acDoc.Database;
-    // Start a transaction
-    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    Document doc = Application.DocumentManager.MdiActiveDocument;
+    Type[] typesToSelect = new Type[]
     {
-        // Open the Block table for read
-        BlockTable acBlkTbl;
-        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
-                                        OpenMode.ForRead) as BlockTable;
-        // Open the Block table record Model space for write
-        BlockTableRecord acBlkTblRec;
-        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
-                                        OpenMode.ForWrite) as BlockTableRecord;
-        var point = acDoc.Editor.GetPoint("Укажите точку внутри контура");
-        if (point.Status != Autodesk.AutoCAD.EditorInput.PromptStatus.OK) return;
-        var plines = acDoc.Editor.TraceBoundary(point.Value, false);
-        if (plines == null || plines.Count \&lt; 1) return;
-        foreach (DBObject createdPline in plines)
-        {
-            Polyline? boundaryAsPline = createdPline as Polyline;
-            if (boundaryAsPline == null) continue;
-            acBlkTblRec.AppendEntity(boundaryAsPline);
-            acTrans.AddNewlyCreatedDBObject(boundaryAsPline, true);
-        }
-        acTrans.Commit();
-    }
+                typeof(Polyline), typeof(Circle)
+    };
+
+    string[] entNamesArr = typesToSelect.Select(t =&gt; RXObject.GetClass(t).DxfName).Distinct().ToArray();
+    TypedValue[] tmpFilterArgs = new TypedValue[]
+    {
+                new TypedValue((int)DxfCode.Start, string.Join(",", entNamesArr))
+    };
+
+    SelectionFilter filter = new SelectionFilter(tmpFilterArgs.ToArray());
+    PromptSelectionOptions settings = new PromptSelectionOptions()
+    {
+        MessageForAdding = "Select polylines and circles"
+    };
+    PromptSelectionResult result = doc.Editor.GetSelection(settings, filter);
+    if (result.Status != PromptStatus.OK) return;
+    doc.Editor.WriteMessage($"\nThere were selected: {result.Value.Count}" + " entities\n");
 }
 </code></pre>
 
@@ -195,11 +196,11 @@ public void InitBoundary()
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_ControlInput.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_GetEntity.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_GetEntity.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="Topic_ControlAcadEnvironmental_AccessCMD.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -209,11 +210,11 @@ public void InitBoundary()
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_ControlInput.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_GetEntity.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_GetEntity.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="Topic_ControlAcadEnvironmental_AccessCMD.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

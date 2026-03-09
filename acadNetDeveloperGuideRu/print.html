@@ -2262,6 +2262,72 @@ public void InitBoundary()
     }
 }
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Запрос-одного-объекта"><a class="header" href="#Запрос-одного-объекта">Запрос одного объекта</a></h1>
+<p>Для того, чтобы попросить Пользователя выбрать объект в чертеже имеется метод <code>Editor.GetEntity</code> с несколькими перегрузками. Он возвращает экземпляр класса <code>PromptEntityResult</code>, свойство которого <code>ObjectId</code> возвращает идентификатор выбранного объекта.</p>
+<p>Чтобы ограничить выбор конкретными классами, задать иные настройки выбора используется класс <code>PromptEntityOptions</code>, затем он подается как аргумент в метод <code>Editor.GetEntity</code>.</p>
+<p>Добавление фильтра по типу осуществляется с помощью метода <code>AddAllowedClass</code>. Можно задавать фильтр как строго для данного объекта, так и для всех типов, наследующих данный класс. К примеру, если <code>AddAllowedClass(typeof(Curve), false)</code>, то выберутся все полилинии, отрезки и иные объекты, описываемые классами, производными от <code>Curve</code>, а если второй аргумент будет <code>true</code>, то в выбор не попадут никакие объекты, так как класс <code>Curve</code> является абстрактным.</p>
+<p>В примере ниже задается фильтр на выбор полилинии и выводится её длина</p>
+<pre><code class="language-csharp">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+
+[CommandMethod("SelectPolyline")]
+public void SelectPolyline()
+{
+    Document doc = Application.DocumentManager.MdiActiveDocument;
+    PromptEntityOptions selOpts = new PromptEntityOptions("Select polyline");
+    selOpts.SetRejectMessage("Object is not polyline");
+    selOpts.AddAllowedClass(typeof(Polyline), true);
+
+    PromptEntityResult selResult = doc.Editor.GetEntity(selOpts);
+    if (selResult.Status != PromptStatus.OK) return;
+    using (Polyline plineObj = selResult.ObjectId.Open(OpenMode.ForRead, true) as Polyline)
+    {
+        doc.Editor.WriteMessage($"\nPolyline's length: {plineObj.Length}\n");
+    }
+}
+</code></pre>
+<p><strong>Примечание</strong>: в AutoCAD .NET API при использовании <code>AddAllowedClass</code> важно также задать <code>RejectMessage</code>, иначе при использовании метода будет ошибка, что это свойство не задано. В nanoCAD, например, это не обязательно.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Запрос-нескольких-объектов"><a class="header" href="#Запрос-нескольких-объектов">Запрос нескольких объектов</a></h1>
+<p>Выбор нескольких объектов осуществляется с помощью метода <code>Editor.GetSelection</code> с перегрузкой для <code>SelectionFilter</code>.</p>
+<p><code>SelectionFilter</code> задается с помощью массива <code>TypedValue</code>, как и <code>ResultBuffer</code>. Если необходимо выбрать несколько типов, то их надо задавать либо в 1 строку для DxfCode.Start с перечислением запятыми, либо с помощью <a href="./Topic_CreateAndEditAcadObjects_SelectSet_Removing_Operators.html">логических операторов</a>. Выбор для нескольких условий см. в <a href="./Topic_CreateAndEditAcadObjects_SelectSet_Removing_UsingSelFilters.html">статье про SelectionFilter</a>.</p>
+<p>Для быстрого перехода от типа объекта (<code>typeof(Polyline)</code>) к соответствующему ему <code>DxfName</code> для задания в фильтре <code>TypedValue</code>) можно воспользоваться следующим приведением:</p>
+<pre><code class="language-csharp">Type t;
+string dxfName = Autodesk.AutoCAD.Runtime.RXObject.GetClass(t).DxfName;
+</code></pre>
+<p>В примере ниже осуществляется выбор нескольких полилиний и окружностей с выводом в командную строку количества отфильтрованных объектов.</p>
+<pre><code class="language-csharp">using System.Linq;
+using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+
+[CommandMethod("SelectPolylines")]
+public void SelectPolylines()
+{
+    Document doc = Application.DocumentManager.MdiActiveDocument;
+    Type[] typesToSelect = new Type[]
+    {
+                typeof(Polyline), typeof(Circle)
+    };
+
+    string[] entNamesArr = typesToSelect.Select(t =&gt; RXObject.GetClass(t).DxfName).Distinct().ToArray();
+    TypedValue[] tmpFilterArgs = new TypedValue[]
+    {
+                new TypedValue((int)DxfCode.Start, string.Join(",", entNamesArr))
+    };
+
+    SelectionFilter filter = new SelectionFilter(tmpFilterArgs.ToArray());
+    PromptSelectionOptions settings = new PromptSelectionOptions()
+    {
+        MessageForAdding = "Select polylines and circles"
+    };
+    PromptSelectionResult result = doc.Editor.GetSelection(settings, filter);
+    if (result.Status != PromptStatus.OK) return;
+    doc.Editor.WriteMessage($"\nThere were selected: {result.Value.Count}" + " entities\n");
+}
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Доступ-к-командной-строке"><a class="header" href="#Доступ-к-командной-строке">Доступ к командной строке</a></h1>
 <p>Возможно отправлять команды непосредственно в командную строку используя метод <code>SendStringToExecute</code> (он отправляет на исполнение по одной строке). Передаваемая методу строка обязательно должна содержать аргументы (командной строки), перечисленные в порядке, ожидаемом последовательностью ввода данных со стороны выполняемой команды. Пустой пробел или ASCII-эквивалент возврата каретки в строке эквивалентен нажатию Enter на клавиатуре. В отличие от среды AutoLISP, вызов метода SendStringToExecute без аргумента недопустим. Команды, выполняемые с помощью SendStringToExecute, являются асинхронными и не вызываются до тех пор, пока команда .NET не завершится. Если вам нужно выполнить команду немедленно (синхронно), вы должны:</p>
 <ul>
@@ -4298,8 +4364,9 @@ public static void FilterXdata()
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="О-типе-данных-resultbuffer"><a class="header" href="#О-типе-данных-resultbuffer">О типе данных ResultBuffer</a></h1>
-<p>Тип ResultBuffer — это класс, который отражает структуру <code>resbuf</code>, определенную в ObjectARX. Структура <code>resbuf</code> предоставляет собой контейнер для данных, специфичных для AutoCAD.</p>
+<p>ResultBuffer — это класс, который отражает структуру <code>resbuf</code>, определенную в ObjectARX. Структура <code>resbuf</code> предоставляет собой контейнер для данных, специфичных для AutoCAD.</p>
 <p>Объект класса Autodesk.AutoCAD.DatabaseServices.ResultBuffer используется практически так же, как и нативный <code>resbuf</code>. Вы определяете ResultBuffer и заполняете его последовательностью пар данных. Каждая пара содержит описание типа данных и значение. В управляемом .NET API эти пары данных являются экземплярами класса <code>Autodesk.AutoCAD.DatabaseServices.TypedValue</code>. Этот служебный класс выполняет ту же функцию, что и члены <code>restype</code> и <code>resval</code> структуры <code>resbuf</code>.</p>
+<p>ResultBuffer используется в <a href="./Topic_Advanced_XData.html">Xrecord и XData</a>.</p>
 <p>Свойство <code>TypedValue.TypeCode</code> представляет собой 16-разрядное целое значение, которое указывает на тип данных свойства <code>TypedValue.Value</code>. Допустимые значения TypeCode зависят от конкретного использования экземпляра ResultBuffer. Например, значения TypeCode, подходящие для определения XRecord, не обязательно подходят для xdata. Перечисление <code>Autodesk.AutoCAD.DatabaseServices.DxfCode</code> определяет коды, которые описывают весь диапазон возможных типов данных ResultBuffer.</p>
 <p>Свойство <code>TypedValue.Value</code> сопоставляется экземпляру System.Object и теоретически может содержать данные любого типа. Однако данные Value должны соответствовать типу, указанному в TypeCode, чтобы гарантировать получение корректного результата.</p>
 <p>Вы можете предварительно заполнить ResultBuffer, передавая массив объектов TypedValue в его конструктор, или создать пустой ResultBuffer и позже вызвать метод <code>ResultBuffer.Add()</code>, чтобы добавить новые объекты TypedValue. В следующем примере показано использование конструктора ResultBuffer:</p>
@@ -10683,9 +10750,13 @@ public void ClippingExternalReference()
     }
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-с-xdata"><a class="header" href="#Работа-с-xdata">Работа с XData</a></h1>
-<p>Возможно использовать т.н. "xdata" для сохранения различной информации в чертеже. Для того, чтобы сохранить некоторую информацию, в чертеже должно быть зерегистрировано приложение (иметься запись RegAppTableRecord).</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-с-xrecord-и-xdata"><a class="header" href="#Работа-с-xrecord-и-xdata">Работа с XRecord и XData</a></h1>
+<p>Существует 2 механизма хранения произвольных данных у объекта - с помощью <code>Xrecord</code> и <code>XData</code>. Принципиальное отличие вариантов в объеме хранимых данных. Если XRecord имеет лимит до 2 Гб данных, то XData ограничено 16 Кб.</p>
+<p>XData само по себе не является классом или структурой, это лишь название свойства, значением которого выступает <a href="./Topic_CreateAndEditAcadObjects_ResultBuffer.html">ResultBuffer</a>. Свойство <code>XData</code> имеют все объекты, унаследованные от <code>DBObject</code> и именно данные в нём имеют ограничение на 16 Кб. Xrecord кстати тоже имеет свойство Xdata, и там такого ограничения нет (т.к. свойство XData у DBObject имеет модификатор <code>virtual</code>, что означает, что оно переопределено у Xrecord).</p>
+<p>Xrecord хранятся в <a href="./Topic_Advanced_Dictionary.html">словарях</a>, а словари хранятся как при объектах, также унаследованные от <code>DBObject</code> (идентификатор словаря в значении свойства <code>ExtensionDictionary</code>), так и на уровне базы данных.</p>
+<p>И XRecord и XData апеллириют набором данных, представленных в виде <a href="./Topic_CreateAndEditAcadObjects_ResultBuffer.html">ResultBuffer</a>. Для того, чтобы сохранить некоторую информацию в <a href="./Topic_CreateAndEditAcadObjects_ResultBuffer.html">ResultBuffer</a>, в чертеже должно быть зарегистрировано приложение (иметься запись <code>RegAppTableRecord</code>), для которого можно сохранить перечень данных разного типа, в отличие от стандартных DxfCode.</p>
 <p>В примере ниже получается набор объектов из пользовательского выбора, и в свойство XData каждого из объектов добавляется ResultBuffer из пары значений -- имени приложения и некоторой текстовой строки (или иного типа данных для ResultBuffer, см. <a href="./Topic_CreateAndEditAcadObjects_ResultBuffer.html">соответствующую статью</a>.</p>
+<p>Пример работы с XRecord в составе словарей см. в <a href="./Topic_Advanced_Dictionary.html">статье про словари</a>.</p>
 <pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -10822,6 +10893,195 @@ public void ViewXData()
 
         // Dispose of the transaction
     }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-со-словарями"><a class="header" href="#Работа-со-словарями">Работа со словарями</a></h1>
+<p>Словари - это специальные неграфические объекты, имеющие структуру "ключ:значение"; ключём выступают строки, значением - ObjectId.</p>
+<p>Для проверки, имеет ли словарь элемент с данным строковым ключем имеется метод <code>Has(string)</code></p>
+<p>В явном виде (объектами класса <code>DBDictionary</code>) словари нигде не хранятся, их необходимо получать через ObjectId и приведением к классу <code>DBDictionary</code>.</p>
+<p>В чертеже имеются постоянные словари, описывающие служебные <a href="./Topic_PartBasics_HierAbout_CollectionObjects.html">коллекции объектов чертежа</a>.</p>
+<p>У прочих объектов, наследующих <code>DBObject</code> по умолчанию словарей может не быть, если свойство <code>DBObject.ExtensionDictionary</code> возвращает ObjectId.Null, то словарь необходимо создать служебным методом <code>DBObject.CreateExtensionDictionary</code>, после этого свойство <code>ExtensionDictionary</code> должно указать на корректный ObjectId.</p>
+<p>Ниже приведен расширенный пример регистрации в чертеже приложения <code>SEMANTIC_APP</code>, создании для объекта словаря, записи в словарь пользовательского словаря <code>SEMANTICS</code> с набором <code>Xrecord</code>, значением <code>XData</code> которого являются пользовательские строковые свойства, сохраненные под приложением <code>SEMANTIC_APP</code>:</p>
+<pre><code class="language-csharp">using Autodesk.AutoCAD.Runtime;
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+using System.Collections.Generic;
+
+private const string SEMANTIC_APP = "SEMANTIC_APP";
+private const string SEMANTIC_DIСT = "SEMANTICS";
+private void checkRegApp()
+{
+    Database cadDb = Application.DocumentManager.MdiActiveDocument.Database;
+    using (Transaction cadTrans = cadDb.TransactionManager.StartTransaction())
+    {
+        RegAppTable acRegAppTbl;
+        acRegAppTbl = cadTrans.GetObject(cadDb.RegAppTableId,
+                                              OpenMode.ForRead) as RegAppTable;
+        // Проверить наличие SEMANTIC_APP
+        if (acRegAppTbl.Has(SEMANTIC_APP) == false)
+        {
+            using (RegAppTableRecord acRegAppTblRec = new RegAppTableRecord())
+            {
+                acRegAppTblRec.Name = SEMANTIC_APP;
+                cadTrans.GetObject(cadDb.RegAppTableId, OpenMode.ForWrite);
+                acRegAppTbl.Add(acRegAppTblRec);
+                cadTrans.AddNewlyCreatedDBObject(acRegAppTblRec, true);
+            }
+        }
+
+        cadTrans.Commit();
+    }
+}
+private void saveObjectProps(ObjectId dwgEntId, Dictionary&lt;string, string&gt; properties)
+{
+    checkRegApp();
+    Database cadDb = Application.DocumentManager.MdiActiveDocument.Database;
+    using (Transaction cadTrans = cadDb.TransactionManager.StartTransaction())
+    {
+        RegAppTable acRegAppTbl;
+        acRegAppTbl = cadTrans.GetObject(cadDb.RegAppTableId,
+                                              OpenMode.ForRead) as RegAppTable;
+        // Проверить наличие SEMANTIC_APP
+        if (acRegAppTbl.Has(SEMANTIC_APP) == false)
+        {
+            using (RegAppTableRecord acRegAppTblRec = new RegAppTableRecord())
+            {
+                acRegAppTblRec.Name = SEMANTIC_APP;
+                cadTrans.GetObject(cadDb.RegAppTableId, OpenMode.ForWrite);
+                acRegAppTbl.Add(acRegAppTblRec);
+                cadTrans.AddNewlyCreatedDBObject(acRegAppTblRec, true);
+            }
+        }
+
+        DBObject dwgEnt = cadTrans.GetObject(dwgEntId, OpenMode.ForWrite);
+
+        if (dwgEnt.ExtensionDictionary == ObjectId.Null) dwgEnt.CreateExtensionDictionary();
+        DBDictionary? entDict = cadTrans.GetObject(dwgEnt.ExtensionDictionary, OpenMode.ForWrite) as DBDictionary;
+        if (entDict == null) return;
+
+
+        // Если словарь уже существует, удалим его
+        ObjectId propsDictId;
+        if (entDict.Contains(SEMANTIC_DIСT))
+        {
+            entDict.Remove(SEMANTIC_DIСT);
+        }
+
+        DBDictionary propsDict = new DBDictionary();
+        entDict.SetAt(SEMANTIC_DIСT, propsDict);
+        cadTrans.AddNewlyCreatedDBObject(propsDict, true);
+        propsDictId = propsDict.ObjectId;
+
+
+
+        propsDict = (DBDictionary)cadTrans.GetObject(propsDictId, OpenMode.ForWrite);
+
+        // Создаем Xrecord для всех значений свойств
+        int indexCounter = 0;
+        foreach (var propValueInfo in properties)
+        {
+            string propKey = $"Property_{indexCounter}";
+            ObjectId xRecordId;
+
+            Xrecord xrec = new Xrecord();
+            propsDict.SetAt(propKey, xrec);
+            cadTrans.AddNewlyCreatedDBObject(xrec, true);
+            xRecordId = xrec.ObjectId;
+
+            Xrecord propValueInfoRecord = (Xrecord)cadTrans.GetObject(xRecordId, OpenMode.ForWrite);
+            using (ResultBuffer propValueInfoRecord_RB = new ResultBuffer())
+            {
+                propValueInfoRecord_RB.Add(new TypedValue((int)DxfCode.ExtendedDataRegAppName, SEMANTIC_APP));
+                propValueInfoRecord_RB.Add(new TypedValue((int)DxfCode.ExtendedDataAsciiString, propValueInfo.Key));
+                propValueInfoRecord_RB.Add(new TypedValue((int)DxfCode.ExtendedDataAsciiString, propValueInfo.Value)); //
+                propValueInfoRecord.XData = propValueInfoRecord_RB;
+            }
+            indexCounter++;
+        }
+        cadTrans.Commit();
+    }
+}
+
+private void listObjectProperies(ObjectId entId)
+{
+    Document doc = Application.DocumentManager.MdiActiveDocument;
+    Database cadDb = doc.Database;
+    using (Transaction cadTrans = cadDb.TransactionManager.StartTransaction())
+    {
+        // Получаем словарь объекта, если его нет -- то создаем
+        DBObject dwgEnt = cadTrans.GetObject(entId, OpenMode.ForWrite);
+
+        DBDictionary? entDict = cadTrans.GetObject(dwgEnt.ExtensionDictionary, OpenMode.ForRead) as DBDictionary;
+        if (entDict == null)
+        {
+            doc.Editor.WriteMessage("У объекта отсутствуют данные");
+            return;
+        }
+
+        if (!entDict.Contains(SEMANTIC_DIСT))
+        {
+            if (entDict == null)
+            {
+                doc.Editor.WriteMessage("У объекта отсутствуют данные для " + SEMANTIC_APP);
+                return;
+            }
+        }
+        ObjectId propsDictId = entDict.GetAt(SEMANTIC_DIСT);
+        DBDictionary? propsDict = cadTrans.GetObject(propsDictId, OpenMode.ForRead) as DBDictionary;
+        if (propsDict == null)
+        {
+            doc.Editor.WriteMessage("Не удалось привести к словарю");
+            return;
+        }
+
+        doc.Editor.WriteMessage($"\nProperties for " + entId.ToString());
+        foreach (var propValueInfoRaw in propsDict)
+        {
+            Xrecord? propValueInfoDef = cadTrans.GetObject(propValueInfoRaw.Value, OpenMode.ForRead) as Xrecord;
+
+            if (propValueInfoDef == null) continue;
+            ResultBuffer propValueInfoDefData = propValueInfoDef.GetXDataForApplication(SEMANTIC_APP);
+            if (propValueInfoDefData == null) continue;
+            {
+                var propArray = propValueInfoDefData.AsArray();
+
+                doc.Editor.WriteMessage($"\nProperty " +
+                    $"Name:{propArray[1].Value} Value:{propArray[2].Value}");
+            }
+        }
+        doc.Editor.WriteMessage($"\nEnd Properties!\n");
+    }
+}
+
+[CommandMethod("SaveExtProperties")]
+public void DemoSaveProperties()
+{
+    Document doc = Application.DocumentManager.MdiActiveDocument;
+    PromptEntityOptions selOpts = new PromptEntityOptions("Select entity");
+    selOpts.SetRejectMessage("Ent is not valid");
+    selOpts.AddAllowedClass(typeof(Entity), false);
+    PromptEntityResult selResult = doc.Editor.GetEntity(selOpts);
+    if (selResult.Status != PromptStatus.OK) return;
+
+    saveObjectProps(selResult.ObjectId, new Dictionary&lt;string, string&gt;()
+        {
+            {"Handle", selResult.ObjectId.Handle.ToString() },
+            {"DxfName", selResult.ObjectId.ObjectClass.DxfName }
+        });
+}
+
+[CommandMethod("ListExtProperties")]
+public void DemoListExtProperties()
+{
+    Document doc = Application.DocumentManager.MdiActiveDocument;
+    PromptEntityOptions selOpts = new PromptEntityOptions("Select entity");
+    selOpts.SetRejectMessage("Ent is not valid");
+    selOpts.AddAllowedClass(typeof(Entity), false);
+    PromptEntityResult selResult = doc.Editor.GetEntity(selOpts);
+    if (selResult.Status != PromptStatus.OK) return;
+
+    listObjectProperies(selResult.ObjectId);
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-с-листами-и-печатью"><a class="header" href="#Работа-с-листами-и-печатью">Работа с листами и печатью</a></h1>

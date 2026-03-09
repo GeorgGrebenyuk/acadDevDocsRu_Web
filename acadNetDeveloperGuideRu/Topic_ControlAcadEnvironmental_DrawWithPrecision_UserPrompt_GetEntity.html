@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Получение контура - Руководство разработчика AutoCAD .NET API</title>
+        <title>Запрос одного объекта - Руководство разработчика AutoCAD .NET API</title>
 
 
         <!-- Custom HTML head -->
@@ -152,54 +152,43 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="Получение-контура"><a class="header" href="#Получение-контура">Получение контура</a></h1>
-<p>Отдельного внимания заслуживает метод <code>TraceBoundary</code> класса Editor, позволяющий получить полилинию, внутри некоторого контура образованного одним или несколькими объектами. Метод возвращает набор полилиний в виде DBObjectCollection, объекты которых необходимо самостоятельно добавить в модель. Пример вызова данного метода приведен в коде ниже</p>
-<pre><code class="language-cs">using Autodesk.AutoCAD.Runtime;
+                        <h1 id="Запрос-одного-объекта"><a class="header" href="#Запрос-одного-объекта">Запрос одного объекта</a></h1>
+<p>Для того, чтобы попросить Пользователя выбрать объект в чертеже имеется метод <code>Editor.GetEntity</code> с несколькими перегрузками. Он возвращает экземпляр класса <code>PromptEntityResult</code>, свойство которого <code>ObjectId</code> возвращает идентификатор выбранного объекта.</p>
+<p>Чтобы ограничить выбор конкретными классами, задать иные настройки выбора используется класс <code>PromptEntityOptions</code>, затем он подается как аргумент в метод <code>Editor.GetEntity</code>.</p>
+<p>Добавление фильтра по типу осуществляется с помощью метода <code>AddAllowedClass</code>. Можно задавать фильтр как строго для данного объекта, так и для всех типов, наследующих данный класс. К примеру, если <code>AddAllowedClass(typeof(Curve), false)</code>, то выберутся все полилинии, отрезки и иные объекты, описываемые классами, производными от <code>Curve</code>, а если второй аргумент будет <code>true</code>, то в выбор не попадут никакие объекты, так как класс <code>Curve</code> является абстрактным.</p>
+<p>В примере ниже задается фильтр на выбор полилинии и выводится её длина</p>
+<pre><code class="language-csharp">using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
 
-[CommandMethod("InitBoundary")]
-public void InitBoundary()
+[CommandMethod("SelectPolyline")]
+public void SelectPolyline()
 {
-    // Get the current document and database
-    Document acDoc = Application.DocumentManager.MdiActiveDocument;
-    Database acCurDb = acDoc.Database;
-    // Start a transaction
-    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+    Document doc = Application.DocumentManager.MdiActiveDocument;
+    PromptEntityOptions selOpts = new PromptEntityOptions("Select polyline");
+    selOpts.SetRejectMessage("Object is not polyline");
+    selOpts.AddAllowedClass(typeof(Polyline), true);
+
+    PromptEntityResult selResult = doc.Editor.GetEntity(selOpts);
+    if (selResult.Status != PromptStatus.OK) return;
+    using (Polyline plineObj = selResult.ObjectId.Open(OpenMode.ForRead, true) as Polyline)
     {
-        // Open the Block table for read
-        BlockTable acBlkTbl;
-        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId,
-                                        OpenMode.ForRead) as BlockTable;
-        // Open the Block table record Model space for write
-        BlockTableRecord acBlkTblRec;
-        acBlkTblRec = acTrans.GetObject(acBlkTbl[BlockTableRecord.ModelSpace],
-                                        OpenMode.ForWrite) as BlockTableRecord;
-        var point = acDoc.Editor.GetPoint("Укажите точку внутри контура");
-        if (point.Status != Autodesk.AutoCAD.EditorInput.PromptStatus.OK) return;
-        var plines = acDoc.Editor.TraceBoundary(point.Value, false);
-        if (plines == null || plines.Count \&lt; 1) return;
-        foreach (DBObject createdPline in plines)
-        {
-            Polyline? boundaryAsPline = createdPline as Polyline;
-            if (boundaryAsPline == null) continue;
-            acBlkTblRec.AppendEntity(boundaryAsPline);
-            acTrans.AddNewlyCreatedDBObject(boundaryAsPline, true);
-        }
-        acTrans.Commit();
+        doc.Editor.WriteMessage($"\nPolyline's length: {plineObj.Length}\n");
     }
 }
 </code></pre>
+<p><strong>Примечание</strong>: в AutoCAD .NET API при использовании <code>AddAllowedClass</code> важно также задать <code>RejectMessage</code>, иначе при использовании метода будет ошибка, что это свойство не задано. В nanoCAD, например, это не обязательно.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_ControlInput.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_TraceBoundary.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_GetEntity.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_GetEntities.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -209,11 +198,11 @@ public void InitBoundary()
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_ControlInput.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_TraceBoundary.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_GetEntity.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="Topic_ControlAcadEnvironmental_DrawWithPrecision_UserPrompt_GetEntities.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
