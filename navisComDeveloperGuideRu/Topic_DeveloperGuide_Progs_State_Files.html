@@ -1,0 +1,433 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Работа с загруженными файлами и объектами - Руководство разработчика Autodesk NavisWorks COM API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика Autodesk NavisWorks COM API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Работа-с-загруженными-файлами-и-объектами"><a class="header" href="#Работа-с-загруженными-файлами-и-объектами">Работа с загруженными файлами и объектами</a></h1>
+<p>Рассмотрим, как получить перечень данных в модели (объектов с иерархией, обладающих свойствами и геометрией). То есть методам API, которые соответствуют "Дереву выбора" в UI Navisworks.</p>
+<p>Первоначально необходимо получить перечень загруженных файлов\проектов через методы со стороны COM-оболочки <strong>InwOpState7</strong>. Напомним, что проект описывается с помощью COM-оболочки <code>InwOaPartition</code>.</p>
+<pre><code class="language-cs">using System.Runtime.InteropServices;
+using NavisworksAutomationAPI18;
+using NavisworksIntegratedAPI18;
+
+Inavisdoc3? nwDoc = Marshal.GetActiveObject("Navisworks.Document.18") as Inavisdoc3;
+InwOpState11? nwState = nwDoc.State() as InwOpState11;
+
+for (int fileIndex = 0; fileIndex &lt; nwState.LoadedFileCount; fileIndex++)
+{
+    InwOaPartition nwPartition = nwState.LoadedFileFromNdx(fileIndex + 1);
+}
+</code></pre>
+<p><strong>Примечание</strong>: обращаем внимание, что все коллекции внутри Navisworks начинаются не с 0, а с 1 (для этого в теле метода LoadedFileFromNdx делаем <code>+1</code>);</p>
+<p>Всего в Navisworks COM API существует 4 разных оболочки, описывающих содержимое загруженных в него данных:</p>
+<ul>
+<li><code>InwOaPartition</code> (также <code>InwOaPartition2</code>, <code>InwOaPartition3</code>) - представляет собой отдельный проект\файл;</li>
+<li><code>InwOaGroup</code> - представляет любой элемент, у которого есть потомки (вложенные элементы по иерархии);</li>
+<li><code>InwOaNode</code> - базовая оболочка для любых объектов, фактически предоставляет полноценный доступ к объекту;</li>
+<li><code>InwOaGeometry</code> - обёртка над геометрией. Никаких специальных методов не содержит, кроме того, что для неё свойство Fragments у <code>InwOaNode</code> вернет набор составляющих геометрию объектов и далее с ней продолжится работа, об этом чуть позднее).</li>
+</ul>
+<p>Далее для каждого загруженного файла необходимо получить рекурсивно доступ к элементам. В примере ниже полученная информация выводится в окно.</p>
+<pre><code class="language-cs">using System;
+using System.Runtime.InteropServices;
+using System.Text;
+using NavisworksAutomationAPI18;
+using NavisworksIntegratedAPI18;
+
+using System.Windows; //WPF, MessageBox
+
+Inavisdoc3? nwDoc = Marshal.GetActiveObject("Navisworks.Document.18") as Inavisdoc3;
+InwOpState11? nwState = nwDoc.State() as InwOpState11;
+
+StringBuilder tmpStructure = new StringBuilder();
+tmpStructure.AppendLine("Hierarchy info");
+
+for (int fileIndex = 0; fileIndex &lt; nwState.LoadedFileCount; fileIndex++)
+{
+    InwOaPartition nwPartition = nwState.LoadedFileFromNdx(fileIndex + 1);
+    childProcessing(nwPartition, "");
+}
+
+void childProcessing(InwOaNode node, string prefix)
+{
+    tmpStructure.AppendLine(prefix + node.UserName);
+    if (node.IsGroup)
+    {
+        InwOaGroup inwOaGroup = node as InwOaGroup;
+        foreach (InwOaNode childElem in inwOaGroup.Children())
+        {
+            childProcessing(childElem, "-" + prefix);
+        }
+    }
+}
+
+MessageBox.Show(tmpStructure.ToString());
+</code></pre>
+<h2 id="Работа-с-геометрий"><a class="header" href="#Работа-с-геометрий">Работа с геометрий</a></h2>
+<p><strong>Дисклеймер</strong>: автор заранее извиняется на изложение материала далее, так как сам не до конца понимает механику в Navisworks.</p>
+<p>Геометрию нельзя получить через какие-либо методы, вместо этого разработчику предлагается создать специальный класс, унаследованный от интерфейса <code>InwSimplePrimitivesCB</code>, где реализовать методы, получающие соответственно вырожденную геометрию: точку, линию, 3d-грань.</p>
+<p>Ниже приведен минималистичный вид данных интерфейсов из библиотеки типов Integrated. Для того, чтобы создать класс-обработчик геометрии, вам придется подключать её к проекту как зависимость, реализовать обработку через <code>dynamic</code>-типизацию со "своим" интерфейсом, одинаковым по сигнатуре с Navisworks, не выйдет (у автора, во всяком случае, не получилось).</p>
+<pre><code class="language-cs">public interface InwSimpleVertex
+{
+    object coord { get; }
+    object tex_coords { get; }
+    object normal { get; }
+    object color { get; }
+}
+
+public interface InwSimplePrimitivesCB
+{
+    void Triangle(InwSimpleVertex v1, InwSimpleVertex v2, InwSimpleVertex v3);
+    void Line(InwSimpleVertex v1, InwSimpleVertex v2);
+    void Point(InwSimpleVertex v1);
+    void SnapPoint(InwSimpleVertex v1);
+}
+</code></pre>
+<p>Реализация чтения с данным классом будет выглядеть так (сделал полный листинг, для консольного приложения):</p>
+<pre><code class="language-cs">using System;
+using System.Runtime.InteropServices;
+using NavisworksAutomationAPI18;
+using NavisworksIntegratedAPI18;
+
+public class PrimitiveChecker : InwSimplePrimitivesCB
+{
+    public bool HasTriangles { get; private set; }
+    public bool HasLines { get; private set; }
+    public bool HasPoints { get; private set; }
+    public bool HasSnapPoints { get; private set; }
+
+    public void Line(InwSimpleVertex v1, InwSimpleVertex v2) =&gt; HasLines = true;
+
+    public void Point(InwSimpleVertex v1) =&gt; HasPoints = true;
+
+    public void SnapPoint(InwSimpleVertex v1) =&gt; HasSnapPoints = true;
+
+    public void Triangle(InwSimpleVertex v1, InwSimpleVertex v2, InwSimpleVertex v3) =&gt;
+      HasTriangles = true;
+}
+
+internal class Program
+{
+    static void Main(string[] args)
+    {
+        Inavisdoc3? nwDoc = Marshal.GetActiveObject("Navisworks.Document.18") as Inavisdoc3;
+        InwOpState11? nwState = nwDoc.State() as InwOpState11;
+
+        for (int fileIndex = 0; fileIndex &lt; nwState.LoadedFileCount; fileIndex++)
+        {
+            InwOaPartition nwPartition = nwState.LoadedFileFromNdx(fileIndex + 1);
+            childProcessing(nwPartition);
+        }
+
+        void childProcessing(InwOaNode node)
+        {
+            if (node.IsGroup)
+            {
+                InwOaGroup inwOaGroup = node as InwOaGroup;
+                foreach (InwOaNode childElem in inwOaGroup.Children())
+                {
+                    childProcessing(childElem);
+                }
+            }
+
+            if (node.IsGeometry)
+            {
+                foreach (InwOaFragment3 geomFragm in node.Fragments())
+                {
+                    PrimitiveChecker geomChecker = new PrimitiveChecker();
+                    geomFragm.GenerateSimplePrimitives(nwEVertexProperty.eNORMAL, geomChecker);
+
+                    if (geomChecker.HasTriangles)
+                    {
+                        //... some work the geometry
+                    }
+                }
+            }
+        }
+        Console.WriteLine("\nEnd!");
+    }
+}
+</code></pre>
+<p>Пример класса для обработки геометрии можете посмотреть у Speckle.Navisworks (конкретно, в <a href="https://github.com/specklesystems/speckle-sharp-connectors/blob/175145c452d17bbcdd99c8dfe22598e9a4755b7e/Converters/Navisworks/Speckle.Converters.NavisworksShared/ToSpeckle/Raw/GeometryToSpeckleConverter.cs#L85">этом месте</a>).</p>
+<h3 id="Примечание-про-пользовательскую-реализацию"><a class="header" href="#Примечание-про-пользовательскую-реализацию">Примечание про пользовательскую реализацию</a></h3>
+<p>Путем экспериментов, если реализовать вот такую конструкцию:</p>
+<pre><code class="language-cs">[ComImport]
+[Guid("1F4067D7-48FB-4759-BB8E-3E4A281FC841")]
+public interface InwSimplePrimitivesCB
+{
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    void Triangle([In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v1, [In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v2, [In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v3);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    void Line([In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v1, [In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v2);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    void Point([In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v1);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    void SnapPoint([In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v1);
+}
+
+public interface InwSimpleVertex
+{
+    object coord
+    {
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [return: MarshalAs(UnmanagedType.Struct)]
+        get;
+    }
+
+    object tex_coord
+    {
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [return: MarshalAs(UnmanagedType.Struct)]
+        get;
+    }
+
+    object normal
+    {
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [return: MarshalAs(UnmanagedType.Struct)]
+        get;
+    }
+
+    object color
+    {
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [return: MarshalAs(UnmanagedType.Struct)]
+        get;
+    }
+}
+</code></pre>
+<p>И для неё написать класс-обработки геометрии, то подключать к проекту COM-библиотеку типов вроде как нет необходимости, необходимо проверить, одинаков ли идентификатор у InwSimplePrimitivesCB в библиотеках типов для других версий Navisworks.</p>
+<h2 id="Работа-со-свойствами"><a class="header" href="#Работа-со-свойствами">Работа со свойствами</a></h2>
+<p>У COM-оболочки <code>InwOaNode</code>, напомним, это "базовое" представление объекта и данных в Navosiworks, имеется свойство <code>Attributes</code>, возвращающее коллекцию атрибутов. Все атрибуты имеют "базовый" интерфейс <code>InwOaAttribute</code>. Всего атрибутов в Navisworks 7+1 (7 тех, что могут быть в коллекции атрибутов объекта и 1 (<code>nwGUIAttribute</code>), характерный для свойств приложения).</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства (ObjectName)</th><th>Чем описывается</th></tr></thead><tbody>
+<tr><td>nwOaNameAttribute</td><td>InwOaNameAttribute</td></tr>
+<tr><td>nwOaMaterial</td><td>InwOaMaterial</td></tr>
+<tr><td>nwOaPublishAttribute</td><td>InwOaPublishAttribute</td></tr>
+<tr><td>nwOaNat64Attribute</td><td>InwOaNat64Attribute</td></tr>
+<tr><td>nwOaTransform</td><td>InwOaTransform</td></tr>
+<tr><td>nwOaBinaryAttribute</td><td>InwOaBinaryAttribute</td></tr>
+<tr><td>nwOaPropertyAttribute</td><td>InwOaPropertyAttribute</td></tr>
+<tr><td>nwOaAttribute</td><td>InwOaAttribute</td></tr>
+<tr><td>Принцип обработки показан ниже.</td><td></td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-cs">InwNodeAttributesColl attrsColl = node.Attributes();
+foreach (InwOaAttribute atrrBase in attrsColl)
+{
+    string attrType = atrrBase.ObjectName;
+    switch (attrType)
+    {
+        case "nwOaNameAttribute":
+            InwOaNameAttribute attrName = atrrBase as InwOaNameAttribute;
+            //...
+            break;
+        case "nwOaMaterial":
+            InwOaMaterial attrMaterial = atrrBase as InwOaMaterial;
+            //...
+            break;
+    }
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_DeveloperGuide_Progs_State_BaseInterfaces.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_DeveloperGuide_Progs_State_Other.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_DeveloperGuide_Progs_State_BaseInterfaces.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_DeveloperGuide_Progs_State_Other.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

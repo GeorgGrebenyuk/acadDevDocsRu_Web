@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Свойства проекта - Руководство разработчика Renga COM API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика Renga COM API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Свойства-проекта"><a class="header" href="#Свойства-проекта">Свойства проекта</a></h1>
+<p>У каждого проекта имеется так называемая "Информация о проекте". Это модальное диалоговое окно, открывающееся из интерфейса Renga и состоящее из 3 вкладок: Проект, Участок и Здание. Каждая из вкладок, а также каждый из элементов вкладки описывается соответствующей COM-оболочкой и её свойством.</p>
+<h2 id="Информация-о-проекте"><a class="header" href="#Информация-о-проекте">Информация о проекте</a></h2>
+<p>Описывается COM-оболочкой <code>Renga.IProjectInfo</code>. Получается через свойство <code>ProjectInfo</code> у COM-оболочки проекта <code>Renga.IProject</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Как в Renga</th><th>API</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Обозначение проекта</td><td>Code</td><td></td></tr>
+<tr><td>Наименование проекта</td><td>Name</td><td></td></tr>
+<tr><td>Стадия</td><td>Stage</td><td></td></tr>
+<tr><td>Описание проекта</td><td>Description</td><td></td></tr>
+</tbody></table>
+</div>
+<h2 id="Информация-о-здании"><a class="header" href="#Информация-о-здании">Информация о здании</a></h2>
+<p>Описывается COM-оболочкой <code>Renga.IBuildingInfo</code>. Получается через свойство BuildingInfo у COM-оболочки проекта <code>Renga.IProject</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Как в Renga</th><th>API</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Номер здания</td><td>Number</td><td></td></tr>
+<tr><td>Наименование здания</td><td>Name</td><td></td></tr>
+<tr><td>Адрес здания</td><td>Stage</td><td>Прим. 1</td></tr>
+<tr><td>Описание здания</td><td>Description</td><td></td></tr>
+<tr><td>Примечание 1: поле адреса составное, описывается COM-оболочкой <code>Renga.IPostalAddress</code>. Редактируется напрямую после получения данного адреса через свойство 	<code>GetAddress</code>.</td><td></td><td></td></tr>
+<tr><td>Среди свойств здания располагаются параметры трансформации координат при экспорте в IFC. Ими можно пользоваться для выполнения операций импорта-экспорта данных в модель.</td><td></td><td></td></tr>
+</tbody></table>
+</div>
+<p>Ниже предлагается метод расширения на C#, возвращающий параметры трансформации координат в виде класса <code>ProjectTransformPararameters</code>. Также там имеется перегрузку для участка, поскольку согласно справке к Renga он тоже может использоваться для задания сдвига координат.</p>
+<pre><code class="language-cs">using System;
+using System.Linq;
+
+public class ProjectTransformPararameters
+{
+    public double X;
+    public double Y;
+    public double Z;
+    public double AngleRad;
+
+    public ProjectTransformPararameters()
+    {
+        X = 0;
+        Y = 0;
+        Z = 0;
+        AngleRad = 0;
+    }
+}
+
+internal static class BuildingSiteInfoExtension
+{
+    private static ProjectTransformPararameters getTransformPararameters(Renga.IPropertyContainer props)
+    {
+        ProjectTransformPararameters trparams = new ProjectTransformPararameters();
+        if (PluginData.Project == null) return trparams;
+
+        // Резервируем имена целевых свойств
+        string propName_IfcLocationX = "IfcLocationX";
+        string propName_IfcLocationY = "IfcLocationY";
+        string propName_IfcLocationZ = "IfcLocationZ";
+        string propName_IfcDirectionPrecession = "IfcDirectionPrecession";
+
+        var propDefs = PluginData.Project.PropertyManager.GetPropertiesDef();
+        if (propDefs == null) return trparams;
+
+        // Находим определения свойств в проекте Renga
+
+        var propRes_IfcLocationX = propDefs.Where(p =&gt; p.Name == propName_IfcLocationX);
+        var propRes_IfcLocationY = propDefs.Where(p =&gt; p.Name == propName_IfcLocationY);
+        var propRes_IfcLocationZ = propDefs.Where(p =&gt; p.Name == propName_IfcLocationZ);
+        var propRes_IfcDirectionPrecession = propDefs.Where(p =&gt; p.Name == propName_IfcDirectionPrecession);
+
+        // Если хотя бы одного определения нет, завершаем
+        if (!propRes_IfcLocationX.Any() || !propRes_IfcLocationY.Any() || !propRes_IfcLocationZ.Any() || !propRes_IfcDirectionPrecession.Any()) return trparams;
+
+        // Идентификаторы свойств
+        RengaPropertyDefinition propDef_IfcLocationX = propRes_IfcLocationX.First();
+        RengaPropertyDefinition propDef_IfcLocationY = propRes_IfcLocationY.First();
+        RengaPropertyDefinition propDef_IfcLocationZ = propRes_IfcLocationZ.First();
+        RengaPropertyDefinition propDef_IfcDirectionPrecession = propRes_IfcDirectionPrecession.First();
+
+        Renga.IProperty? propInstance_IfcLocationX = null;
+        Renga.IProperty? propInstance_IfcLocationY = null;
+        Renga.IProperty? propInstance_IfcLocationZ = null;
+        Renga.IProperty? propInstance_IfcDirectionPrecession = null;
+
+        if (props.Contains(propDef_IfcLocationX.Id)) propInstance_IfcLocationX = props.Get(propDef_IfcLocationX.Id);
+        if (props.Contains(propDef_IfcLocationY.Id)) propInstance_IfcLocationY = props.Get(propDef_IfcLocationY.Id);
+        if (props.Contains(propDef_IfcLocationZ.Id)) propInstance_IfcLocationZ = props.Get(propDef_IfcLocationZ.Id);
+        if (props.Contains(propDef_IfcDirectionPrecession.Id)) propInstance_IfcDirectionPrecession = props.Get(propDef_IfcDirectionPrecession.Id);
+
+        if (propInstance_IfcLocationX == null || propInstance_IfcLocationY == null || propInstance_IfcLocationZ == null || propInstance_IfcDirectionPrecession == null) return trparams;
+
+        // поверяем типы свойств
+        if (propDef_IfcLocationX.PType != Renga.PropertyType.PropertyType_Length |
+            propDef_IfcLocationY.PType != Renga.PropertyType.PropertyType_Length |
+            propDef_IfcLocationZ.PType != Renga.PropertyType.PropertyType_Length |
+            propDef_IfcDirectionPrecession.PType != Renga.PropertyType.PropertyType_Angle) return trparams;
+
+        trparams.X = propInstance_IfcLocationX.GetLengthValue(Renga.LengthUnit.LengthUnit_Meters);
+        trparams.Y = propInstance_IfcLocationY.GetLengthValue(Renga.LengthUnit.LengthUnit_Meters);
+        trparams.Z = propInstance_IfcLocationZ.GetLengthValue(Renga.LengthUnit.LengthUnit_Meters);
+
+        var angle = propInstance_IfcDirectionPrecession.GetAngleValue(Renga.AngleUnit.AngleUnit_Degrees);
+        if (angle &lt; 0) angle = 360.0 + angle;
+        trparams.AngleRad = Math.PI * propInstance_IfcDirectionPrecession.GetAngleValue(Renga.AngleUnit.AngleUnit_Degrees) / 180.0;
+
+        return trparams;
+
+    }
+    /// &lt;summary&gt;
+    /// Возвращает параметры трансформации координат из свойств здания. Сдвиг XYZ в метрах, угол поворота вокруг оси Z в градусах, наименование СК
+    /// &lt;/summary&gt;
+    /// &lt;param name="buildingInfo"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    public static ProjectTransformPararameters GetTransformPararameters(this Renga.IBuildingInfo buildingInfo)
+    {
+        return getTransformPararameters(buildingInfo.GetProperties());
+    }
+
+    /// &lt;summary&gt;
+    /// Возвращает параметры трансформации координат из свойств участка. Сдвиг XYZ в метрах, угол поворота вокруг оси Z в градусах, WKT-код СК
+    /// &lt;/summary&gt;
+    /// &lt;param name="buildingInfo"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    public static ProjectTransformPararameters GetTransformPararameters(this Renga.ISiteInfo siteInfo)
+    {
+        return getTransformPararameters(siteInfo.GetProperties());
+    }
+}
+</code></pre>
+<h2 id="Информация-об-участке"><a class="header" href="#Информация-об-участке">Информация об участке</a></h2>
+<p>Описывается COM-оболочкой <code>Renga.ISiteInfo</code>. Получается через свойство <code>SiteInfo</code> у COM-оболочки проекта <code>Renga.IProject</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Как в Renga</th><th>API</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Номер участка</td><td>Number</td><td></td></tr>
+<tr><td>Наименование участка</td><td>Name</td><td></td></tr>
+<tr><td>Адрес участка</td><td>Stage</td><td>см. Прим.1 для здания</td></tr>
+<tr><td>Описание участка</td><td>Description</td><td></td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_RengaDevGuide_ProjectProcessing.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_RengaDevGuide_ProjectProcessing_RootProps_Building.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_RengaDevGuide_ProjectProcessing.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_RengaDevGuide_ProjectProcessing_RootProps_Building.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

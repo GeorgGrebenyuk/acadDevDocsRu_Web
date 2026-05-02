@@ -1,0 +1,618 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Руководство разработчика AutoCAD Civil 3D .NET API</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика AutoCAD Civil 3D .NET API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Руководство-net-разработчика"><a class="header" href="#Руководство-net-разработчика">Руководство .NET-разработчика</a></h1>
+<p>Настоящее руководство является авторским переводом на русский язык оригинального <a href="https://help.autodesk.com/view/CIV3D/2025/ENU/?guid=GUID-DA303320-B66D-4F4F-A4F4-9FBBEC0754E0">руководства разработка Civil 3d API</a> со значительными дополнениями (новые статьи, отдельные примеры, примечания).</p>
+<p>Исходные материалы настоящего руководства расположены в https://github.com/GeorgGrebenyuk/acadDevDocsRu/tree/main/docs/civil3d/net</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Вступление"><a class="header" href="#Вступление">Вступление</a></h1>
+<p>Autodesk Civil 3d .NET API позволяет взаимодействовать с объектами Civil 3D - трассами, поверхностями, а также их стилями и некоторыми настройками чертежа, специфичными для Civil 3D.</p>
+<p>Данный API основывается на AutoCAD .NET API (читай о нём локализованную справку <a href="https://georggrebenyuk.github.io/acadDevDocsRu_Web/acadNetDeveloperGuideRu/">здесь</a>).</p>
+<h2 id="Состав-api"><a class="header" href="#Состав-api">Состав API</a></h2>
+<p>В число библиотек, определяющих Civil 3d .NET API входят:</p>
+<p>Основные библиотеки:</p>
+<ul>
+<li><code>AeccDbMgd.dll</code>: основная библиотека, предоставляющая доступ к основным объектам Civil 3D, стилям, настройкам чертежа;</li>
+<li><code>AeccDataShortcutMgd.dll</code>: функциональность быстрых ссылок на данные;</li>
+<li><code>AeccPressurePipesMgd.dll</code>: работа с напорными сетями;</li>
+<li><code>AeccUiMgd.dll</code>: взаимодействие с пользовательским интерфейсом, окнами, палитрами, специальными окнами отдельных команд;</li>
+</ul>
+<p>Вспомогательные библиотеки:</p>
+<ul>
+<li><code>AeccCogoMgd.dll</code>: вспомогательная библиотека, содержит <code>unsafe</code>-код, утилиты для работы с точками COGO, преобразованиями единиц;</li>
+<li><code>AeccAdpMgd.dll</code>: вспомогательная библиотека, какие-то действия с атрибутами в файле (?);</li>
+<li><code>AeccHydroCalcsMgd.dll</code>: вспомогательная библиотека, содержит перечисления, структуры для функций анализа поверхности на сток воды, водосборы и пр.;</li>
+<li><code>AeccLogMgd.dll</code>: модуль логгирования;</li>
+<li><code>AeccMgdReverse.dll</code>: вспомогательная библиотека, внутренние исключения, обработчики ошибок (?);</li>
+<li><code>CaMgdContentData.dll</code>: внутренние перечисления, действиям с библиотекой компонентов, прочее;</li>
+</ul>
+<p>Также в Civil 3D имеется набор библиотек от AutoCAD Architecture (ACA):
+Основные библиотеки:</p>
+<ul>
+<li><code>AecBaseMgd.dll</code>:  основная библиотека для взаимодействия с ACA;</li>
+<li><code>AecCoreMgd.dll</code>: доступ к основным ACA-объектам, включая меж-объектные связи и структуру данных модели;</li>
+<li><code>AecPropDataMgd.dll</code>: работа с наборами характеристик;</li>
+</ul>
+<p>Вспомогательные библиотеки:</p>
+<ul>
+<li><code>AecArchMgd.dll</code>: объектная модель архитектурных объектов (стены, двери и пр.);</li>
+<li><code>AecStructureMgd.dll</code>:  работа с конструктивными элементами (балки, колонны), также анализ конструкций;</li>
+<li><code>AecBaseUtilsMgd.dll</code>: вспомогательные функции для ACA;</li>
+<li><code>AecArchDACHMgd.dll</code>: содержит стандарты для Германии;</li>
+<li><code>AecAppMgd.dll</code>: доступ к событиям и прочим настройкам ACA;</li>
+<li><code>AecRenovationUIMgd.dll:</code> инструменты для работы со стадиями проектирования (?);</li>
+<li><code>AecRcpMgd.dll</code>: работа с планами потолков, с осветительным оборудованием;</li>
+<li><code>AecProjectBaseMgd.dll</code>: доступ к данным проекта, листам;</li>
+<li><code>AecMgdReverse.dll</code>: преобразование объектов ACA в стандартные объекты AutoCAD и обратно;</li>
+<li><code>AecStandaloneMgd.dll</code>: модули для работы вне AutoCAD;</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Об-объектах-верхнего-уровня"><a class="header" href="#Об-объектах-верхнего-уровня">Об объектах верхнего уровня</a></h1>
+<p>Перед тем, как переходить непосредственно к API объектов Civil 3D необходимо уделить внимание нескольким объектам "верхнего уровня":</p>
+<ul>
+<li>сущности "Приложение Civil 3d" - <code>CivilApplication</code>;</li>
+<li>сущности "Документа Civil 3d" - <code>CivilDocument</code>;</li>
+<li>настройкам единиц и прочего в документе - <code>SettingsRoot</code>;</li>
+</ul>
+<p>Первые 2 предоставляют доступ к особым свойствам и объектам в Civil 3D, тогда как настройки определяют поведение единиц и прочих параметров при работе в чертеже.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="О-civilapplication"><a class="header" href="#О-civilapplication">О CivilApplication</a></h1>
+<p>Объект <code>CivilApplication</code> (из пространства имён <code>Autodesk.Civil.ApplicationServices</code>) представляет собой  класс, предоставляющий доступ к статическим свойствам:</p>
+<ul>
+<li><code>ActiveDocument</code> - текущему (активному) документу, описывается классом <code>CivilDocument</code>;</li>
+<li><code>ActiveProduct</code> - возвращает перечисление, какая сейчас запущена конфигурация;</li>
+<li><code>SurveyProjects</code> - возвращает объект класса <code>SurveyProjectCollection</code>, предоставляющий доступ к подсистеме "Съемка" (топогеодезические инструменты);</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="О-civildocument"><a class="header" href="#О-civildocument">О CivilDocument</a></h1>
+<p>Объект <code>CivilDocument</code> (из пространства имён <code>Autodesk.Civil.ApplicationServices</code>) представляет собой класс, предоставляющий доступ к коллекциям объектов Civil 3D, а также настройкам чертежа для данного документа. Фактически его можно рассматривать как расширение к стандартному классу Document, описывающего открытую модель AutoCAD.</p>
+<p>К <code>CivilDocument</code> можно перейти, вызвав статическое свойство у класса <code>CivilApplication</code>, либо воспользовавшись статическим методом  <code>CivilDocument.GetCivilDocument()</code> для данной базы данных чертежа (при манипуляциях с файлом без его открытия в AutoCAD).</p>
+<p>Функциональность класса <code>CivilDocument</code> можно разделить на 3 основные группы:</p>
+<ul>
+<li>предоставление доступа к классам-обработчикам коллекций объектов Civil 3D (группы точек COGO <code>CogoPoints</code>,  коридоры <code>CorridorCollection</code> и т.д.) через свойства класса <code>CivilDocument</code>;</li>
+<li>получение <code>ObjectId</code> или <code>ObjectIdCollection</code> для заданных объектов чертежа  (трасс, поверхностей и т.д.), к ним относятся все методы класса;</li>
+<li>доступ к стилям и настройкам чертежа - через свойства <code>Styles</code> и <code>Settings</code> соответственно, сюда же вспомогательные методы <code>IsCorridorSectionViewActive</code>, <code>IsSectionEditorCorridorReferenceObject</code>, <code>IsDriveActive</code>;</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Настройки-модели-civil"><a class="header" href="#Настройки-модели-civil">Настройки модели Civil</a></h1>
+<p>Программный доступ к настройкам модели Civil 3D осуществляется через свойство <code>Settings</code> у оболочки документа Civil 3D -- <code>CivilDocument</code>. Настройки описывается классом <code>SettingsRoot</code> из пространства имён <code>Autodesk.Civil.Settings</code>.</p>
+<ul>
+<li><code>TagSettings</code> (класс <code>SettingsTag</code>) задает значения для счётчиков объектов при их создании - отдельные окна при каждом окне создания объекта в UI;</li>
+<li><code>DrawingSettings</code> (класс <code>SettingsDrawing</code>) - параметры чертежа, см. <a href="Topic_DeveloperGuide_RootObjects_CivilDoc_Settings_DrawingProperties.html">отдельную статью</a>;</li>
+<li><code>AssociateShortcutProjectId</code> (строка) - идентификатор данного проекта в механизме Быстрых ссылок на данные;</li>
+<li><code>LandXMLSettings</code> (класс <code>SettingsLandXML</code>) - настройки импорта-экспорта LandXML, альтернатива окна, запускаемого командой <code>EDITLANDXMLSETTINGS</code>;</li>
+</ul>
+<p>Также возможно запросить настройки среды для заданной группы в альтернативу их получения через <code>DrawingSettings.AmbientSettings</code> с помощью метода <code>GetSettings</code> с передачей ему типа класса, описывающего данную группу параметров среды.</p>
+<p>Рассмотрим далее перечень доступных настроек в сравнении с UI.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Параметры-чертежа"><a class="header" href="#Параметры-чертежа">Параметры чертежа</a></h1>
+<p>Окно с параметрами чертежа Civil 3D со стороны UI вызывается командой <code>_AeccEditDrawingSettings</code>.</p>
+<p>Со стороны API эти настройки доступны через свойство <code>DrawingSettings</code> у оболочки настроек <code>SettingsRoot</code>  и описываются классом <code>SettingsDrawing</code>.</p>
+<h2 id="Единицы-измерения-и-зона"><a class="header" href="#Единицы-измерения-и-зона">Единицы измерения и зона</a></h2>
+<p>Доступ к настройкам осуществляется через свойство <code>SettingsDrawing.UnitZoneSettings</code> и описываются классом <code>SettingsUnitZone</code>.</p>
+<p>![[Pasted image 20260415160738.png]]</p>
+<p>Далее рассмотрим, какие элементы на стороне UI чем на стороне API описаны:</p>
+<div class="table-wrapper"><table><thead><tr><th>Элемент в настройках</th><th>Чем представлено в API</th><th>Чем описывается в API</th><th>Write</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единицы чертежа</td><td>Свойство DrawingUnits</td><td>Перечисление DrawingUnitType</td><td>✅</td><td></td></tr>
+<tr><td>Преобразование британской <br>системы единиц в метрическую</td><td>Свойство ImperialToMetricConversion</td><td>Перечисление ImperialToMetricConversionType</td><td>✅</td><td></td></tr>
+<tr><td>Единицы угловой меры</td><td>Свойство AngularUnits</td><td>Перечисление AngleUnitType</td><td>✅</td><td></td></tr>
+<tr><td>Масштабировать объекты, <br>вставленные из других чертежей</td><td>Свойство ScaleObjectsFromOtherDrawings</td><td>bool</td><td>✅</td><td></td></tr>
+<tr><td>Установить соответствующие<br>переменные AutoCAD</td><td>Свойство MatchAutoCADVariables</td><td>bool</td><td>✅</td><td></td></tr>
+<tr><td>Пользовательский масштаб</td><td>Свойство DrawingScale</td><td>double</td><td>✅</td><td>К выпадающему списку как в UI доступа нет. Вместо этого редактируйте данное свойство.</td></tr>
+<tr><td>Категории:<br>Доступные системы координат:<br>Код выбранной <br>системы координат<br><br>Описание<br>Проекция<br>Референц-Эллипсоид</td><td>Свойство CoordinateSystemCode</td><td>string</td><td>✅</td><td>Вы можете вызвать статический метод <code>GetAllCodes()</code>, который вернёт коды всех загруженных систем координат.<br>С помощью статического метода <code>GetCoordinateSystemByCode</code> можно получить определение СК по коду. И далее узнать её категорию <code>Category</code> и наименование <code>Description</code>.<br>Описание, проекцию и референц-эллипсоид получить через свойства <code>Description</code>, <code>Projection</code>, <code>Datum</code> соответственно.</td></tr>
+</tbody></table>
+</div>
+<h2 id="Преобразование"><a class="header" href="#Преобразование">Преобразование</a></h2>
+<p>Доступ к настройкам осуществляется через свойство <code>SettingsDrawing.TransformationSettings</code> и описываются классом <code>SettingsTransformation</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Элемент в настройках</th><th>Чем представлено в API</th><th>Чем описывается в API</th><th>Write</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Применить параметры преобразование</td><td>Свойство ApplyTransformSettings</td><td>bool</td><td>✅</td><td>Это свойство класса SettingsDrawing!</td></tr>
+<tr><td>Описание зоны</td><td>Свойство CoordinateSystemCode</td><td>string</td><td>❌</td><td>Вернитесь к <code>SettingsDrawing.UnitZoneSettings</code> и вызовите через метод <code>GetCoordinateSystemByCode</code> информацию о СК чертежа, оттуда возьмите имя -<code>Description</code></td></tr>
+<tr><td>Применить масштабный коэффициент уровня моря</td><td>Свойство ApplySeaLevelScaleFactor</td><td>bool</td><td>✅</td><td></td></tr>
+<tr><td>Отметка (уровня моря)</td><td>Свойство SeaLevelScaleElevation</td><td>double</td><td>✅</td><td></td></tr>
+<tr><td>Радиус эллипсоида вращения</td><td>Свойство SpheroidRadius</td><td>double</td><td>✅</td><td></td></tr>
+<tr><td>Масштабный коэффициент сетки, вычисление (набор перечислений)</td><td>Свойство GridScaleFactorComputation</td><td>Перечисление GridScaleFactorType</td><td>✅</td><td></td></tr>
+<tr><td>Масштабный коэффициент сетки,  величина масштабного коэффициент</td><td>Свойство GridScaleFactor</td><td>double</td><td></td><td></td></tr>
+<tr><td>Центр поворота (флажок)<br>Указать угол поворота сетки (флажок)</td><td>Свойство SpecifyRotationType</td><td>Перечисление SpecifyRotationType</td><td>✅</td><td>Для "Центр поворота" = RotationPoint; Для "Указать угол поворота сетки" = GridRotationAngle</td></tr>
+<tr><td>Указать угол поворота сетки, значение "К северу"</td><td>Свойство RotationToGridNorth</td><td>double</td><td>✅</td><td></td></tr>
+<tr><td>Указать угол поворота сетки, значение "Азимут"</td><td>Свойство RotationToGridAzimuth</td><td>double</td><td>✅</td><td></td></tr>
+<tr><td>Центр поворота, Локальное северное положение<br>Центр поворота, Локальное восточное положение</td><td>Свойство LocalRotationPoint</td><td>Point2d</td><td>✅</td><td>Компонента X описывает восточное положение; компонента Y описывает северное положение</td></tr>
+<tr><td>Центр поворота, Северное положение в координатах сетки<br>Центр поворота, Восточное положение в координатах сетки</td><td>Свойство GridRotationPoint</td><td>Point2d</td><td>✅</td><td>Компонента X описывает восточное положение; компонента Y описывает северное положение</td></tr>
+<tr><td>Опорная точка, Локальное северное положение<br>Центр поворота, Локальное восточное положение</td><td>Свойство LocalReferencePoint</td><td>Point2d</td><td>✅</td><td>Компонента X описывает восточное положение; компонента Y описывает северное положение</td></tr>
+<tr><td>Опорная точка, Северное положение в координатах сетки<br>Центр поворота, Восточное положение в координатах сетки</td><td>Свойство GridReferencePoint</td><td>Point2d</td><td>✅</td><td>Компонента X описывает восточное положение; компонента Y описывает северное положение</td></tr>
+</tbody></table>
+</div>
+<h2 id="Слои-объекта"><a class="header" href="#Слои-объекта">Слои объекта</a></h2>
+<p>Доступ к настройкам осуществляется через свойство <code>SettingsDrawing.ObjectLayerSettings</code> и описываются классом <code>SettingsObjectLayers</code>.</p>
+<p>Перечень всех объектов (первая колонка настроек), для которых может иметься некоторый слой, приведен в системном перечислении <code>SettingsObjectLayerType</code>. Для редактирования информации о слое вызовите метод <code>SettingsObjectLayers.GetObjectLayerSetting</code> для заданного типа объекта (перечисления <code>SettingsObjectLayerType</code>).</p>
+<ul>
+<li><strong>Слой</strong>: свойство <code>LayerId</code> или <code>LayerName</code>. При редактировании предпочтительно задавать через <code>LayerId</code>, при чтении можно через <code>LayerName</code> считывать имя слоя (в альтернативу получения <code>LayerTableRecord</code> через <code>LayerId</code>);</li>
+<li><strong>Модификатор</strong>: свойство <code>Modifier</code> (представлено перечислением <code>ObjectLayerModifierType</code>, названия очевидны и в комментировании не нуждаются);</li>
+<li><strong>Значение</strong>: свойство <code>ModifierValue</code> (заполняется только, если <code>Modifier</code>= <code>ObjectLayerModifierType.Suffix</code> или <code>Modifier</code>= <code>ObjectLayerModifierType.Prefix</code> ) - какой у слоя будет суффикс или префикс соответственно);</li>
+<li><strong>Заблокировано</strong>: свойство <code>Locked</code>;</li>
+</ul>
+<h2 id="Перечень-сокращений"><a class="header" href="#Перечень-сокращений">Перечень сокращений</a></h2>
+<p>Доступ к настройкам осуществляется через свойство <code>SettingsDrawing.AbbreviationsSettings</code> и описываются классом <code>SettingsAbbreviation</code>.</p>
+<p>Каждое из свойств класса <code>SettingsAbbreviation</code> описывает одну из групп сокращений:</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя группы в UI</th><th>Свойство в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Текст общего назначения</td><td>GeneralText</td><td>SettingsAbbreviationGeneral</td><td></td></tr>
+<tr><td>Текст для точки геометрии трассы</td><td>AlignmentGeoPointText</td><td>SettingsAbbreviationAlignment</td><td></td></tr>
+<tr><td>Данные объекта для точки геометрии трассы</td><td>AlignmentGeoPointEntityData</td><td>SettingsAbbreviationAlignmentEnhanced</td><td></td></tr>
+<tr><td>Вираж</td><td>Superelevation</td><td>SettingsAbbreviationSuperelevation</td><td></td></tr>
+<tr><td>Возвышение наружного рельса</td><td>Cant</td><td>SettingsAbbreviationCant</td><td></td></tr>
+<tr><td>Профиль</td><td>Profile</td><td>SettingsAbbreviationProfile</td><td></td></tr>
+<tr><td>Функциональность самих классом похожа. Имеется некоторое перечисление, для которого получаются настройки и задаются настройки (в виде строк).</td><td></td><td></td><td></td></tr>
+</tbody></table>
+</div>
+<h2 id="Параметры-среды"><a class="header" href="#Параметры-среды">Параметры среды</a></h2>
+<p>Доступ к настройкам осуществляется через свойство <code>SettingsDrawing.AmbientSettings</code> и описываются классом <code>SettingsAmbient</code>.</p>
+<p>Некоторые параметры среды (отдельные свойства) в UI имеют серый цвет и не доступны для редактирования, со стороны API к них также нет доступа для данной группы.</p>
+<p>Все остальные свойства, характеризующие параметры среды, в API доступны только для чтения - никакие из них нельзя изменить!</p>
+<h3 id="Общие"><a class="header" href="#Общие">Общие</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsGeneral</code> и доступна через свойство <code>General</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Тип отображения единиц при печати</td><td>Свойство PlottedUnitDisplay</td><td>Перечисление PlottedUnitDisplayType</td><td></td></tr>
+<tr><td>Задание единиц измерения AutoCAD</td><td></td><td></td><td></td></tr>
+<tr><td>Сохранить изменения параметров команды</td><td>Свойство SaveCommandChangesToSettings</td><td>bool</td><td>Описывается PropertyBoolean, но по факту это обычный boolean</td></tr>
+<tr><td>Отображать средство просмотра событий</td><td>Свойство ShowEventViewer</td><td>bool</td><td></td></tr>
+<tr><td>Показать подсказки</td><td>Свойство ShowToolTips</td><td>bool</td><td></td></tr>
+<tr><td>Преобразование британской системы<br>единиц в метрическую</td><td></td><td></td><td></td></tr>
+<tr><td>Состояние всплывающей подсказки<br>для нового объекта</td><td>Свойство NewEntityToolTipState</td><td>bool</td><td></td></tr>
+<tr><td>Направление движения транспорта</td><td>Свойство DrivingDirection</td><td>Перечисление DrivingDirectionType</td><td></td></tr>
+<tr><td>Единица измерения на чертеже</td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td>Также имеется свойство <code>IndependentLayerOn</code> - возвращает или задает признак, будет ли отображаться объект в зависимости от видимости его слоя. Согласно официальной справке свойство эквивалентно <code>SettingsObjectLayers.ObjectControlledByLayer</code>.</td><td></td><td></td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Степень-кривизны"><a class="header" href="#Степень-кривизны">Степень кривизны</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsDegreeOfCurvature</code> и доступна через свойство <code>DegreeOfCurvature</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единицы длины хорды</td><td>Свойство UnitChordLength</td><td>double</td><td></td></tr>
+<tr><td>Единица длины дуги</td><td>Свойство UnitArcLength</td><td>double</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Назначение-меток"><a class="header" href="#Назначение-меток">Назначение меток</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsLabeling</code> и доступна через свойство <code>Labeling</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Метод запроса меток</td><td>Свойство PromptMethod</td><td>Перечисление LabelingPromptType</td><td>Запретить запросы = Suppress<br>Командная строка = CommandLine<br>Диалоговое окно = Dialog</td></tr>
+</tbody></table>
+</div>
+<h3 id="Время"><a class="header" href="#Время">Время</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsTime</code> и доступна через свойство <code>Time</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление TimeUnitType</td><td>Запретить запросы = Suppress<br>Командная строка = CommandLine<br>Диалоговое окно = Dialog</td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td>Стандартное округление = Normal<br>Округление вверх = Up<br>Усечение = Truncate</td></tr>
+</tbody></table>
+</div>
+<h3 id="Безразмерный"><a class="header" href="#Безразмерный">Безразмерный</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsUnitless</code> и доступна через свойство <code>Unitless</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Расстояние"><a class="header" href="#Расстояние">Расстояние</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsDistance</code> и доступна через свойство <code>Distance</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление LinearUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Размер"><a class="header" href="#Размер">Размер</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsDimension</code> и доступна через свойство <code>Dimension</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление LinearUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Координата"><a class="header" href="#Координата">Координата</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsCoordinate</code> и доступна через свойство <code>Coordinate</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление LinearUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Координата-сетки"><a class="header" href="#Координата-сетки">Координата сетки</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsGridCoordinate</code> и доступна через свойство <code>GridCoordinate</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление LinearUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Отметка"><a class="header" href="#Отметка">Отметка</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsElevation</code> и доступна через свойство <code>Elevation</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление LinearUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Площадь"><a class="header" href="#Площадь">Площадь</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsArea</code> и доступна через свойство <code>Area</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление AreaUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Объём"><a class="header" href="#Объём">Объём</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsVolume</code> и доступна через свойство <code>Volume</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление VolumeUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Скорость"><a class="header" href="#Скорость">Скорость</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsSpeed</code> и доступна через свойство <code>Speed</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление SpeedUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Угол"><a class="header" href="#Угол">Угол</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsAngle</code> и доступна через свойство <code>Angle</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление SpeedUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+<tr><td>Отбрасывать дробную часть<br>для целочисленных значений</td><td>Свойство DropDecimalForWholeNumbers</td><td>Перечисление DropDecimalWholeType</td><td></td></tr>
+<tr><td>Отбросить начальные<br>нули для градусов</td><td>Свойство DropLeadingZerosForDegrees</td><td>Перечисление DropLeadingZeroType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Направление"><a class="header" href="#Направление">Направление</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsDirection</code> и доступна через свойство <code>Direction</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление AngleUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Формат</td><td>Свойство Format</td><td>Перечисление AngleFormatType</td><td></td></tr>
+<tr><td>Направление</td><td>Свойство Direction</td><td>Перечисление DirectionDisplayType</td><td></td></tr>
+<tr><td>Заглавные буквы</td><td>Свойство Capitalization</td><td>Перечисление DirectionNameDisplayType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+<tr><td>Тип измерения</td><td>Свойство MeasurementType</td><td>Перечисление VectorMeasurementType</td><td></td></tr>
+<tr><td>Четверть румба</td><td>Свойство BearingQuadrant</td><td>Перечисление BearingQuadrantType</td><td></td></tr>
+<tr><td>Отбрасывать дробную часть<br>для целочисленных значений</td><td>Свойство DropDecimalForWholeNumbers</td><td>Перечисление DropDecimalWholeType</td><td></td></tr>
+<tr><td>Отбросить начальные<br>нули для градусов</td><td>Свойство DropLeadingZerosForDegrees</td><td>Перечисление DropLeadingZeroType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Широта-Долгота"><a class="header" href="#Широта-Долгота">Широта Долгота</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsLatLong</code> и доступна через свойство <code>LatLong</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление AngleUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Формат</td><td>Свойство Format</td><td>Перечисление AngleFormatType</td><td></td></tr>
+<tr><td>Направление</td><td>Свойство Direction</td><td>Перечисление DirectionDisplayType</td><td></td></tr>
+<tr><td>Заглавные буквы</td><td>Свойство Capitalization</td><td>Перечисление DirectionNameDisplayType</td><td></td></tr>
+<tr><td>Отбрасывать дробную часть<br>для целочисленных значений</td><td>Свойство DropDecimalForWholeNumbers</td><td>Перечисление DropDecimalWholeType</td><td></td></tr>
+<tr><td>Отбросить начальные<br>нули для градусов</td><td>Свойство DropLeadingZerosForDegrees</td><td>Перечисление DropLeadingZeroType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Уклон"><a class="header" href="#Уклон">Уклон</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsSlope</code> и доступна через свойство <code>Slope</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление SlopeFormatType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Откос"><a class="header" href="#Откос">Откос</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsGrade</code> и доступна через свойство <code>Grade</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление GradeFormatType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Уклоноткос"><a class="header" href="#Уклоноткос">Уклон/откос</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsGradeSlope</code> и доступна через свойство <code>GradeSlope</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление GradeSlopeFormatType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Пикет"><a class="header" href="#Пикет">Пикет</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsStation</code> и доступна через свойство <code>Station</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление LinearUnitType</td><td></td></tr>
+<tr><td>Формат</td><td>Свойство Format</td><td>Перечисление StationFormatType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+<tr><td>Символ разделителя пикетов</td><td>Свойство StationDelimiterCharacter</td><td>Перечисление StationDelimiterCharacterType</td><td></td></tr>
+<tr><td>Позиция разделителя пикетов</td><td>Свойство StationDelimiterPosition</td><td>Перечисление StationDelimiterPositionType</td><td></td></tr>
+<tr><td>Отбрасывать дробную часть<br>для целочисленных значений</td><td>Свойство DropDecimalForWholeNumbers</td><td>Перечисление DropDecimalWholeType</td><td></td></tr>
+<tr><td>Отбросить начальные<br>нули для градусов</td><td>Свойство DropLeadingZerosForDegrees</td><td>Перечисление DropLeadingZeroType</td><td></td></tr>
+<tr><td>Минимальная ширина отображения</td><td>Свойство MinimumDisplayWidth</td><td>int</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Ускорение"><a class="header" href="#Ускорение">Ускорение</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsAcceleration</code> и доступна через свойство <code>Acceleration</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление AccelerationUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Давление"><a class="header" href="#Давление">Давление</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsPressure</code> и доступна через свойство <code>Pressure</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Единица</td><td>Свойство Unit</td><td>Перечисление PressureUnitType</td><td></td></tr>
+<tr><td>Точность</td><td>Свойство Precision</td><td>int</td><td></td></tr>
+<tr><td>Округление</td><td>Свойство Rounding</td><td>Перечисление RoundingType</td><td></td></tr>
+<tr><td>Знак</td><td>Свойство Sign</td><td>Перечисление SignType</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Прозрачные-команды"><a class="header" href="#Прозрачные-команды">Прозрачные команды</a></h3>
+<p>Группа свойств описывается классом <code>SettingsAmbient.SettingsTransparentCommands</code> и доступна через свойство <code>TransparentCommands</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства в UI</th><th>Что отвечает в API</th><th>Чем описывается</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Запрос на ввод 3D точек</td><td>Свойство PromptFor3DPoints</td><td>bool</td><td></td></tr>
+<tr><td>Запрос на ввод Y до ввода X</td><td>Свойство PromptForYBeforeX</td><td>bool</td><td></td></tr>
+<tr><td>Запрос на ввод восточного положения<br>до ввода северного положения</td><td>Свойство PromptForEastingThenNorthing</td><td>bool</td><td></td></tr>
+<tr><td>Запрос на ввод долготы до ввода широты</td><td>Свойство PromptForLongitudeThenLatitude</td><td>bool</td><td></td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="Стили"><a class="header" href="#Стили">Стили</a></h1>
+<p>Стили - это неотъемлемая часть объектной модели Civil 3D, они определяют, как объект выглядит, какие у него настройки отображения\формирования, какие сценарии анализа можно применить к объекту и пр. На стороне UI стили объектов доступны для просмотра на вкладке "Параметры" области инструментов чертежа.</p>
+<p>На стороне API доступ к стилям осуществляется через специальный класс <code>StylesRoot</code>, получаемый через свойство <code>Styles</code> у сущности <code>CivilDocument</code>. В таблице далее приведена информация, каким классом описывается коллекция стилей для соответствующего объекта в Civil 3D:</p>
+<div class="table-wrapper"><table><thead><tr><th>Группа стилей в Civil 3D</th><th>Свойство в API</th><th>Чем описывается?</th><th>Примечание</th></tr></thead><tbody>
+<tr><td><strong>Общие</strong></td><td></td><td></td><td></td></tr>
+<tr><td><strong>Универсальные стили</strong></td><td></td><td></td><td></td></tr>
+<tr><td>Стили маркеров</td><td>MarkerStyles</td><td>MarkerStyleCollection</td><td></td></tr>
+<tr><td>Стили характерной линии</td><td></td><td></td><td></td></tr>
+<tr><td>Стили штриховки откосов</td><td></td><td></td><td></td></tr>
+<tr><td>Стили проекций</td><td></td><td></td><td></td></tr>
+<tr><td>Стили набора кодов</td><td></td><td></td><td></td></tr>
+<tr><td>Стили звена</td><td></td><td></td><td></td></tr>
+<tr><td>Стили фигуры</td><td></td><td></td><td></td></tr>
+<tr><td><strong>Стили меток</strong></td><td></td><td></td><td></td></tr>
+<tr><td>Точка</td><td>PointStyles</td><td>PointStyleCollection</td><td></td></tr>
+<tr><td>Поверхность</td><td>SurfaceStyles</td><td>SurfaceStyleCollection</td><td></td></tr>
+<tr><td>Участок</td><td>ParcelStyles</td><td>ParcelStyleCollection</td><td></td></tr>
+<tr><td>Объект профилирования</td><td></td><td></td><td></td></tr>
+<tr><td>Трасса</td><td>AlignmentStyles</td><td>AlignmentStyleCollection</td><td></td></tr>
+<tr><td>Профиль</td><td></td><td></td><td></td></tr>
+<tr><td>Вид профиля</td><td></td><td></td><td></td></tr>
+<tr><td>Вид виража</td><td></td><td></td><td></td></tr>
+<tr><td>Вид возвышения наружного рельса</td><td></td><td></td><td></td></tr>
+<tr><td>Ось сечения</td><td></td><td></td><td></td></tr>
+<tr><td>Сечение</td><td>SectionStyles</td><td>SectionStyleCollection</td><td></td></tr>
+<tr><td>Вид сечения</td><td>SectionViewStyles</td><td>SectionViewStyleCollection</td><td></td></tr>
+<tr><td>Линия диаграммы земляных масс</td><td></td><td></td><td></td></tr>
+<tr><td>Вид диаграммы земляных масс</td><td></td><td></td><td></td></tr>
+<tr><td>Водосбор</td><td></td><td></td><td></td></tr>
+<tr><td>Трубопроводная сеть</td><td></td><td></td><td></td></tr>
+<tr><td>Труба</td><td></td><td></td><td></td></tr>
+<tr><td>Колодец</td><td></td><td></td><td></td></tr>
+<tr><td>Напорная трубопроводная сеть</td><td></td><td></td><td></td></tr>
+<tr><td>Напорная труба</td><td></td><td></td><td></td></tr>
+<tr><td>Фитинг</td><td></td><td></td><td></td></tr>
+<tr><td>Устройство регулирования потока</td><td></td><td></td><td></td></tr>
+<tr><td>Мост</td><td></td><td></td><td></td></tr>
+<tr><td>Коридор</td><td></td><td></td><td></td></tr>
+<tr><td>Перекресток</td><td></td><td></td><td></td></tr>
+<tr><td>Конструкция</td><td></td><td></td><td></td></tr>
+<tr><td>Элемент конструкции</td><td></td><td></td><td></td></tr>
+<tr><td>Объем работ</td><td></td><td></td><td></td></tr>
+<tr><td>Съемка</td><td></td><td></td><td></td></tr>
+<tr><td>Группа рамок вида</td><td></td><td></td><td></td></tr>
+<tr><td>Рамка вида</td><td></td><td></td><td></td></tr>
+<tr><td>Линия соответствия</td><td></td><td></td><td></td></tr>
+<tr><td>Участок застройки</td><td></td><td></td><td></td></tr>
+<tr><td>Железная дорога</td><td></td><td></td><td></td></tr>
+<tr><td>--</td><td></td><td></td><td></td></tr>
+<tr><td>Стили таблицы</td><td>TableStyles</td><td>TableStylesRoot</td><td>Для любых таблиц. Свойства класса описывают таблицы для соотв. объектов</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="Получение-стиля"><a class="header" href="#Получение-стиля">Получение стиля</a></h1>
+<p>Любой стиль</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

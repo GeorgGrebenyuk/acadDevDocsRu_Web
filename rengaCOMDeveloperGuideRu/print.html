@@ -1,0 +1,1146 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Руководство разработчика Renga COM API</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика Renga COM API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Руководство-разработчика"><a class="header" href="#Руководство-разработчика">Руководство разработчика</a></h1>
+<p>Настоящее руководство посвящено разработке под российскую САПР архитектурно-инженерного назначения Renga (<a href="https://rengabim.com/">https://rengabim.com</a>). У программы имеется SDK и справка к нему по API <a href="https://help.rengabim.com/api/">https://help.rengabim.com/api</a>, но во-первых, она на английском языке, во-вторых не изобилует подробностями работы со многими объектами, и, самое важное, никак не затрагивает тему багов и ограничений в работе имеющихся методов.</p>
+<p>В данном руководстве будут приводиться примеры, преимущественно, на C#, но также будут содержаться положения и для разработки на иных языках - Python, C++.
+Исходные материалы настоящего руководства расположены в <a href="https://github.com/GeorgGrebenyuk/acadDevDocsRu/tree/main/docs/renga/com">https://github.com/GeorgGrebenyuk/acadDevDocsRu/tree/main/docs/renga/com</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Общие-сведения"><a class="header" href="#Общие-сведения">Общие сведения</a></h1>
+<p>В данном разделе описывается принцип взаимодействия с приложением Renga и его объектами при помощи COM API.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="О-renga-com-api"><a class="header" href="#О-renga-com-api">О Renga COM API</a></h1>
+<p>Единственный вариант программного взаимодействия с Renga - это COM API; работать с COM могут различные языки программирования с динамической типизацией (C#, C++, Python, JavaScript и пр.)</p>
+<p>Текущая версия COM API существует где-то с 2018 года, до этого у Renga было C++ API (вроде бы). Поэтому все номера редакций API начинаются с цифры "2".</p>
+<p><strong>Примечание</strong>: Сама по себе технология COM API является Windows-специфичной, то есть потенциальная версия Renga под иные операционные системы будет подразумевать отсутствие API или его существенное изменение его технологии.</p>
+<p>Пользовательские приложения могут взаимодействовать с Renga двумя способами:</p>
+<ul>
+<li>в форме загруженного плагина, размещенного в папке приложения и загруженного при запуске программы;</li>
+<li>из стороннего процесса благодаря COM-технологии.</li>
+</ul>
+<p>Несмотря на одинаковую технологию (COM API) пользовательские приложения, загруженные в Renga, будут показывать лучшую производительность, чем работающие с ней из стороннего процесса.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="О-renga-sdk"><a class="header" href="#О-renga-sdk">О Renga SDK</a></h1>
+<p>В составе Renga SDK поставляются необходимые для разработки компоненты:</p>
+<ul>
+<li>библиотека типов COM в формате <code>tlb</code> (type library) в <code>\tlb\RengaCOMAPI.tlb</code>;</li>
+<li>подключаемая вспомогательная библиотека на .NET в двух редакциях - для сборки под .NET Framework 4.8 и .NET 8.0 (с версии API 2.37 или Renga 8.3);</li>
+<li>подключаемые вспомогательные заголовочные файлы на C++ из <code>C++\Include\Renga</code>;
+Также имеется справка, аналогичная <a href="https://help.rengabim.com/api/index.html">приведенной на сайте</a>. Справка собирается через Doxygen.</li>
+</ul>
+<p>Примеры в SDK приводятся для C#, C++ одинаково и в значительно меньшей части для Python.</p>
+<p>Все версии SDK имеют одинаковую структуру, она описывается в корневом файле <code>ReadMeFirst.txt</code>.</p>
+<h2 id="Об-изменениях-в-sdk"><a class="header" href="#Об-изменениях-в-sdk">Об изменениях в SDK</a></h2>
+<p>Скажем честно, официальный Changelog (раздел справки, где должны писаться изменения) содержит далеко не все фактические изменения и обновления в API. Разработчик может столкнуться с неприятными последствиями недокументированных обновлений при разработке приложений.</p>
+<p>Сценарий самостоятельного анализа SDK будет выглядеть следующим образом:</p>
+<h3 id="Для-renganetpluginutilitydll"><a class="header" href="#Для-renganetpluginutilitydll">Для Renga.NET.PluginUtility.dll</a></h3>
+<ol>
+<li>Создаём reference-версию библиотеки Renga.NET.PluginUtility.dll с помощью, например, утилиты <a href="https://github.com/JetBrains/Refasmer">JetBrains Refasmer</a> ;</li>
+<li>Через любой декомпилятор, например, <a href="https://github.com/dnSpy/dnSpy">dnSpy</a> экспортируем созданную reference-библиотеку в набор исходников;</li>
+<li>Загоняем исходники в любую систему контроля версий и сравниванием обновления с ранним SDK;
+Для C++ пункты 1 и 2 не нужны, так как в SDK они уже в виде "текстовых" файлов.</li>
+</ol>
+<h3 id="Для-rengacomapitlb"><a class="header" href="#Для-rengacomapitlb">Для RengaCOMAPI.tlb</a></h3>
+<ol>
+<li>С помощью утилиты <code>oleview.exe</code> из состава Windows SDK для C++ или аналога создаём IDL-файл, описывающие данную библиотеку типов;</li>
+<li>По аналогии с предыдущим пунктом публикуем данный текстовый IDL-файл в систему контроля версий и сравниванием содержимое для другой версии библиотеки типов;</li>
+</ol>
+<p>У автора нет возможности это делать самостоятельно, поэтому прикладываю ссылки на разные <a href="https://disk.yandex.ru/d/7ciTFvw0JmCNgA.">архивные версии Renga SDK</a>, список будет пополняться</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Подключение-библиотек"><a class="header" href="#Подключение-библиотек">Подключение библиотек</a></h1>
+<p>Для разработки загружаемого приложения или для приложения, взаимодействующего с процессом Renga, создаваемого на языках программирования C# или C++ необходимо импортировать в проект библиотеку типов Renga. Это можно сделать несколькими способами:</p>
+<h2 id="c"><a class="header" href="#c">C#</a></h2>
+<h3 id="comfilereference"><a class="header" href="#comfilereference">COMFileReference</a></h3>
+<p>В ваш <code>csproj</code> файл занесите инструкцию</p>
+<pre><code class="language-xml">&lt;ItemGroup&gt;
+    &lt;COMFileReference Include="$(SolutionDir)external\RengaCOMAPI.tlb"&gt;&lt;/COMFileReference&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<p>где <code>$(SomePath)</code> - ваш путь к файлу tlb из Renga SDK.
+Такой способ подключения не требует, чтобы Renga была установлена на вашем ПК</p>
+<h3 id="comreference"><a class="header" href="#comreference">ComReference</a></h3>
+<p>В ваш <code>csproj</code> файл занесите инструкцию</p>
+<pre><code class="language-xml">&lt;ItemGroup&gt;
+  &lt;COMReference Include="Renga"&gt;
+	&lt;WrapperTool&gt;tlbimp&lt;/WrapperTool&gt;
+	&lt;VersionMinor&gt;0&lt;/VersionMinor&gt;
+	&lt;VersionMajor&gt;1&lt;/VersionMajor&gt;
+	&lt;Guid&gt;0ec5d324-8b9f-4d30-84ed-ab711618d1c1&lt;/Guid&gt;
+	&lt;Lcid&gt;0&lt;/Lcid&gt;
+	&lt;Isolated&gt;false&lt;/Isolated&gt;
+	&lt;EmbedInteropTypes&gt;true&lt;/EmbedInteropTypes&gt;
+  &lt;/COMReference&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<p>Этот вариант требует, чтобы на ПК была установлена Renga и зарегистрирована в системе её библиотека типов. Кроме того, библиотека типов устанавливается в единственном экземпляре, затирая другую библиотеку (если у вас несколько версий Renga на ПК).</p>
+<h3 id="interoprengadll"><a class="header" href="#interoprengadll">Interop.Renga.dll</a></h3>
+<p>Подключите к проекту <code>csproj</code> библиотеку типов <code>Interop.Renga.dll</code>, которая формируется автоматически при сборке приложения в <code>obj</code>-папке при подключении библиотеки типов одним из способов выше.</p>
+<pre><code class="language-xml">&lt;ItemGroup&gt;
+	&lt;Reference Include="Interop.Renga.dll"&gt;
+		&lt;HintPath&gt;$(SomePath)Interop.Renga.dll&lt;/HintPath&gt;
+		&lt;Private&gt;True&lt;/Private&gt;
+		&lt;EmbedInteropTypes&gt;False&lt;/EmbedInteropTypes&gt;
+	&lt;/Reference&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<p>где <code>$(SomePath)</code> - путь к этой библиотеке
+Такой путь фактически аналогичен первому, где идёт подключение к tlb. Некоторые авторы плагинов, например, Awada или ModPlus использует такой сценарий, в ModPlus и вовсе имеется возможность подключаться к конкретной версии Renga, если их установлено на ПК несколько.</p>
+<h2 id="c-1"><a class="header" href="#c-1">C++</a></h2>
+<h3 id="import-tlb"><a class="header" href="#import-tlb">import tlb</a></h3>
+<ol>
+<li>В свойствах <code>vcxproj</code> проекта в <code>AdditionalIncludeDirectories</code> добавьте путь к папке, содержащей файл <code>RengaCOMAPI.tlb</code>.</li>
+<li>В основном заголовочном файле приложения (если используются precompilated-headers в нем, если нет -- то в каком-то основном) напишите инструкцию</li>
+</ol>
+<pre><code class="language-cpp">#import &lt;RengaCOMAPI.tlb&gt;
+</code></pre>
+<p><strong>Примечание</strong>: данная конструкция сработает только для языка программирования Visual C++ (версия языка от Microsoft). Обычный C++ "не знает" такой команды, для него см. подключение ниже.</p>
+<h3 id="rengacomapi-tlh-и-tli"><a class="header" href="#rengacomapi-tlh-и-tli">RengaCOMAPI tlh и tli</a></h3>
+<p>При подключении библиотеки типов способом выше в промежуточной папке проекта создаются файлы <code>RengaCOMAPI.tli</code>, <code>RengaCOMAPI.tlh</code>.
+Подключите их в свой проект.
+Ниже пример подключения для случая Qt в файле <code>pro</code></p>
+<pre><code class="language-pro">HEADERS += \
+    rengacomapi.tlh
+DISTFILES += \
+    rengacomapi.tlh
+</code></pre>
+<p><code>tlh</code> файл (объявление функций) в конце сдержит инструкцию импорта <code>tli</code>-файла (реализация функций) с абсолютным путем. При размещении его у себя в проекте обязательно отредактируйте этот путь!</p>
+<h2 id="python-и-прочие-ЯП"><a class="header" href="#python-и-прочие-ЯП">Python и прочие ЯП</a></h2>
+<p>Подключать что-либо нет необходимости, вы просто будете использовать динамическую типизацию объектов и методы согласно справке.
+О принципе подключения к приложению Renga см. статью <a href="./Topic_RengaDevGuide_Common_ConnectToRenga.html">Подключение к приложению Renga</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Подключение-к-приложению-renga"><a class="header" href="#Подключение-к-приложению-renga">Подключение к приложению Renga</a></h1>
+<h2 id="Получение-приложение-из-загруженного-плагина"><a class="header" href="#Получение-приложение-из-загруженного-плагина">Получение приложение из загруженного плагина</a></h2>
+<p>Для внутренних приложений, загружаемых в Renga в виде плагинов, вопрос получения COM-интерфейса, описывающего приложение Renga не стоит - просто вызывается соответствующий метод:
+На C#:</p>
+<pre><code class="language-csharp">Renga.Application rengaApp = new Renga.Application();
+</code></pre>
+<p>На C++:</p>
+<pre><code class="language-cpp">Renga::IApplicationPtr rengaApp = Renga::CreateApplication();
+</code></pre>
+<h2 id="Получение-приложения-из-внешнего-процесса"><a class="header" href="#Получение-приложения-из-внешнего-процесса">Получение приложения из внешнего процесса</a></h2>
+<p>Сложнее обстоит вопрос с доступом к приложению Renga из стороннего процесса. Так или иначе, способы будут завязаны на COM-методы, так как само API реализовано на COM-технологии.
+Есть 2 сценария -- создать новый процесс Renga и подключиться к текущему процессу.</p>
+<h3 id="c-2"><a class="header" href="#c-2">C++</a></h3>
+<p>Для запуска нового процесса Renga создайте экземпляр COM-оболочки приложения, выполните с ней действия и закройте приложение. Листинг далее со <a href="https://help.rengabim.com/api/how-to-local-server.html">странички официальной документации</a>.</p>
+<pre><code class="language-cpp">CoInitialize(nullptr);
+auto renga = Renga::CreateApplication(CLSCTX_LOCAL_SERVER);
+renga-&gt;PutVisible(VARIANT_TRUE);
+renga-&gt;OpenProject(bstr_t(argv[1]));
+// use Renga someway
+renga-&gt;CloseProject(VARIANT_TRUE);
+// Quit explicitly:
+renga-&gt;Quit();
+
+CoUninitialize();
+</code></pre>
+<p>Как правило, пользовательские приложения на C++ существуют только в виде плагинов, для них не рационально делать логику работы с COM из стороннего процесса. Автору во всяком случае неизвестны плагины к Renga, написанные на C++ и обращающиеся к ней извне (возможно, только крупные СОД).
+Тем более, что работа с COM в C++ мягко говоря плохая и очень сильно отдает "legacy" .
+Автор не использовал в своей практике подобных обращений, если вам надо -- вы можете попросить ИИ-агента помочь с этой задачей, автор не имеет желания пробовать это сам и писать здесь километровые листинги 😬.</p>
+<h3 id="c-3"><a class="header" href="#c-3">C#</a></h3>
+<h4 id="marshalgetactiveobject"><a class="header" href="#marshalgetactiveobject">Marshal.GetActiveObject</a></h4>
+<p>Наиболее простая реализация на C# (фактически, на .NET) - обратиться к методу <code>Marshal.GetActiveObject</code> из пространства имён <code>System.Runtime.InteropServices</code> и передать ему в аргумент идентификатор Renga-приложения <code>Renga.Application.1</code>. Если приложение не запущено, то оно будет создано</p>
+<p><strong>Примечание</strong>: начиная с .NET 5+ эта функциональность удалена из .NET, вместо этого можете воспользоваться вызовами нативного API через DllImport</p>
+<pre><code class="language-csharp">//From https://stackoverflow.com/a/65496277
+public static class Marshal2
+{
+    internal const String OLEAUT32 = "oleaut32.dll";
+    internal const String OLE32 = "ole32.dll";
+
+    [System.Security.SecurityCritical]  // auto-generated_required
+    public static Object GetActiveObject(String progID)
+    {
+        Object obj = null;
+        Guid clsid;
+
+        // Call CLSIDFromProgIDEx first then fall back on CLSIDFromProgID if
+        // CLSIDFromProgIDEx doesn't exist.
+        try
+        {
+            CLSIDFromProgIDEx(progID, out clsid);
+        }
+        //            catch
+        catch (System.Exception)
+        {
+            CLSIDFromProgID(progID, out clsid);
+        }
+
+        GetActiveObject(ref clsid, IntPtr.Zero, out obj);
+        return obj;
+    }
+
+    //[DllImport(Microsoft.Win32.Win32Native.OLE32, PreserveSig = false)]
+    [DllImport(OLE32, PreserveSig = false)]
+    [System.Runtime.Versioning.ResourceExposure(System.Runtime.Versioning.ResourceScope.None)]
+    [System.Security.SuppressUnmanagedCodeSecurity]
+    [System.Security.SecurityCritical]  // auto-generated
+    private static extern void CLSIDFromProgIDEx([MarshalAs(UnmanagedType.LPWStr)] String progId, out Guid clsid);
+
+    //[DllImport(Microsoft.Win32.Win32Native.OLE32, PreserveSig = false)]
+    [DllImport(OLE32, PreserveSig = false)]
+    [System.Runtime.Versioning.ResourceExposure(System.Runtime.Versioning.ResourceScope.None)]
+    [System.Security.SuppressUnmanagedCodeSecurity]
+    [System.Security.SecurityCritical]  // auto-generated
+    private static extern void CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] String progId, out Guid clsid);
+
+    //[DllImport(Microsoft.Win32.Win32Native.OLEAUT32, PreserveSig = false)]
+    [DllImport(OLEAUT32, PreserveSig = false)]
+    [System.Runtime.Versioning.ResourceExposure(System.Runtime.Versioning.ResourceScope.None)]
+    [System.Security.SuppressUnmanagedCodeSecurity]
+    [System.Security.SecurityCritical]  // auto-generated
+    private static extern void GetActiveObject(ref Guid rclsid, IntPtr reserved, [MarshalAs(UnmanagedType.Interface)] out Object ppunk);
+
+
+    [DllImport("ole32.dll")]
+    internal static extern void GetRunningObjectTable(int reserved, out IRunningObjectTable prot);
+
+    [DllImport("ole32.dll")]
+    private static extern int CreateBindCtx(uint reserved, out IBindCtx ppbc);
+
+    public static List&lt;string&gt; GetAppMonikers(string appName)
+    {
+        IRunningObjectTable rot;
+        GetRunningObjectTable(0, out rot);
+
+        IEnumMoniker monikerEnumerator = null;
+        rot.EnumRunning(out monikerEnumerator);
+        if (monikerEnumerator == null)
+            return null;
+
+        monikerEnumerator.Reset();
+
+        var registries = new List&lt;IMoniker&gt;();
+        var registries2 = new List&lt;string&gt;();
+
+        IntPtr pNumFetched = new IntPtr();
+        IMoniker[] monikers = new IMoniker[1];
+        while (monikerEnumerator.Next(1, monikers, pNumFetched) == 0)
+        {
+            IBindCtx bindCtx;
+            CreateBindCtx(0, out bindCtx);
+            if (bindCtx == null)
+                continue;
+
+            string displayName;
+            monikers[0].GetDisplayName(bindCtx, null, out displayName);
+            //registries2.Add(displayName);
+            if (displayName.Contains(appName)) registries.Add(monikers[0]);
+        }
+        return registries2;
+    }
+}
+</code></pre>
+<p>После прекращения работы с приложением Renga извне, если оно более не нужно, закройте его и освободите COM-объект приложения (далее <code>renga</code>) с помощью стандартного метода:</p>
+<pre><code class="language-csharp">System.Runtime.InteropServices.Marshal.ReleaseComObject(renga);
+</code></pre>
+<h4 id="running-object-table"><a class="header" href="#running-object-table">Running Object Table</a></h4>
+<p>Официальная справка предлагает также обратить внимание на Windows-специфичную технологию "Running Object Table". Переиначивая примеры со <a href="https://help.rengabim.com/api/how-to-rot.html">справки</a> конструкция, позволяющая получить все запущенные в системе процессы Renga будет выглядеть так:</p>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+
+public static Renga.IApplication[] GetRengaApps()
+{
+    IRunningObjectTable rot;
+    GetRunningObjectTable(0, out rot);
+
+    List&lt;Renga.IApplication&gt; tmpApps = new List&lt;Renga.IApplication&gt;();
+    var rengaMonikers = GetRengaMonikers();
+    foreach (var moniker in rengaMonikers)
+    {
+        object comObject;
+        // Get first Renga moniker in list
+        rot.GetObject(moniker, out comObject);
+
+        Renga.IApplication rengaApp = comObject as Renga.IApplication;
+        if (rengaApp != null) tmpApps.Add(rengaApp);
+    }
+    return tmpApps.ToArray();
+}
+
+[DllImport("ole32.dll")]
+private static extern void GetRunningObjectTable(int reserved, out IRunningObjectTable prot);
+[DllImport("ole32.dll")]
+private static extern int CreateBindCtx(uint reserved, out IBindCtx ppbc);
+private static List&lt;IMoniker&gt; GetRengaMonikers()
+{
+    IRunningObjectTable rot;
+    GetRunningObjectTable(0, out rot);
+
+    IEnumMoniker monikerEnumerator = null;
+    rot.EnumRunning(out monikerEnumerator);
+    if (monikerEnumerator == null)
+        return null;
+
+    monikerEnumerator.Reset();
+
+    var registries = new List&lt;IMoniker&gt;();
+
+    IntPtr pNumFetched = new IntPtr();
+    IMoniker[] monikers = new IMoniker[1];
+    while (monikerEnumerator.Next(1, monikers, pNumFetched) == 0)
+    {
+        IBindCtx bindCtx;
+        CreateBindCtx(0, out bindCtx);
+        if (bindCtx == null)
+            continue;
+
+        string displayName;
+        monikers[0].GetDisplayName(bindCtx, null, out displayName);
+        if (displayName.Contains("!Renga"))
+            registries.Add(monikers[0]);
+    }
+    return registries;
+}
+</code></pre>
+<h3 id="pyhton"><a class="header" href="#pyhton">Pyhton</a></h3>
+<p>Необходимо установить вспомогательный пакет <code>pywin32</code></p>
+<pre><code class="language-python">import win32com.client  
+rengaApp = win32com.client.GetActiveObject("Renga.Application.1")  
+if rengaApp is not None:  
+    print("Application received successfully!")
+</code></pre>
+<h3 id="powershell"><a class="header" href="#powershell">Powershell</a></h3>
+<p>Ниже пример, как создать новый процесс Renga, вывести в консоль номер версии программы и закрыть приложение.</p>
+<pre><code class="language-powershell"># --- Вспомогательная функция для освобождения ресрусов от COM-объекта
+function Release-ComObject([object]$obj) {
+    if ($null -ne $obj -and $obj -is [System.__ComObject]) {
+        [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($obj)
+    }
+}
+
+# Создадим экземпляр приложения Renga
+$rengaApp = $null
+try {
+    $rengaApp = New-Object -ComObject "Renga.Application.1" -ErrorAction Stop
+} catch {
+    Write-Warning "Не удалось создать COM-объект Renga.Application.1. Если Renga не зарегистрирована как COM-сервер, выполните из папки установки: RengaProfessional.exe /regserver"
+    Read-Host "Нажмите Enter для выхода"
+    exit
+}
+
+# Делаем приложение видимым
+$rengaApp.Visible = $true
+
+# Выполняем некоторые действия, например, получаем информацию о версии приложения
+Write-Host $rengaApp.VersionS
+
+try { $rengaApp.Quit() } catch {}
+Release-ComObject $rengaApp
+
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Примеры-приложений--и-курсы"><a class="header" href="#Примеры-приложений--и-курсы">Примеры приложений  и курсы</a></h1>
+<p>К сожалению, единой базы всех пользовательских плагинов и скриптов нет. Ниже предлагается перечень ссылок на материалы и пользовательские реализации плагинов и скриптов, актуальных на настоящую дату -- март 2026 года.</p>
+<h2 id="Курсы-и-методические-материалы"><a class="header" href="#Курсы-и-методические-материалы">Курсы и методические материалы</a></h2>
+<p><a href="https://bim.vc/edu/courses/renga-instrumenty-avtomatizatsii-api-i-dynamo/">Видеокурс</a> от лета 2022 г. "Renga: Инструменты автоматизации API и Dynamo". На текущий момент сильно устарел, но для начала можно ориентироваться.</p>
+<p>Официальные <a href="https://help.rengabim.com/api/index.html">справка по API</a> и <a href="https://rengabim.com/sdk/">SDK</a>. Также автор прикладывает ссылки на <a href="https://disk.yandex.ru/d/7ciTFvw0JmCNgA">ранние версии SDK</a>.</p>
+<p>Блог Renga на <a href="https://habr.com/ru/users/Rengabim/">Habr</a>, статьи по API:</p>
+<ul>
+<li><a href="https://habr.com/ru/companies/ascon/articles/343010/">API BIM-системы Renga</a> (декабрь 2017);</li>
+<li><a href="https://habr.com/ru/companies/ascon/articles/498892/">Непоследний обзор Renga API</a> (апрель 2020);</li>
+</ul>
+<p>Блог Renga на официальном сайте, <a href="https://blog.rengabim.com/search/label/API">статьи по API</a>.</p>
+<p>Пользовательские блоги и каналы:</p>
+<ul>
+<li>TODO</li>
+</ul>
+<h2 id="Разработки-с-открытым-исходным-кодом"><a class="header" href="#Разработки-с-открытым-исходным-кодом">Разработки с открытым исходным кодом</a></h2>
+<h3 id="c-4"><a class="header" href="#c-4">C++</a></h3>
+<ul>
+<li><a href="https://github.com/RengaSoftware/ModelExplorer">ModelExplorer</a> - обозреватель модели от команды разработки Renga;</li>
+</ul>
+<h3 id="c-5"><a class="header" href="#c-5">C#</a></h3>
+<ul>
+<li><a href="https://github.com/Lex-is-BIM/renga_bri4ka">Renga Bri4ka</a> - набор различных плагинов;</li>
+<li><a href="https://github.com/Vinny-Environment/VinnyRengaAdapter">VinnyRengaAdapter</a> - экспорт объектов в обменные форматы;</li>
+<li><a href="https://github.com/karpovichpv/RengaInspector">RengaInspector</a> - оконный обозреватель проекта и объектов (свойств и методов по API);
+TODO</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Ограничения-api"><a class="header" href="#Ограничения-api">Ограничения API</a></h1>
+<p>В случае внешнего связывания с Renga некоторые функции могут быть не доступны. Нигде в официальной справке информации об этом нет, не известно, баг это или особенность поведения, но автор считает своим долгом поделиться этой информацией:</p>
+<ul>
+<li>невозможно получить IScreenshotService для активного вида;</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Взаимодействие-с-приложением-renga"><a class="header" href="#Взаимодействие-с-приложением-renga">Взаимодействие с приложением Renga</a></h1>
+<p>Приложение Renga, описываемое COM-интерфейсом Renga.IApplication позволяет:</p>
+<ul>
+<li>получить доступ к проекту (свойство <strong>Project</strong>);</li>
+<li>добавить в меню новые команды и панели;</li>
+<li>получить и задать некоторую общую информацию (локаль, видимость, версию, название);</li>
+<li>получить доступ к вспомогательному классу Math, с помощью которого можно создавать новые экземпляры кривых;</li>
+<li>открыть, закрыть, создать новый проект;</li>
+<li>осуществить выход из процесса Renga;</li>
+<li>получить доступ к активному виду проекта;</li>
+<li>получить доступ к чтению и заданию выбора объектов;</li>
+</ul>
+<p>Разработчик плагинов из всего перечисленного по убыванию приоритета имеет дело с:</p>
+<ul>
+<li>изменением меню;</li>
+<li><a href="./Topic_RengaDevGuide_AppProcessing_Selection.html">выборкой объектов</a>;</li>
+<li><a href="./Topic_RengaDevGuide_AppProcessing_View.html">взаимодействием с активным видом</a>;</li>
+<li>работой с кривыми для создания новых объектов;</li>
+</ul>
+<p>Работа с меню в настоящем руководстве будет рассмотрена по остаточному принципу, родная справка хорошо объясняет этот материал.</p>
+<p>Приложение Renga фактически содержит инструменты работы с открытым в ней проектом -- механика выбора, доступ к активному виду.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-с-видом"><a class="header" href="#Работа-с-видом">Работа с видом</a></h1>
+<p>Свойство <code>ActiveView</code> COM-оболочки приложения возвращает активный вид текущего приложения, описываемый COM-оболочкой <code>Renga.IView</code>. Свойство последнего <code>Type</code> характеризует вид этого вида.</p>
+<p>Варианты<code>ViewType_ProjectExplorer</code> или <code>ViewType_Undefined</code> описывают вид вне открытого проекта, остальные варианты перечислений ViewType характеризуют какую-то составляющую проекта.</p>
+<p>У вида, свойство <code>Type</code> которого = <code>ViewType_View3D</code>, можно получить другую COM-оболочку, называемую <code>Renga.IView3DParams</code>, которая предоставляет доступ к камере (считывание параметров ее положения, установка положения), подробнее см. <a href="./Topic_RengaDevGuide_AppProcessing_View_Camera.html">вложенную статью</a>. Для заданного положения камеры можно <a href="./Topic_RengaDevGuide_AppProcessing_View_Screens.html">создать снимок</a>.</p>
+<p>Также для вида, свойство <code>Type</code> которого = <code>ViewType_View3D</code>, <code>ViewType_Level</code>, <code>ViewType_Assembly</code> или <code>ViewType_Drawing</code>, можно получить COM-оболочку <code>Renga.IModelView</code>, предоставляющую доступ к чтению и редактированию параметров видимости объектов, заданию визуального стиля. Подробнее см. статью <a href="./Topic_RengaDevGuide_AppProcessing_View_Visibility.html">Управление видимостью объектов</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-с-камерой"><a class="header" href="#Работа-с-камерой">Работа с камерой</a></h1>
+<p>Функциональность камеры в Renga описывается COM-оболочкой <code>Renga.ICamera3D</code>. Получить её можно только для активного 3D-вида проекта приложения.</p>
+<p>Ниже приводится метод расширения на C#, получающий камеру у объекта приложения:</p>
+<pre><code class="language-csharp">public static Renga.ICamera3D? GetCamera(this Renga.IApplication application)
+{
+	Renga.IView view = application.ActiveView as Renga.IView;
+	if (view.Type != Renga.ViewType.ViewType_View3D) return null;
+	Renga.IView3DParams? viewModelParams = viewModel as Renga.IView3DParams;
+	if (viewModelParams == null) return null;
+
+	return viewModelParams.Camera;
+}
+</code></pre>
+<h2 id="Механика-работы-камеры"><a class="header" href="#Механика-работы-камеры">Механика работы камеры</a></h2>
+<p>Камера отражает текущую точку обзора для активного 3D-вида модели проекта.
+Свойство <code>Position</code> задает точку обзора, свойство <code>FocusPoint</code> - точку на векторе, куда направлен взгляд, свойство <code>UpVector</code> - направление вверх, чтобы таким образом однозначно ориентировать правую декартову систему координат в пространстве.
+Упомянутые выше свойства редактируемы - они могут быть изменены c помощью метода <strong>LookTo</strong>, и ориентация камеры также будет изменена.
+Readonly-свойства <code>FovHorizontal</code>, <code>FovVertical</code> характеризуют соответственно горизонтальный и вертикальный сегмент обзора в радианах. Как кажется автору, это актуально для перспективного вида.</p>
+<p>Для лучшего понимания механики работы параметров проведем сопоставлением с работой в Renga:</p>
+<ul>
+<li>при любых операциях вращения сцены будут меняться только параметры <code>Position</code> и <code>UpVector</code>;</li>
+<li>при масштабировании сцены колесиком будет меняться <code>Position</code> и <code>FocusPoint</code>;
+Так как работа с информационной моделью в Renga ведется около нуля координат (более того, он обычно является точкой пересечения начала строительных осей), то можно говорить, что <code>FocusPoint</code> в основном будет указывать на точку "0,0,0".</li>
+</ul>
+<p>Параметры камеры являются зависимыми друг от друга. Например, переопределяя точку <code>Position</code> и <code>FocusPoint</code>, параметр UpVector будет меняться, несмотря на заданное ему другое значение.</p>
+<h2 id="Изменение-положения-камеры"><a class="header" href="#Изменение-положения-камеры">Изменение положения камеры</a></h2>
+<p>Изменить положение камеры можно с помощью метода <code>LookAt</code> COM-оболочки камеры <code>Renga.ICamera3D</code>. Метод принимает на вход все 3 определяющих параметра камеры -- точку взгляда, вектор направления и вектор, задающий ось Z.
+Покажем ниже несколько вариантов положения камеры для сторон видового куба, с расчетом, что точка обзора будет удалена на фиксированное расстояние от "нуля координат":</p>
+<pre><code class="language-csharp">// Сдвиг координат, мм
+double coordsOffsetView = 100000; // 100 м.
+
+private void SetView(double[] position)
+{
+	// Используется метод расширения из листинга выше
+	Renga.ICamera3D? camera = PluginData.rengaApplication.GetCamera();
+	if (camera == null) return;
+	// Конструктор FloatPoint3D условный, на самом деле его нет
+	// Сделано для наглядности. И да, он работает с float
+	camera.LookAt(
+		new FloatPoint3D(0,0,0), 
+		new FloatPoint3D(position[0], position[1], position[2]),
+		new FloatPoint3D(0,0,1));
+}
+
+private void Button_SetOrientFix_Top_Click()
+{
+	SetView(new double[] {0,0, coordsOffsetView });
+}
+
+private void Button_SetOrientFix_Down_Click()
+{
+	SetView(new double[] { 0, 0, -coordsOffsetView });
+}
+
+private void Button_SetOrientFix_Right_Click()
+{
+	SetView(new double[] { coordsOffsetView, 0, 0  });
+}
+
+private void Button_SetOrientFix_Left_Click()
+{
+	SetView(new double[] { -coordsOffsetView, 0, 0 });
+}
+private void Button_SetOrientFix_Front_Click()
+{
+	SetView(new double[] { 0, coordsOffsetView, 0 });
+}
+
+private void Button_SetOrientFix_Back_Click()
+{
+	SetView(new double[] { 0, -coordsOffsetView, 0 });
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Создание-скриншотов-сцены"><a class="header" href="#Создание-скриншотов-сцены">Создание скриншотов сцены</a></h1>
+<p>Текущий вид можно сохранить в виде снимка. Виды, которые можно сохранять:</p>
+<ul>
+<li>3D-вид модели (с версии 5.5);</li>
+<li>сборка (с какой версии неизвестно);</li>
+<li>чертеж (c версии 8.10);</li>
+</ul>
+<p>Доступ к созданию снимка осуществляется через COM-оболочку <code>Renga.IScreenshotService</code>, которая получается вызовом метода GetInterfaceByName("IScreenshotService") для COM-оболочки вида IModelView, подробнее см. <a href="./Topic_RengaDevGuide_AppProcessing_View_Visibility.html">статью о нём</a>.</p>
+<blockquote>
+<p>[!CAUTION]
+Сохранять снимки можно только из-под загруженных плагинов. При попытке сделать получение COM-оболочки IScreenshotService извне, вернется <code>null</code>.</p>
+</blockquote>
+<p>Снимок (скриншот) формируется с помощью метода <code>MakeScreenshot</code> для заданных настроек IScreenshotSettings (экземпляр настроек создается через метод той же COM-оболочки <code>CreateSettings</code>).
+Созданный снимок будет описываться COM-оболочкой <code>Renga.IImage</code>, который можно сохранить в файл с помощью метода <code>SaveToFile</code> в виде картинки BMP или PNG.</p>
+<p>Настройки снимка <code>IScreenshotSettings</code> определяют только разрешение снимка по горизонтали и вертикали в пикселях (свойства <code>Width</code> и <code>Height</code> соответственно).</p>
+<pre><code class="language-cs">Renga.IApplication rengaApp;
+// Получаем активный вид
+Renga.IView rengaView = rengaApp.ActiveView;
+// Приводим вид к интерфейсу Renga
+Renga.IModelView? rengaViewModel = rengaView as Renga.IModelView;
+if (rengaViewModel == null) return;
+// Получаем вспомогательный сервис для создания снимков
+Renga.IScreenshotService? screenServics;
+screenServics = rengaViewModel.GetInterfaceByName("IScreenshotService")
+as Renga.IScreenshotService;
+//screenServics = rengaView as Renga.IScreenshotService;
+if (screenServics == null) return;
+// Создаем настройки для снимка
+Renga.IScreenshotSettings settings = screenServics.CreateSettings();
+settings.Width = 512;
+settings.Height = 512;
+//Создаем снимок
+Renga.IImage createdScreen = screenServics.MakeScreenshot(settings);
+// Сохраняем снимок в файл
+createdScreen.SaveToFile("rengaScreen1.png",
+Renga.ImageFormat.ImageFormat_PNG);
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Управление-видимостью-объектов"><a class="header" href="#Управление-видимостью-объектов">Управление видимостью объектов</a></h1>
+<p>Если текущий вид это 3D-пространство модели, план, сборка или чертёж, для него можно получить COM-оболочку <code>Renga.IModelView</code>, предоставляющую доступ к чтению и редактированию параметров видимости объектов, заданию визуального стиля.</p>
+<p>Кроме того, у <code>IModelView</code> имеется метод <code>GetInterfaceByName</code>, позволяющий безопасно получить <a href="./Topic_RengaDevGuide_AppProcessing_View_Screens.html">сервис для создания снимков</a>.</p>
+<p>Методы COM-оболочки <code>Renga.IModelView</code> можно разделить на 2 группы:</p>
+<ul>
+<li>управление видимостью объектов;</li>
+<li>управление визуальным стилем вида и отдельных объектов;</li>
+</ul>
+<h2 id="Видимость-объектов"><a class="header" href="#Видимость-объектов">Видимость объектов</a></h2>
+<ul>
+<li>GetHiddenObjects - возвращает массив int-идентификаторов скрытых объектов на данном виде;</li>
+<li>GetVisibleObjects - возвращает массив int-идентификаторов видимых объектов на данном виде;</li>
+<li>IsObjectVisible - возвращает признак, видим ли объект по заданному int-идентификатору на данном виде;</li>
+<li>SetObjectsVisibility - задает признак видимости (или невидимости) для заданной группы int-идентификаторов объектов на данном виде;</li>
+<li>ShowObjects - задает видимость объектов для заданной группы int-идентификаторов объектов на данном виде (только для 3D-вида);
+Ниже предлагается авторский метод расширения, задающий видимость объектов для 4 случаев:</li>
+</ul>
+<pre><code class="language-cs">public enum ObjectsVisibilityVariant
+{
+    ShowAll, //показать все объекты
+    HideAll, // скрыть все
+    ShowOnlySelected, // скрыть все, кроме выбранных
+    HideOnlySelected // показать все, кроме выбранных
+}
+
+public static void SetObjectsVisibility2(this Renga.IModelView rengaModelView,
+        ObjectsVisibilityVariant mode, int[]? ids)
+{
+    Renga.IApplication rengaApp;
+
+    Renga.IModel model = rengaApp.Project.Model;
+    Renga.IModelObjectCollection rengaObjectsCollection
+        = model.GetObjects();
+
+    List&lt;int&gt; idsAll = new List&lt;int&gt;();
+    for (int rengaObjectIndex = 0; rengaObjectIndex &lt;
+        rengaObjectsCollection.Count; rengaObjectIndex++)
+    {
+        Renga.IModelObject rengaObject =
+            rengaObjectsCollection.GetByIndex(rengaObjectIndex);
+        idsAll.Add(rengaObject.Id);
+    }
+
+    if (mode == ObjectsVisibilityVariant.ShowAll)
+        rengaModelView.SetObjectsVisibility(idsAll.ToArray(), true);
+    else if (mode == ObjectsVisibilityVariant.HideAll)
+        rengaModelView.SetObjectsVisibility(idsAll.ToArray(), false);
+    else if (ids == null || !ids.Any()) return;
+
+
+    if (mode == ObjectsVisibilityVariant.ShowOnlySelected)
+    {
+        var idsToHide = idsAll.Except(ids);
+
+        rengaModelView.SetObjectsVisibility(ids, true);
+        if (idsToHide.Any()) rengaModelView.
+                SetObjectsVisibility(idsToHide.ToArray(), false);
+    }
+    else if (mode == ObjectsVisibilityVariant.HideOnlySelected)
+    {
+        var idsToShow = idsAll.Except(ids);
+
+        rengaModelView.SetObjectsVisibility(ids, false);
+        if (idsToShow.Any()) rengaModelView.
+                SetObjectsVisibility(idsToShow.ToArray(), true);
+    }
+}
+</code></pre>
+<h3 id="Визуальный-стиль"><a class="header" href="#Визуальный-стиль">Визуальный стиль</a></h3>
+<ul>
+<li>GetObjectVisualStyle - возвращает визуальный стиль объекта по его int-идентификатору;</li>
+<li>SetObjectsVisualStyle - задает объектам визуальный стиль по их int-идентификаторам;
+Свойство VisualStyle - возвращает или задает визуальный стиль для всего вида.</li>
+</ul>
+<p>Как правило,</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-с-выборкой-объектов"><a class="header" href="#Работа-с-выборкой-объектов">Работа с выборкой объектов</a></h1>
+<p>Свойство <code>Selection</code> COM-оболочки приложения Renga возвращает COM-оболочку <code>Renga. ISelection</code> для получения и задания пользовательского выбора объектов в текущем проекте.
+COM-оболочка содержит 2 метода -- получить выбор <code>GetSelectedObjects</code> и сделать заданные объекты выбранными <code>SetSelectedObjects</code>.</p>
+<p>Неочевидное на первый взгляд действие, сброс выбора, это передача методу <code>SetSelectedObjects</code> пустой коллекции объектов.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Событие-выбора"><a class="header" href="#Событие-выбора">Событие выбора</a></h1>
+<p>Можно подписаться на событие выбора объектов в модели через механизм <code>Renga.SelectionEventSource</code>. Подписка на событие осуществляется, как правило, из процедуры плагина Initialize.</p>
+<pre><code class="language-cs">private Renga.IApplication m_application;
+private Renga.SelectionEventSource m_selectionEventSource;
+
+public bool Initialize(string pluginFolder)
+{
+    m_application = new Renga.Application();
+    var selection = m_application.Selection;
+    m_selectionEventSource = new Renga.SelectionEventSource(selection);
+    m_selectionEventSource.ModelSelectionChanged += OnModelSelectionChanged;
+    return true;
+}
+private void OnModelSelectionChanged(object sender, EventArgs args)
+{
+    var selection = m_application.Selection;
+    //Ваши действия ... с selection.GetSelectedObjects()
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Взаимодействие-с-проектом-renga"><a class="header" href="#Взаимодействие-с-проектом-renga">Взаимодействие с проектом Renga</a></h1>
+<p>Приложение Renga фактически работает с одним активным проектом в сессии.
+Через сущность проекта, описываемого COM-оболочкой <code>Renga.IProject</code> осуществляются все действия по созданию свойств, объектов, получению информации о стилях и т.д.
+Получить COM-оболочку<code>Renga.IProject</code> можно с помощью свойства <code>Project</code> у COM-оболочки приложения <code>Renga.IApplication</code>.</p>
+<p>Доступ почти ко всем коллекциям объектов и стилей, а также к специальным инструментам взаимодействия с моделью получается с помощью свойств у COM-оболочки проекта.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Свойства-проекта"><a class="header" href="#Свойства-проекта">Свойства проекта</a></h1>
+<p>У каждого проекта имеется так называемая "Информация о проекте". Это модальное диалоговое окно, открывающееся из интерфейса Renga и состоящее из 3 вкладок: Проект, Участок и Здание. Каждая из вкладок, а также каждый из элементов вкладки описывается соответствующей COM-оболочкой и её свойством.</p>
+<h2 id="Информация-о-проекте"><a class="header" href="#Информация-о-проекте">Информация о проекте</a></h2>
+<p>Описывается COM-оболочкой <code>Renga.IProjectInfo</code>. Получается через свойство <code>ProjectInfo</code> у COM-оболочки проекта <code>Renga.IProject</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Как в Renga</th><th>API</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Обозначение проекта</td><td>Code</td><td></td></tr>
+<tr><td>Наименование проекта</td><td>Name</td><td></td></tr>
+<tr><td>Стадия</td><td>Stage</td><td></td></tr>
+<tr><td>Описание проекта</td><td>Description</td><td></td></tr>
+</tbody></table>
+</div>
+<h2 id="Информация-о-здании"><a class="header" href="#Информация-о-здании">Информация о здании</a></h2>
+<p>Описывается COM-оболочкой <code>Renga.IBuildingInfo</code>. Получается через свойство BuildingInfo у COM-оболочки проекта <code>Renga.IProject</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Как в Renga</th><th>API</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Номер здания</td><td>Number</td><td></td></tr>
+<tr><td>Наименование здания</td><td>Name</td><td></td></tr>
+<tr><td>Адрес здания</td><td>Stage</td><td>Прим. 1</td></tr>
+<tr><td>Описание здания</td><td>Description</td><td></td></tr>
+<tr><td>Примечание 1: поле адреса составное, описывается COM-оболочкой <code>Renga.IPostalAddress</code>. Редактируется напрямую после получения данного адреса через свойство 	<code>GetAddress</code>.</td><td></td><td></td></tr>
+<tr><td>Среди свойств здания располагаются параметры трансформации координат при экспорте в IFC. Ими можно пользоваться для выполнения операций импорта-экспорта данных в модель.</td><td></td><td></td></tr>
+</tbody></table>
+</div>
+<p>Ниже предлагается метод расширения на C#, возвращающий параметры трансформации координат в виде класса <code>ProjectTransformPararameters</code>. Также там имеется перегрузку для участка, поскольку согласно справке к Renga он тоже может использоваться для задания сдвига координат.</p>
+<pre><code class="language-cs">using System;
+using System.Linq;
+
+public class ProjectTransformPararameters
+{
+    public double X;
+    public double Y;
+    public double Z;
+    public double AngleRad;
+
+    public ProjectTransformPararameters()
+    {
+        X = 0;
+        Y = 0;
+        Z = 0;
+        AngleRad = 0;
+    }
+}
+
+internal static class BuildingSiteInfoExtension
+{
+    private static ProjectTransformPararameters getTransformPararameters(Renga.IPropertyContainer props)
+    {
+        ProjectTransformPararameters trparams = new ProjectTransformPararameters();
+        if (PluginData.Project == null) return trparams;
+
+        // Резервируем имена целевых свойств
+        string propName_IfcLocationX = "IfcLocationX";
+        string propName_IfcLocationY = "IfcLocationY";
+        string propName_IfcLocationZ = "IfcLocationZ";
+        string propName_IfcDirectionPrecession = "IfcDirectionPrecession";
+
+        var propDefs = PluginData.Project.PropertyManager.GetPropertiesDef();
+        if (propDefs == null) return trparams;
+
+        // Находим определения свойств в проекте Renga
+
+        var propRes_IfcLocationX = propDefs.Where(p =&gt; p.Name == propName_IfcLocationX);
+        var propRes_IfcLocationY = propDefs.Where(p =&gt; p.Name == propName_IfcLocationY);
+        var propRes_IfcLocationZ = propDefs.Where(p =&gt; p.Name == propName_IfcLocationZ);
+        var propRes_IfcDirectionPrecession = propDefs.Where(p =&gt; p.Name == propName_IfcDirectionPrecession);
+
+        // Если хотя бы одного определения нет, завершаем
+        if (!propRes_IfcLocationX.Any() || !propRes_IfcLocationY.Any() || !propRes_IfcLocationZ.Any() || !propRes_IfcDirectionPrecession.Any()) return trparams;
+
+        // Идентификаторы свойств
+        RengaPropertyDefinition propDef_IfcLocationX = propRes_IfcLocationX.First();
+        RengaPropertyDefinition propDef_IfcLocationY = propRes_IfcLocationY.First();
+        RengaPropertyDefinition propDef_IfcLocationZ = propRes_IfcLocationZ.First();
+        RengaPropertyDefinition propDef_IfcDirectionPrecession = propRes_IfcDirectionPrecession.First();
+
+        Renga.IProperty? propInstance_IfcLocationX = null;
+        Renga.IProperty? propInstance_IfcLocationY = null;
+        Renga.IProperty? propInstance_IfcLocationZ = null;
+        Renga.IProperty? propInstance_IfcDirectionPrecession = null;
+
+        if (props.Contains(propDef_IfcLocationX.Id)) propInstance_IfcLocationX = props.Get(propDef_IfcLocationX.Id);
+        if (props.Contains(propDef_IfcLocationY.Id)) propInstance_IfcLocationY = props.Get(propDef_IfcLocationY.Id);
+        if (props.Contains(propDef_IfcLocationZ.Id)) propInstance_IfcLocationZ = props.Get(propDef_IfcLocationZ.Id);
+        if (props.Contains(propDef_IfcDirectionPrecession.Id)) propInstance_IfcDirectionPrecession = props.Get(propDef_IfcDirectionPrecession.Id);
+
+        if (propInstance_IfcLocationX == null || propInstance_IfcLocationY == null || propInstance_IfcLocationZ == null || propInstance_IfcDirectionPrecession == null) return trparams;
+
+        // поверяем типы свойств
+        if (propDef_IfcLocationX.PType != Renga.PropertyType.PropertyType_Length |
+            propDef_IfcLocationY.PType != Renga.PropertyType.PropertyType_Length |
+            propDef_IfcLocationZ.PType != Renga.PropertyType.PropertyType_Length |
+            propDef_IfcDirectionPrecession.PType != Renga.PropertyType.PropertyType_Angle) return trparams;
+
+        trparams.X = propInstance_IfcLocationX.GetLengthValue(Renga.LengthUnit.LengthUnit_Meters);
+        trparams.Y = propInstance_IfcLocationY.GetLengthValue(Renga.LengthUnit.LengthUnit_Meters);
+        trparams.Z = propInstance_IfcLocationZ.GetLengthValue(Renga.LengthUnit.LengthUnit_Meters);
+
+        var angle = propInstance_IfcDirectionPrecession.GetAngleValue(Renga.AngleUnit.AngleUnit_Degrees);
+        if (angle &lt; 0) angle = 360.0 + angle;
+        trparams.AngleRad = Math.PI * propInstance_IfcDirectionPrecession.GetAngleValue(Renga.AngleUnit.AngleUnit_Degrees) / 180.0;
+
+        return trparams;
+
+    }
+    /// &lt;summary&gt;
+    /// Возвращает параметры трансформации координат из свойств здания. Сдвиг XYZ в метрах, угол поворота вокруг оси Z в градусах, наименование СК
+    /// &lt;/summary&gt;
+    /// &lt;param name="buildingInfo"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    public static ProjectTransformPararameters GetTransformPararameters(this Renga.IBuildingInfo buildingInfo)
+    {
+        return getTransformPararameters(buildingInfo.GetProperties());
+    }
+
+    /// &lt;summary&gt;
+    /// Возвращает параметры трансформации координат из свойств участка. Сдвиг XYZ в метрах, угол поворота вокруг оси Z в градусах, WKT-код СК
+    /// &lt;/summary&gt;
+    /// &lt;param name="buildingInfo"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    public static ProjectTransformPararameters GetTransformPararameters(this Renga.ISiteInfo siteInfo)
+    {
+        return getTransformPararameters(siteInfo.GetProperties());
+    }
+}
+</code></pre>
+<h2 id="Информация-об-участке"><a class="header" href="#Информация-об-участке">Информация об участке</a></h2>
+<p>Описывается COM-оболочкой <code>Renga.ISiteInfo</code>. Получается через свойство <code>SiteInfo</code> у COM-оболочки проекта <code>Renga.IProject</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Как в Renga</th><th>API</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Номер участка</td><td>Number</td><td></td></tr>
+<tr><td>Наименование участка</td><td>Name</td><td></td></tr>
+<tr><td>Адрес участка</td><td>Stage</td><td>см. Прим.1 для здания</td></tr>
+<tr><td>Описание участка</td><td>Description</td><td></td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="Информация-о-здании-1"><a class="header" href="#Информация-о-здании-1">Информация о здании</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Информация-об-участке-1"><a class="header" href="#Информация-об-участке-1">Информация об участке</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Информация-о-проекте-1"><a class="header" href="#Информация-о-проекте-1">Информация о проекте</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Прочие-свойства"><a class="header" href="#Прочие-свойства">Прочие свойства</a></h1>
+<p>К числу прочих свойств, имеющихся у COM-оболочки проекта IProject, можно отнести:</p>
+<ul>
+<li>FilePath - абсолютный путь к текущему проекту или его имя, если проект не был сохранен;</li>
+<li>JournalPath - абсолютный путь к файлу журнала действий с моделью, он же лог при серверной работе;</li>
+</ul>
+<h2 id="Вспомогательные-методы"><a class="header" href="#Вспомогательные-методы">Вспомогательные методы</a></h2>
+<p>Также у COM-оболочки проекта имеются некоторые методы, которые можно позиционировать как вспомогательные:</p>
+<ul>
+<li>ExportDrawingsToPdf - экспорт набора чертежей в PDF;</li>
+<li>ExportObjectsToIFC - экспорт группы объектов в IFC;</li>
+<li>ExportToCsv - экспорт информации о свойствах и стиля проекта в набор CSV;</li>
+<li>HasUnsavedChanges - возвращает признак, есть ли в проекте несохраненные изменения;</li>
+<li>HasFile - возвращает признак, был ли проект когда-либо сохранен;</li>
+<li>Save - сохраняет данный проект проект, включая перегрузку SaveAs - сохранение с параметрами;</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Категории"><a class="header" href="#Категории">Категории</a></h1>
+<p>Категории в Renga - это объекты инженерных систем, называемые также "категориями", сгруппированные по видам инженерных систем (перечень ограничен).
+На базе категории может быть создан 1 или несколько стилей (см. о них <a href="./Topic_RengaDevGuide_ProjectProcessing_Styles.html">следующий раздел</a>).</p>
+<p>В таблице ниже приведен перечень всех возможных категорий в Renga, информация - каким перечислением <code>EntityTypes</code> описывается категория группы, через какое свойство COM-оболочки проекта <code>Renga.IProject</code> данная категория доступна:</p>
+<div class="table-wrapper"><table><thead><tr><th>Название группы в Renga</th><th>EntityType</th><th>Свойство в IProject</th></tr></thead><tbody>
+<tr><td>Санитарно-техническое оборудование</td><td>PlumbingFixtureCategory</td><td>PlumbingFixtureCategories</td></tr>
+<tr><td>Оборудование</td><td>EquipmentCategory</td><td>EquipmentCategories</td></tr>
+<tr><td>Деталь трубопровода</td><td>PipeFittingCategory</td><td>PipeFittingCategories</td></tr>
+<tr><td>Аксессуар трубопровода</td><td>PipeAccessoryCategory</td><td>PipeAccessoryCategories</td></tr>
+<tr><td>Вентиляционное оборудование</td><td>MechanicalEquipmentCategory</td><td>MechanicalEquipmentCategories</td></tr>
+<tr><td>Деталь воздуховода</td><td>DuctFittingCategory</td><td>DuctFittingCategories</td></tr>
+<tr><td>Аксессуар воздуховода</td><td>DuctAccessoryCategory</td><td>DuctAccessoryCategories</td></tr>
+<tr><td>Электроустановочное изделие</td><td>WiringAccessoryCategory</td><td>WiringAccessoryCategories</td></tr>
+<tr><td>Осветительный прибор</td><td>LightingFixtureCategory</td><td>LightingFixtureCategories</td></tr>
+<tr><td>Электрический распределительный щит</td><td>ElectricDistributionBoardCategory</td><td>ElectricDistributionBoardCategories</td></tr>
+</tbody></table>
+</div>
+<h2 id="Создание-категорий"><a class="header" href="#Создание-категорий">Создание категорий</a></h2>
+<p>С помощью API начиная с версии Renga 8.3 возможен импорт в проект новой категории из RST-файла (создаваемого с помощью STDL). За это отвечает метод <code>ImportCategory</code> у COM-оболочки проекта <code>Renga.IProject</code>. Метод принимает на вход идентификатор импортируемой категории объектов (см. таблицу выше) и абсолютный путь к RST-файлу, возвращаемый объект описывается стандартной COM-оболочкой <code>Renga.IEntity</code>. Далее на основе идентификатора импортированной категории можно создать стиль. Ниже обобщенный пример подобной операции:</p>
+<blockquote>
+<p>[!ATTENTION]
+Для программного импорта стиля в модель необходимо иметь лицензию на редакцию Professional.</p>
+</blockquote>
+<pre><code class="language-cs">Renga.IProject project;
+Guid categoryType = Renga.EntityTypes.MechanicalEquipmentCategory;
+Guid typeId = Renga.EntityTypes.MechanicalEquipmentStyle;
+string categoryRstPath;
+
+var operation = project.CreateOperation();
+
+operation.Start();
+var category = project.ImportCategory(categoryType, categoryRstPath);
+operation.Apply();
+
+operation.Start();
+var argsUnits = project.MechanicalEquipmentStyles.CreateNewEntityArgs();
+argsUnits.TypeId = typeId;
+argsUnits.CategoryId = category.Id;
+var style = project.MechanicalEquipmentStyles.Create(argsUnits);
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Стили"><a class="header" href="#Стили">Стили</a></h1>
+<p>Стили в Renga - это варианты описания объектов и различных настроек. Не все стили, называемые "Styles" в API в самой программе также называются "стилями", например, тип ReinforcementGrade (класс арматуры) называется "Reinforcement grade style", хотя в самой Renga называется только как "класс"</p>
+<h3 id="Стили-для-объектов"><a class="header" href="#Стили-для-объектов">Стили для объектов</a></h3>
+<p>Стили в Renga, относящиеся к объектам, подразделяются на ряд "тематических групп", каждый стиль описывает один или несколько типоразмеров объекта (обычно, параметрического). На базе конкретного стиля создается объект соответствующего типа модели Renga. Типовой стиль имеет некоторый профиль (геометрию) и набор свойств.
+По умолчанию все стили создаются вручную во встроенном редакторе Renga, некоторые стили могут также создаваться на основе <a href="./Topic_RengaDevGuide_ProjectProcessing_Categories.html">категорий</a> (импортированных из STDL).</p>
+<h3 id="Стили-для-настроек"><a class="header" href="#Стили-для-настроек">Стили для настроек</a></h3>
+<p>В основном, это перечень различных настроек из меню "Оформление" меню проекта в Renga и другие.</p>
+<h2 id="Перечень-стилей"><a class="header" href="#Перечень-стилей">Перечень стилей</a></h2>
+<p>В таблице ниже приводится перечень категорий стилей, информация, с какой версии API возможно их создание, каким свойством описывается коллекция стилей в составе свойств проекта, какие категории связаны с данными стилями, возможность создать объект данной категории. Для версии API Renga 2.46 (8.12). В скобках приведена информация, с какой версии появилась возможность создания, там где эта информация известна.
+Если стиль описывает неграфический объект, то для него не будут заполнены ячейки в колонках "Можно создать объект".
+Пустые поля означают, что в API это не реализовано.</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя в API<br>(EntityTypes)</th><th>Имя в Renga<br>на русском</th><th>Где в меню<br>Renga</th><th>Свойство<br>в IProject</th><th>Категории</th><th>Можно<br>создать <br>стиль</th><th>Можно <br>создать <br>объект<br>В модели</th></tr></thead><tbody>
+<tr><td>Assembly</td><td>Сборка</td><td></td><td>Assemblies</td><td></td><td>❌</td><td>✅ (8.6)</td></tr>
+<tr><td>BeamStyle</td><td>Стиль балки</td><td>Стили балки</td><td>BeamStyles</td><td></td><td>✅</td><td>✅ (8.9)</td></tr>
+<tr><td>BuildingElementModel</td><td>❓ (связи?)</td><td></td><td>❓</td><td></td><td></td><td></td></tr>
+<tr><td>ColumnStyle</td><td>Стиль колонны</td><td>Стили колонны</td><td>ColumnStyles</td><td></td><td>✅</td><td>✅ (8.6)</td></tr>
+<tr><td>DisplayStyle</td><td>Стиль отображения</td><td>Оформление - <br>Стили отображения</td><td>❓</td><td></td><td></td><td></td></tr>
+<tr><td>DoorStyle</td><td>Стиль двери</td><td>Стили двери</td><td>DoorStyles</td><td></td><td>✅</td><td>✅ (8.6)</td></tr>
+<tr><td>DuctAccessoryStyle</td><td>Стиль <br>аксессуара <br>воздуховода</td><td>Воздуховодные <br>системы - Стили <br>аксессуара <br>воздуховода</td><td>DuctAccessoryStyles</td><td>DuctAccessoryCategories</td><td>✅</td><td>❌</td></tr>
+<tr><td>DuctFittingStyles</td><td>Стиль детали<br>воздуховода</td><td>Воздуховодные <br>системы - Стили <br>детали <br>воздуховода</td><td>DuctAccessoryStyles</td><td>DuctFittingCategories</td><td>✅</td><td>❌</td></tr>
+<tr><td>DuctStyle</td><td>Стиль <br>воздуховода</td><td>Воздуховодные <br>системы - Стили <br>воздуховода</td><td>DuctStyles</td><td></td><td>✅</td><td>❌</td></tr>
+<tr><td>ElectricCircuitLineStyle</td><td>Стиль <br>электрической<br>линии</td><td>Электрические <br>системы - Стили <br>электрической <br>линии</td><td>ElectricalCircuitLineStyles</td><td></td><td>✅</td><td>❌</td></tr>
+<tr><td>ElectricalConductorStyle</td><td>Стиль проводника</td><td>Электрические <br>системы - Стили <br>проводника</td><td>ElectricalConductorStyles</td><td></td><td>✅</td><td>❌</td></tr>
+<tr><td>ElectricDistributionBoardStyle</td><td>Стиль <br>электрического <br>распределительного <br>щита</td><td>Электрические <br>системы - Стили <br>электрического <br>распределительного <br>щита</td><td>ElectricDistributionBoardStyles</td><td>ElectricDistributionBoardCategories</td><td>✅</td><td>✅ (8.12)</td></tr>
+<tr><td>ElementStyle</td><td>Стиль элемента</td><td>Стили элемента</td><td>ElementStyles</td><td></td><td>✅</td><td>✅ (8.6)</td></tr>
+<tr><td>EquipmentStyle</td><td>Стиль оборудования</td><td>Трубопроводные <br>системы - Стили <br>оборудования</td><td>EquipmentStyles</td><td>EquipmentCategories</td><td>✅</td><td>✅ (8.9)</td></tr>
+<tr><td>HatchPatternStyle</td><td>Стиль штриховки</td><td>Оформление - <br>Штриховки</td><td></td><td></td><td>❌</td><td>✅ (8.7)</td></tr>
+<tr><td>HoleStyle</td><td>Стиль отверстия</td><td>Стили отверстия</td><td>HoleStyles</td><td></td><td>✅</td><td>✅ (8.7)</td></tr>
+<tr><td>LayoutStyle</td><td>Стиль оформления</td><td>Оформление - <br>Стили оформления</td><td>LayoutStyles</td><td></td><td>✅</td><td></td></tr>
+<tr><td>LightingFixtureStyle</td><td>Стиль <br>осветительного<br>прибора</td><td>Электрические <br>системы - Стили <br>осветительного  <br>прибора</td><td>LightingFixtureStyles</td><td>LightingFixtureCategories</td><td>✅</td><td>✅ (8.12)</td></tr>
+<tr><td>Material</td><td>Материал <br>(стиль материала)</td><td>Материалы</td><td>Materials</td><td></td><td>❌</td><td></td></tr>
+<tr><td>MechanicalEquipmentStyle</td><td>Стиль <br>вентиляционного<br>оборудования</td><td>Воздуховодные <br>системы - Стили <br>вентиляционного <br>оборудования</td><td>MechanicalEquipmentStyles</td><td>MechanicalEquipmentCategories</td><td>✅</td><td>✅ (8.9)</td></tr>
+<tr><td>PageFormat</td><td>Стиль <br>формы страницы<br>❓</td><td>❓</td><td>PageFormatStyles</td><td></td><td>✅</td><td></td></tr>
+<tr><td>PipeAccessoryStyle</td><td>Стиль <br>аксессуара<br>трубопровода</td><td>Трубопроводные <br>системы - Стили <br>аксессуара<br>трубопровода</td><td>PipeAccessoryStyles</td><td>PipeAccessoryCategories</td><td>✅</td><td>❌</td></tr>
+<tr><td>PipeFittingStyle</td><td>Стиль <br>детали <br>трубопровода</td><td>Трубопроводные <br>системы - Стили <br>детали<br>трубопровода</td><td>PipeFittingStyles</td><td>PipeFittingCategories</td><td>✅</td><td>❌</td></tr>
+<tr><td>PipeStyle</td><td>Стиль трубы</td><td>Трубопроводные <br>системы - Стили <br>трубы</td><td>PipeStyles</td><td></td><td>✅</td><td>❌</td></tr>
+<tr><td>PlateStyle</td><td>Стиль пластины</td><td>Стили пластины</td><td>PlateStyles</td><td></td><td>✅</td><td>✅ (8.6)</td></tr>
+<tr><td>PlumbingFixtureStyle</td><td>Стиль <br>санитарно-<br>технического <br>оборудования</td><td>Трубопроводные <br>системы - Стили <br>санитарно-<br>технического<br>оборудования</td><td>PlumbingFixtureStyles</td><td>PlumbingFixtureCategories</td><td>✅</td><td>✅ (8.9)</td></tr>
+<tr><td>RebarStyle</td><td>Стиль <br>арматурного <br>стержня</td><td>Армирование - Стили <br>арматурного стержня</td><td>RebarStyles</td><td></td><td>✅</td><td>❌</td></tr>
+<tr><td>ReinforcementGrade</td><td>Класс арматуры</td><td>Армирование - Классы <br>арматуры</td><td>ReinforcementGrades</td><td></td><td>✅</td><td>❌</td></tr>
+<tr><td>ReinforcementStyle</td><td>Стиль<br>армирования</td><td>Армирование - Стили <br>армирования</td><td>ReinforcementStyles</td><td></td><td>❌</td><td></td></tr>
+<tr><td>ReinforcementUnitStyle</td><td>Стиль <br>арматурного<br>изделия</td><td>Армирование - Стили <br>арматурных изделий</td><td>ReinforcementUnitStyles</td><td></td><td>❌</td><td></td></tr>
+<tr><td>SystemStyle</td><td>Стиль системы</td><td>Стили системы</td><td>SystemStyles</td><td></td><td>❌</td><td></td></tr>
+<tr><td>TagStyle</td><td>Стиль маркера</td><td>Оформление - <br>Стили маркера</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>TextStyle</td><td>Стиль текста</td><td>Оформление - <br>Стили текста</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Topic</td><td>Раздел</td><td>Оформление - Разделы</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>WindowStyle</td><td>Стиль окна</td><td>Стили окна</td><td>WindowStyles</td><td></td><td>✅</td><td>✅ (8.6)</td></tr>
+<tr><td>WiringAccessoryStyle</td><td>Стиль <br>электроустановочного<br>изделия</td><td>Электрические <br>системы - Стили <br>электроустановочного  <br>изделия</td><td>WiringAccessoryStyles</td><td>WiringAccessoryCategories</td><td>✅</td><td>✅ (8.12)</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="Создание-стилей"><a class="header" href="#Создание-стилей">Создание стилей</a></h1>
+<p>Создание новых стилей, как и создание объектов в модели, осуществляется с помощью сходного подхода через <code>CreateNewEntityArgs</code> и <code>Create</code>. Доступны с версии Renga 8.4.
+Стили создаются для одного из фиксированных набора стилей, каждый набор стилей описывается COM-оболочкой <code>Renga.IEntityCollection</code>.</p>
+<p>У COM-оболочки целевой коллекции стилей, например, стилей вентиляционного оборудования (доступных через свойство <code>MechanicalEquipmentStyles</code> у COM-оболочки проекта) вызывается метод <code>CreateNewEntityArgs</code>, возвращающий экземпляр настроек для создания стиля (описывается COM-оболочкой <code>Renga.INewEntityArgs</code>).
+У него обязательно заполняются 2 параметра:</p>
+<ul>
+<li>TypeId (равен идентификатору стиля для заданной группы из перечисления <code>Renga.StyleTypeIds</code>, в данном случае для вентиляционного оборудования - <code>MechanicalEquipmentStyle</code>);</li>
+<li>CategoryId (равен свойству Id у COM-оболочки категории оборудования из набора категорий для заданной группы стилей, если таковая есть, в данном случае для вентиляционного оборудования это <code>MechanicalEquipmentCategories</code>);
+Для созданного экземпляра настроек у той же COM-оболочки целевой коллекции стилей вызывается метод <code>Create</code>, возвращающий объект стиля, доступный через COM-оболочку <code>Renga.IEntity</code>.</li>
+</ul>
+<p>Ниже обобщенный пример, показывающий подобный сценарий импорта. Сперва создается определение категории из RST-файла, затем создается стиль на базе созданной категории.</p>
+<pre><code class="language-cs">Renga.IProject project;
+Guid categoryType = Renga.EntityTypes.MechanicalEquipmentCategory;
+Guid typeId = Renga.EntityTypes.MechanicalEquipmentStyle;
+string categoryRstPath;
+
+var operation = project.CreateOperation();
+
+operation.Start();
+var category = project.ImportCategory(categoryType, categoryRstPath);
+operation.Apply();
+
+operation.Start();
+var argsUnits = project.MechanicalEquipmentStyles.CreateNewEntityArgs();
+argsUnits.TypeId = typeId;
+argsUnits.CategoryId = category.Id;
+var style = project.MechanicalEquipmentStyles.Create(argsUnits);
+</code></pre>
+<p>Для коллекций стилей, не имеющих категорий, свойство CategoryId соответственно не указывается.</p>
+<p><strong>Примечание:</strong> Автору настоящей справки не понятно, зачем разработчики добавили возможность создания стиля, если ему нельзя назначить геометрию и задать имя 😐. Это относится ко всем стилям, не только к тем, что создаются на основе категорий. Фактически, это мёртворожденная затея без всякого смысла....</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Чтение-стилей"><a class="header" href="#Чтение-стилей">Чтение стилей</a></h1>
+<p>Получить информацию о любом стиле в Renga можно с помощью COM-оболочки <code>Renga.IEntity</code>. Каких-либо специальных COM-оболочек для какого-либо стиля в настоящем API (для Renga 8.12) не существует.
+Процесс перебора COM-оболочки коллекции стилей, представленной <code>Renga.IEntityCollection</code> также не представляет каких-либо трудностей. Используйте цикл для количества стилей в коллекции <code>Count</code> и метод <code>GetByIndex</code>, возвращающий определение стиля, описываемое COM-оболочкой <code>Renga.IEntity</code>. Полученный стиль можно привести к COM-оболочке набора свойств или параметров, характерный для стиля данного типа.</p>
+<p>В примере ниже у проекте получается коллекция стилей дверей, она перебирается, если приведением стиля к COM-оболочке набора параметров <code>Renga.IParameterContainer</code> было успешным, то для каждое приведенного к строке непустое значение запоминается и после перебора всех параметров выводится в диалоговое окно.</p>
+<pre><code class="language-cs">Renga.IApplication rengaApp;
+StringBuilder tmpText = new StringBuilder();
+// Получаем набор стилей дверей
+Renga.IEntityCollection doorStyles = rengaApp.Project.DoorStyles;
+
+for (int styleIndex = 0; styleIndex &lt; doorStyles.Count; styleIndex++)
+{
+Renga.IEntity doorStyle = doorStyles.GetByIndex(styleIndex);
+Renga.IParameterContainer? doorStyleParams = 
+doorStyle.GetInterfaceByName("IParameterContainer") as Renga.IParameterContainer;
+if (doorStyleParams == null) continue;
+tmpText.AppendLine("Door parameters for style " + doorStyle.Name);
+Renga.IGuidCollection doorStyleParams_Ids = doorStyleParams.GetIds();
+for (int paramIndex = 0; paramIndex &lt; doorStyleParams_Ids.Count; paramIndex++)
+{
+Renga.IParameter doorParam = doorStyleParams.Get(doorStyleParams_Ids.Get(paramIndex));
+bool isNeed = (doorParam.HasValue &amp;&amp; !string.IsNullOrEmpty(doorParam.GetStringValue())) ? true :false;
+if (!isNeed) continue;
+tmpText.AppendLine($"Name: {doorParam.Definition.Name}; Value: {doorParam.GetStringValue()}");
+}
+}
+rengaApp.UI.ShowMessageBox(Renga.MessageIcon.MessageIcon_Info, "Result", tmpText.ToString());
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-со-свойствами"><a class="header" href="#Работа-со-свойствами">Работа со свойствами</a></h1>
+<p>Свойства в Renga представлены 3 отдельными группами, каждая со своей логикой:</p>
+<ul>
+<li>классические свойства нескольких типов, можно свободно создавать, редактировать и назначать типам объектов;</li>
+<li>расчетные свойства, перечень ограничен, характерны объектам определенных типов. Доступны только для чтения. <a href="https://help.rengabim.com/api/group___possible_quantities_for_entities.html">Страница официальной справки</a> с "матрицей" расчетных свойств для объектов;</li>
+<li>параметры, как и расчетные свойства ограничены и специфичны типам объектов, таблицы с их сопоставлением с объектами, как для расчетных свойств, нет. Параметры можно редактировать для различных типов значений;
+Каждая из "групп" свойств выше описывается своими идентификаторами, COM-оболочками.
+Получение доступа к свойствам осуществляется через методы у COM-оболочек объектов модели и\или чертежа, некоторых неграфических элементов; также некоторые элементы могут приводиться к COM-оболочке "набора свойств", например, стиль описываемый COM-оболочкой <code>Renga.IEntity</code> можно привести к набору параметров (COM-оболочка <code>Renga.IParameterContainer</code>).</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Обычные-свойства"><a class="header" href="#Обычные-свойства">Обычные свойства</a></h1>
+<p>Свойство <code>PropertyManager</code> COM-оболочки проекта IProject возвращает менеджер обычных свойств, описываемый COM-оболочкой <code>Renga.IPropertyManager</code>.
+С помощью данного менеджера можно создавать новые определения свойств, проверять наличие свойства в проекте и получать их, назначать свойство типам объектов, удалять свойства.
+Специфика свойств в Renga состоит в наличии у свойства уникального идентификатора типа <code>Guid</code>. Все действия со свойствами через данный менеджер осуществляются через идентификатор свойства. Имеются перегрузки методов, работающие с идентификатором как со строкой (с суффиксом <code>S</code>) и как с <code>Guid</code>.</p>
+<h2 id="Общие-методы-менеджера-свойств"><a class="header" href="#Общие-методы-менеджера-свойств">Общие методы менеджера свойств</a></h2>
+<p>К числу общих и специальных методов у COM-оболочки менеджера свойств <code>Renga.IPropertyManager</code> можно отнести:</p>
+<ul>
+<li><code>GetCSVExportFlag</code> - возвращает признак, будет ли свойство экспортировано в CSV. Флажок может поставить Пользователь в самой программе или через API, метод <code>SetCSVExportFlag</code>;</li>
+<li><code>SetCSVExportFlag</code> - задает признак, будет ли свойство экспортировано в CSV;</li>
+<li><code>GetExpression</code> - возвращает выражение (формулу) для данного определения свойства и типа объекта;</li>
+<li><code>SetExpression</code> - задает выражение (формулу) для данного определения свойства и типа объекта. (<strong>Примечание</strong>: не понимаю, зачем ещё и тип объекта. В линейке программ ModelStudioCS формула едина на всё определение свойства);</li>
+</ul>
+<p>Информацию о прочих методах менеджера свойств смотрите в статьях раздела.</p>
+<div style="break-before: page; page-break-before: always;"></div><p>Процесс создания нового определения свойств через API аналогичен процессу через пользовательский интерфейс Renga с той разницей, что через API имеется возможно задать идентификатор свойства, а через UI - нет.</p>
+<h2 id="Шаг-1---Создать-определение-свойства"><a class="header" href="#Шаг-1---Создать-определение-свойства">Шаг 1 - Создать определение свойства</a></h2>
+<p>Здесь мы вынуждены прибегнуть к тавтологии.
+Необходимо создать вспомогательный объект, описываемый COM-оболочкой <code>Renga.IPropertyDescription</code>, который будет содержать информацию о новом определении свойства -- его имени и типе. Тип описывается стандартным перечислением <code>Renga.PropertyType</code> из состава библиотеки типов. Альтернативный сценарий - создать экземпляр структуры <code>Renga.PropertyDescription</code> и задать ей поля <code>Name</code> и <code>Type</code> аналогично аргументам метода <code>CreatePropertyDescription</code>.</p>
+<pre><code class="language-csharp">Renga.IPropertyManager manager;
+// Вариант 1
+Renga.IPropertyDescription propDef = manager.CreatePropertyDescription("DeveloperName", 
+	Renga.PropertyType.PropertyType_String);
+// Вариант 2
+Renga.PropertyDescription propDef2 = new Renga.PropertyDescription(){Name = "DeveloperName", 
+	Type = Renga.PropertyType.PropertyType_String};
+</code></pre>
+<h2 id="Шаг-2---Зарегистрировать-свойство"><a class="header" href="#Шаг-2---Зарегистрировать-свойство">Шаг 2 - Зарегистрировать свойство</a></h2>
+<p>Далее, в зависимости от того, чем представлено определение свойства -- COM-оболочкой <code>Renga.IPropertyDescription</code> или структурой <code>Renga.PropertyDescription</code> необходимо зарегистрировать определение свойства с указанным идентификатором в проекте Renga. В первом случае -- через метод <code>RegisterProperty2</code>, во второй -- через метод <code>RegisterProperty</code>.
+Проверить, занят ли данный идентификатор для нового определения свойства перед его добавлением можно через метод <code>IsPropertyRegistered</code>.</p>
+<pre><code class="language-csharp">Renga.IPropertyManager manager;
+Guid newPropDefId = Guid.Parse("06f8a29e-c932-4432-961c-8a61e5a9c8b8");
+if (manager.IsPropertyRegistered(newPropDefId)) return;
+// Вариант 1
+manager.RegisterProperty2(newPropDefId, propDef);
+// Вариант 2
+manager.RegisterProperty(newPropDefId, propDef2);
+</code></pre>
+<p>Пока свойство не будет зарегистрировано, оно не появится в проекте. Можно считать данный процесс аналогичным созданию.
+Обратная процедура -- <code>UnregisterProperty</code> фактически означает удаление свойства из проекта.</p>
+<h2 id="Шаг-3---Связывание-свойства-с-типами-объектов"><a class="header" href="#Шаг-3---Связывание-свойства-с-типами-объектов">Шаг 3 - Связывание свойства с типами объектов</a></h2>
+<p>Далее необходимо добавить определение свойства к одному или нескольким типам объектов. Типы объектов - это <code>Guid</code> из класса <code>Renga.EntityTypes</code>.
+Проверить, назначено ли свойство объекту можно с помощью метода <code>IsPropertyAssignedToType</code>.
+Связать свойство с объектом можно через метод <code>AssignPropertyToType</code>.</p>
+<h2 id="Прочие-действия"><a class="header" href="#Прочие-действия">Прочие действия</a></h2>
+<p>Можно задать формулу <code>SetExpression</code> для расчета значения свойства (формула назначается для заданного типа объекта), перед добавлением свойство должно быть добавлено к типу объекта (шаг 3).
+Для определения свойства можно задать флаг, что оно будет выгружаться в CSV через метод <code>SetCSVExportFlag</code>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

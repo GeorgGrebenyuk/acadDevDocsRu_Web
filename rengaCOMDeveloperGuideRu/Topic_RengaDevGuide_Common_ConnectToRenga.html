@@ -1,0 +1,427 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Подключение к приложению Renga - Руководство разработчика Renga COM API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика Renga COM API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Подключение-к-приложению-renga"><a class="header" href="#Подключение-к-приложению-renga">Подключение к приложению Renga</a></h1>
+<h2 id="Получение-приложение-из-загруженного-плагина"><a class="header" href="#Получение-приложение-из-загруженного-плагина">Получение приложение из загруженного плагина</a></h2>
+<p>Для внутренних приложений, загружаемых в Renga в виде плагинов, вопрос получения COM-интерфейса, описывающего приложение Renga не стоит - просто вызывается соответствующий метод:
+На C#:</p>
+<pre><code class="language-csharp">Renga.Application rengaApp = new Renga.Application();
+</code></pre>
+<p>На C++:</p>
+<pre><code class="language-cpp">Renga::IApplicationPtr rengaApp = Renga::CreateApplication();
+</code></pre>
+<h2 id="Получение-приложения-из-внешнего-процесса"><a class="header" href="#Получение-приложения-из-внешнего-процесса">Получение приложения из внешнего процесса</a></h2>
+<p>Сложнее обстоит вопрос с доступом к приложению Renga из стороннего процесса. Так или иначе, способы будут завязаны на COM-методы, так как само API реализовано на COM-технологии.
+Есть 2 сценария -- создать новый процесс Renga и подключиться к текущему процессу.</p>
+<h3 id="c"><a class="header" href="#c">C++</a></h3>
+<p>Для запуска нового процесса Renga создайте экземпляр COM-оболочки приложения, выполните с ней действия и закройте приложение. Листинг далее со <a href="https://help.rengabim.com/api/how-to-local-server.html">странички официальной документации</a>.</p>
+<pre><code class="language-cpp">CoInitialize(nullptr);
+auto renga = Renga::CreateApplication(CLSCTX_LOCAL_SERVER);
+renga-&gt;PutVisible(VARIANT_TRUE);
+renga-&gt;OpenProject(bstr_t(argv[1]));
+// use Renga someway
+renga-&gt;CloseProject(VARIANT_TRUE);
+// Quit explicitly:
+renga-&gt;Quit();
+
+CoUninitialize();
+</code></pre>
+<p>Как правило, пользовательские приложения на C++ существуют только в виде плагинов, для них не рационально делать логику работы с COM из стороннего процесса. Автору во всяком случае неизвестны плагины к Renga, написанные на C++ и обращающиеся к ней извне (возможно, только крупные СОД).
+Тем более, что работа с COM в C++ мягко говоря плохая и очень сильно отдает "legacy" .
+Автор не использовал в своей практике подобных обращений, если вам надо -- вы можете попросить ИИ-агента помочь с этой задачей, автор не имеет желания пробовать это сам и писать здесь километровые листинги 😬.</p>
+<h3 id="c-1"><a class="header" href="#c-1">C#</a></h3>
+<h4 id="marshalgetactiveobject"><a class="header" href="#marshalgetactiveobject">Marshal.GetActiveObject</a></h4>
+<p>Наиболее простая реализация на C# (фактически, на .NET) - обратиться к методу <code>Marshal.GetActiveObject</code> из пространства имён <code>System.Runtime.InteropServices</code> и передать ему в аргумент идентификатор Renga-приложения <code>Renga.Application.1</code>. Если приложение не запущено, то оно будет создано</p>
+<p><strong>Примечание</strong>: начиная с .NET 5+ эта функциональность удалена из .NET, вместо этого можете воспользоваться вызовами нативного API через DllImport</p>
+<pre><code class="language-csharp">//From https://stackoverflow.com/a/65496277
+public static class Marshal2
+{
+    internal const String OLEAUT32 = "oleaut32.dll";
+    internal const String OLE32 = "ole32.dll";
+
+    [System.Security.SecurityCritical]  // auto-generated_required
+    public static Object GetActiveObject(String progID)
+    {
+        Object obj = null;
+        Guid clsid;
+
+        // Call CLSIDFromProgIDEx first then fall back on CLSIDFromProgID if
+        // CLSIDFromProgIDEx doesn't exist.
+        try
+        {
+            CLSIDFromProgIDEx(progID, out clsid);
+        }
+        //            catch
+        catch (System.Exception)
+        {
+            CLSIDFromProgID(progID, out clsid);
+        }
+
+        GetActiveObject(ref clsid, IntPtr.Zero, out obj);
+        return obj;
+    }
+
+    //[DllImport(Microsoft.Win32.Win32Native.OLE32, PreserveSig = false)]
+    [DllImport(OLE32, PreserveSig = false)]
+    [System.Runtime.Versioning.ResourceExposure(System.Runtime.Versioning.ResourceScope.None)]
+    [System.Security.SuppressUnmanagedCodeSecurity]
+    [System.Security.SecurityCritical]  // auto-generated
+    private static extern void CLSIDFromProgIDEx([MarshalAs(UnmanagedType.LPWStr)] String progId, out Guid clsid);
+
+    //[DllImport(Microsoft.Win32.Win32Native.OLE32, PreserveSig = false)]
+    [DllImport(OLE32, PreserveSig = false)]
+    [System.Runtime.Versioning.ResourceExposure(System.Runtime.Versioning.ResourceScope.None)]
+    [System.Security.SuppressUnmanagedCodeSecurity]
+    [System.Security.SecurityCritical]  // auto-generated
+    private static extern void CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] String progId, out Guid clsid);
+
+    //[DllImport(Microsoft.Win32.Win32Native.OLEAUT32, PreserveSig = false)]
+    [DllImport(OLEAUT32, PreserveSig = false)]
+    [System.Runtime.Versioning.ResourceExposure(System.Runtime.Versioning.ResourceScope.None)]
+    [System.Security.SuppressUnmanagedCodeSecurity]
+    [System.Security.SecurityCritical]  // auto-generated
+    private static extern void GetActiveObject(ref Guid rclsid, IntPtr reserved, [MarshalAs(UnmanagedType.Interface)] out Object ppunk);
+
+
+    [DllImport("ole32.dll")]
+    internal static extern void GetRunningObjectTable(int reserved, out IRunningObjectTable prot);
+
+    [DllImport("ole32.dll")]
+    private static extern int CreateBindCtx(uint reserved, out IBindCtx ppbc);
+
+    public static List&lt;string&gt; GetAppMonikers(string appName)
+    {
+        IRunningObjectTable rot;
+        GetRunningObjectTable(0, out rot);
+
+        IEnumMoniker monikerEnumerator = null;
+        rot.EnumRunning(out monikerEnumerator);
+        if (monikerEnumerator == null)
+            return null;
+
+        monikerEnumerator.Reset();
+
+        var registries = new List&lt;IMoniker&gt;();
+        var registries2 = new List&lt;string&gt;();
+
+        IntPtr pNumFetched = new IntPtr();
+        IMoniker[] monikers = new IMoniker[1];
+        while (monikerEnumerator.Next(1, monikers, pNumFetched) == 0)
+        {
+            IBindCtx bindCtx;
+            CreateBindCtx(0, out bindCtx);
+            if (bindCtx == null)
+                continue;
+
+            string displayName;
+            monikers[0].GetDisplayName(bindCtx, null, out displayName);
+            //registries2.Add(displayName);
+            if (displayName.Contains(appName)) registries.Add(monikers[0]);
+        }
+        return registries2;
+    }
+}
+</code></pre>
+<p>После прекращения работы с приложением Renga извне, если оно более не нужно, закройте его и освободите COM-объект приложения (далее <code>renga</code>) с помощью стандартного метода:</p>
+<pre><code class="language-csharp">System.Runtime.InteropServices.Marshal.ReleaseComObject(renga);
+</code></pre>
+<h4 id="running-object-table"><a class="header" href="#running-object-table">Running Object Table</a></h4>
+<p>Официальная справка предлагает также обратить внимание на Windows-специфичную технологию "Running Object Table". Переиначивая примеры со <a href="https://help.rengabim.com/api/how-to-rot.html">справки</a> конструкция, позволяющая получить все запущенные в системе процессы Renga будет выглядеть так:</p>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+
+public static Renga.IApplication[] GetRengaApps()
+{
+    IRunningObjectTable rot;
+    GetRunningObjectTable(0, out rot);
+
+    List&lt;Renga.IApplication&gt; tmpApps = new List&lt;Renga.IApplication&gt;();
+    var rengaMonikers = GetRengaMonikers();
+    foreach (var moniker in rengaMonikers)
+    {
+        object comObject;
+        // Get first Renga moniker in list
+        rot.GetObject(moniker, out comObject);
+
+        Renga.IApplication rengaApp = comObject as Renga.IApplication;
+        if (rengaApp != null) tmpApps.Add(rengaApp);
+    }
+    return tmpApps.ToArray();
+}
+
+[DllImport("ole32.dll")]
+private static extern void GetRunningObjectTable(int reserved, out IRunningObjectTable prot);
+[DllImport("ole32.dll")]
+private static extern int CreateBindCtx(uint reserved, out IBindCtx ppbc);
+private static List&lt;IMoniker&gt; GetRengaMonikers()
+{
+    IRunningObjectTable rot;
+    GetRunningObjectTable(0, out rot);
+
+    IEnumMoniker monikerEnumerator = null;
+    rot.EnumRunning(out monikerEnumerator);
+    if (monikerEnumerator == null)
+        return null;
+
+    monikerEnumerator.Reset();
+
+    var registries = new List&lt;IMoniker&gt;();
+
+    IntPtr pNumFetched = new IntPtr();
+    IMoniker[] monikers = new IMoniker[1];
+    while (monikerEnumerator.Next(1, monikers, pNumFetched) == 0)
+    {
+        IBindCtx bindCtx;
+        CreateBindCtx(0, out bindCtx);
+        if (bindCtx == null)
+            continue;
+
+        string displayName;
+        monikers[0].GetDisplayName(bindCtx, null, out displayName);
+        if (displayName.Contains("!Renga"))
+            registries.Add(monikers[0]);
+    }
+    return registries;
+}
+</code></pre>
+<h3 id="pyhton"><a class="header" href="#pyhton">Pyhton</a></h3>
+<p>Необходимо установить вспомогательный пакет <code>pywin32</code></p>
+<pre><code class="language-python">import win32com.client  
+rengaApp = win32com.client.GetActiveObject("Renga.Application.1")  
+if rengaApp is not None:  
+    print("Application received successfully!")
+</code></pre>
+<h3 id="powershell"><a class="header" href="#powershell">Powershell</a></h3>
+<p>Ниже пример, как создать новый процесс Renga, вывести в консоль номер версии программы и закрыть приложение.</p>
+<pre><code class="language-powershell"># --- Вспомогательная функция для освобождения ресрусов от COM-объекта
+function Release-ComObject([object]$obj) {
+    if ($null -ne $obj -and $obj -is [System.__ComObject]) {
+        [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($obj)
+    }
+}
+
+# Создадим экземпляр приложения Renga
+$rengaApp = $null
+try {
+    $rengaApp = New-Object -ComObject "Renga.Application.1" -ErrorAction Stop
+} catch {
+    Write-Warning "Не удалось создать COM-объект Renga.Application.1. Если Renga не зарегистрирована как COM-сервер, выполните из папки установки: RengaProfessional.exe /regserver"
+    Read-Host "Нажмите Enter для выхода"
+    exit
+}
+
+# Делаем приложение видимым
+$rengaApp.Visible = $true
+
+# Выполняем некоторые действия, например, получаем информацию о версии приложения
+Write-Host $rengaApp.VersionS
+
+try { $rengaApp.Quit() } catch {}
+Release-ComObject $rengaApp
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_RengaDevGuide_Common_AddReferences.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_RengaDevGuide_Common_AppSamples.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_RengaDevGuide_Common_AddReferences.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_RengaDevGuide_Common_AppSamples.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

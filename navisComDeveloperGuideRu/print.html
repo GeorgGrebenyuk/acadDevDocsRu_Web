@@ -1,0 +1,1209 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Руководство разработчика Autodesk NavisWorks COM API</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика Autodesk NavisWorks COM API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Руководство-com-разработчика"><a class="header" href="#Руководство-com-разработчика">Руководство COM-разработчика</a></h1>
+<p>Настоящее руководство является авторским переводом справки к Autodesk NavisWorks COM API <code>COM\documentation</code> из состава его SDK с дополнениями (статьи, примеры, примечания) с упором на работу с моделью.</p>
+<p>Исходные материалы настоящего руководства расположены в https://github.com/GeorgGrebenyuk/acadDevDocsRu/tree/main/docs/navis/com</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Вступление"><a class="header" href="#Вступление">Вступление</a></h1>
+<p>С помощью настоящего API пользователи могу:</p>
+<ul>
+<li>связать объекты в Navisworks с таблицами Excel или базой данных MS Access;</li>
+<li>связать объекты Navisworks с временной шкалой в MS Project для создания календарного графика строительства;</li>
+<li>запустить приложение Navisworks для заданной модели с заданными положением камеры и параметрами анимации;</li>
+<li>создать видовой экран в AutoCAD на основе вида Navisworks (?);</li>
+<li>составить отчет о коллизиях - провести проверку на коллизии и сформировать HTML-отчеты с растровыми изображениями мест коллизий;</li>
+<li>создать внутренний скрипт с использованием Navisworks ActiveX, который будет доступен из-под Navisworks и выполнять некоторые действия;</li>
+</ul>
+<p>COM API позволяет работать в трех различных режимах:</p>
+<ol>
+<li>Расширение возможностей API при разработке пользовательских плагинов для Navisworks;</li>
+<li>COM-автоматизация: программные сценарии с Navisworks (открыть, запустить, сделать ...);</li>
+<li>Создание "элементов управления" в сторонних приложениях (Power Point, Excel и пр.), которые как-то взаимодействуют с Navisworks;</li>
+</ol>
+<h2 id="Требования"><a class="header" href="#Требования">Требования</a></h2>
+<p>Для работы с COM API необходимы языки программирования с поддержкой динамической типизации (C#, Visual C++, Python, JS и пр.). Оригинальная справка <code>COM Interface.pdf</code>  от 2015г. из состава Navis SDK упоминала только Visual Basic 6.0.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Объектная-модель-navisworks-и-его-особенности"><a class="header" href="#Объектная-модель-navisworks-и-его-особенности">Объектная модель Navisworks и его особенности</a></h1>
+<h2 id="Введение---о-navisworks"><a class="header" href="#Введение---о-navisworks">Введение - о Navisworks</a></h2>
+<p>Navisworks, как программа, предназначен для интерактивного отображения больших моделей со сложной геометрией и\или с большим числом полигонов. Производительность Navisworks зависит от доступного аппаратного обеспечения (ресурсы видеокарты, оперативной памяти, виртуальной памяти).</p>
+<h2 id="Традиционный-подход-к-созданию-моделей-для-СОД"><a class="header" href="#Традиционный-подход-к-созданию-моделей-для-СОД">Традиционный подход к созданию моделей для СОД</a></h2>
+<p>В обычных сценариях, если аппаратные ресурсы нельзя повысить, то единственное решение добиться производительности при работе со сборками моделей - либо отображать их частично, либо моделировать объекты с меньшим уровнем детализации (LOD). Далее при просмотре сцены решать, объекты в какой детализации отображать - в слабой или детальной. Решение обычно основывается на статических правилах (расстояние от зрителя), иногда с элементами прогнозирования (попытаться заранее определить, сколько времени займет отображение, и рассчитать оптимальное расстояние видимости).</p>
+<p>Процесс оптимизации для моделей сложен. Существуют инструментальные средства, которые автоматически формируют упрощенную модель в более низком LOD. Однако все ещё необходимо самостоятельно решать, какие части объектов упрощать, и сколько упрощенной графики включать в целевую модель. Как правило, улучшение идёт до того момента, пока модель не достигнет достаточной производительности на имеющемся оборудовании. Также необходимо будет пересоздавать модель, если она изменяется или разворачивается на менее производительном оборудовании.</p>
+<h2 id="Подход-в-navisworks"><a class="header" href="#Подход-в-navisworks">Подход в Navisworks</a></h2>
+<p>Navisworks использует другой подход. Отрисовка модели упорядочена таким образом, что сперва отображаются наиболее важные (внешние) части модели. Гарантированная минимальная частота кадров легко достигается остановкой отрисовки графики при превышении временного интервала. Такой подход гарантирует, что всякий раз модель отображается с максимально-возможным качеством для доступных аппаратных характеристик ПК.</p>
+<p>Механика графической подсистемы Navisworks устроена так, чтобы упрощать объекты при взаимодействии пользователя с моделью (вращение, перемещение, масштабирование). Как только взаимодействие завершается, подсистема начинает заполнять недостающие части геометрии в порядке их важности. Для пользователя это немного похоже на процесс проявления фотографии. Пользователь может прервать процесс в любой момент, осуществив следующую итерацию изменения положения вида.</p>
+<p>Navisworks работает автоматически с исходными данными модели. Не требуется этап редактирования геометрии вручную. Не требуются уровни детализации (LOD). Navisworks автоматически определяет оптимальный состав сцены в соответствии со сложностью модели и доступными аппаратными средствами. Одну и ту же модель можно использовать как на графической рабочей станции, так и на ноутбуке.</p>
+<h2 id="Архитектура-navisworks"><a class="header" href="#Архитектура-navisworks">Архитектура Navisworks</a></h2>
+<p>Navisworks отображает модель, используя логические и пространственные структуры данных.</p>
+<p><em>Логическая структура данных</em> соответствует тому, как пользователь представлял бы себе модель. Так, модель AutoCAD (dwg) будет разделена на слои, а Вхождения блоков обеспечат иерархическую структуру.  Модель MicroStation разделена на уровни, а элементы сгруппированы в ячейки, обеспечивающие иерархическую структуру.</p>
+<p>Логическая структура модели обычно не является оптимальным решением для быстрого отображения структуры данных, поэтому Navisworks поддерживает отдельную <em>пространственно-организованную структуру данных</em> для оптимальной производительности отображения. Пространственная структура данных автоматически перестраивается при изменении логической структуры.</p>
+<p>Логическая структура Navisworks представляет собой граф сцены. Граф сцены описывает иерархически структурированные данные (любые данные могут быть иметь несколько вхождений). Топологически граф сцены представляет собой направленный ациклический граф (DAG). Navisworks поддерживает графы сцен с атрибутами (материалами, преобразованиями и т. д.), прикрепленными к узлам графа. Листовые узлы графа представляют геометрию. Совокупный набор атрибутов, применяемых к каждому геометрическому объекту, наследуется от родительских узлов в графе.</p>
+<p>Логическая структура исходной модели преобразуется в эквивалентный граф сцены Navisworks. Каждому элементу <strong>SceneBase</strong> (то есть узлу или атрибуту) присваивается имя и тип, определенные в процессе преобразования модели. Это позволяет максимально точно связать логическую структуру в Navisworks с исходной САПР-системой. Тип элемента <strong>SceneBase</strong> определяется двумя строками:</p>
+<ul>
+<li><strong>ClassUserName</strong>, которая отображается пользователю Navisworks для описания типа. Эта строка может быть локализована и различаться в разных версиях Navisworks. Ее не следует использовать для идентификации какого-либо конкретного типа элемента SceneBase при программировании;</li>
+<li><strong>ClassName</strong>, которая никогда не отображается пользователю и одинакова во всех версиях Navisworks. Ее безопасно использовать для идентификации конкретного типа элемента SceneBase.</li>
+</ul>
+<p>При преобразовании в пространственную структуру данных иерархический граф сцены логической структуры упрощается, при этом сохраняется вся информация о геометрии. Каждый экземпляр узла Geometry представляется одним или несколькими фрагментами в пространственной структуре данных. Каждый фрагмент содержит упрощенные версии атрибутов Geometry, Transform и Appearance из исходного графа сцены. Для экономии памяти исходные геометрические данные отбрасываются.
+![[Pasted image 20260417132126.png]]</p>
+<p>В графе сцены единственный способ идентифицировать конкретный экземпляр — это использовать путь через граф сцены от корневого узла (раздела) до данного узла геометрии. Путь можно рассматривать как набор узлов, где каждый узел является дочерним узлом предыдущего узла в наборе. Пути используются для поддержания связей между логическими и пространственными структурами данных. Каждый узел содержит список всех путей, в которых он используется. Каждый фрагмент поддерживает ссылку на путь, который он представляет. Пути используются во всей системе Navisworks для идентификации объектов внутри модели. Например, выделение представляет собой набор путей, как показано ниже.
+![[Pasted image 20260417132230.png]]</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Информация-о-некоторых-объектах"><a class="header" href="#Информация-о-некоторых-объектах">Информация о некоторых объектах</a></h1>
+<p>Вся модель (документ) Navisworks доступна через COM-оболочку State. С её помощью можно получать доступ к:</p>
+<ul>
+<li>Раздел (<strong>Partition</strong>), образующий корень графа сцены модели. Если несколько файлов были объединены, корневой раздел будет иметь дочерние разделы, каждый из которых будет представлять один из загруженных файлов;</li>
+<li>Текущему виду <strong>AnonView</strong>;</li>
+<li>Текущему виду в плане AnonView (Вид - Окна - Вид в плане);</li>
+<li>Текущему виду в сечении AnonView (Вид - Окна - Вид в сечении);</li>
+<li>Текущим параметрам анимации модели;</li>
+<li>Текущему выбору объектов;</li>
+<li>Коллекции сохраненных видов (Вид - Окна - Сохраненные точки обзора);</li>
+<li>Коллекции источников освещения сцены (?); <code>A collection of scene Lights.</code></li>
+<li>Коллекции наборов выбора объектов (Вид - Окна - Наборы);</li>
+<li>Прочим свойствам сцены;</li>
+<li>Коллекции плагинов, которые расширяют и изменяют интерфейс Navisworks;</li>
+</ul>
+<p>Представлено COM-оболочкой <code>nwOpState</code> (наследует функции от 11 разных COM-оболочек с числовыми суффиксами и телом <code>InwOpState</code>);</p>
+<h2 id="partition"><a class="header" href="#partition">Partition</a></h2>
+<p>Корневой узел графа сцены, созданного путем преобразования одного исходного файла или модели. Разделами описываются корень текущей модели Navisworks, каждый файл, добавленный в модель, внешние ссылки (xrefs), на которые ссылаются явно загруженные файлы. Исходное имя файла (если доступно) хранится в разделе (partition).</p>
+<h2 id="node"><a class="header" href="#node">Node</a></h2>
+<p>Базовая COM-оболочка <code>InwOaNode</code> для различных типов узлов в графе сцены. Есть 3 типа узлов:</p>
+<ul>
+<li>Partition: корневой узел графа сцены (COM-оболочка <code>InwOaPartition</code>);</li>
+<li>Group: узел для группировки элементов. Используйте свойства IsLayer и IsInstance для определения, чем является данная группа (COM-оболочка <code>InwOaGroup</code>);</li>
+<li>Geometry: лист графа сцены, отражает геометрию объекта (COM-оболочка <code>InwOaGeometry</code>);</li>
+</ul>
+<h2 id="attribute"><a class="header" href="#attribute">Attribute</a></h2>
+<p>Представлен COM-оболочкой <code>InwOaAttribute</code>.</p>
+<p>К каждому узлу может быть привязано произвольное количество атрибутов. Атрибуты могут использоваться для управления внешним видом узла или просто для связывания с ним дополнительной информации. Все атрибуты внешнего вида, за исключением Transform  (COM-оболочка <code>InwOaTansform</code>), наследуются от родительских узлов, при этом используется атрибут, расположенный дальше всего по пути (т.е. ближайший к данному узлу, <em>прим. автора</em>). К атрибутам внешнего вида относятся:</p>
+<ul>
+<li>
+<p>Material: Информация о цвете. прозрачности, уровне блеска. Если для COM-оболочки узла <code>InwOaNode</code>, с которым данный материал связан, метод <code>IsOverrideMaterial</code> = true, то этот материал также наследуется вложенными в данный узел элементами  (COM-оболочка <code>InwOaMatrial</code>);</p>
+</li>
+<li>
+<p>SemanticPriority: отображение приоритета. Объекты с более высоким приоритетом с меньшей вероятностью будут отброшены при отрисовке геометрии сцены (<em>прим. автора</em> - я не понял, где в API это задаетcя. Возможно, это устаревшая механика);</p>
+</li>
+<li>
+<p>Transform: параметры трансформации геометрии объекта. Параметры преобразований "суммируются" для вложенных объектов (по пути в дереве иерархии);
+К числу информационных атрибутов относится:</p>
+</li>
+<li>
+<p>NameAttribute: произвольное имя, не строка с неограниченной длиной (COM-оболочка <code>InwOaNameAttribute</code>);</p>
+</li>
+<li>
+<p>Nat64Attribute: 64-битное целое положительное число, диапазон значений - <code>[0, 18 446 744 073 709 551 615]</code> (COM-оболочка <code>InwOaNameAttribute</code>);</p>
+</li>
+<li>
+<p>PropertyAttribute: список различных свойств, см. <a href="Topic_DeveloperGuide_NavisObjectModel_About.html#Property">следующий раздел</a> (COM-оболочка <code>InwOaPropertyAttribute</code>);</p>
+</li>
+<li>
+<p>TextAttribute: текстовый блок, может содержать символы перевода на новую строку (COM-оболочка <code>InwOaTextAttribute</code>);</p>
+</li>
+<li>
+<p>URLAttribute: именованная ссылка на некоторые внешние данные (COM-оболочка <code>InwOaURLAttribute</code>);</p>
+</li>
+<li></li>
+</ul>
+<h2 id="property"><a class="header" href="#property">Property</a></h2>
+<p>Представлено COM-оболочкой <code>InwOaProperty</code>.</p>
+<p>Свойство — это именованное значение определённого типа. Имя задается дважды - отображаемое имя (aka Caption), которое будет видно пользователю - <code>UserName</code>; внутреннее имя <code>name</code>. Значение <code>value</code> может быть одного из пяти типов:</p>
+<ul>
+<li>Дробное <code>double</code>;</li>
+<li>32-битное целое <code>int</code>;</li>
+<li><code>bool</code>;</li>
+<li>Широкая строка - <code>string</code> (C++ <code>std::wstring</code>);</li>
+<li>Время и дата - (C# - <code>DateTime.ToString()</code>);</li>
+</ul>
+<h2 id="path"><a class="header" href="#path">Path</a></h2>
+<p>Path (путь) - это последовательность узлов, начинающаяся с раздела в корне графа сцены (Partition) и заканчивающаяся конкретным узлом внутри него, которая (последовательность, <em>прим. автора</em>) однозначно определяет конкретный экземпляр объекта.</p>
+<p>Представлен COM-оболочкой `InwOaPath.</p>
+<h2 id="selection-и-selectionset"><a class="header" href="#selection-и-selectionset">Selection и SelectionSet</a></h2>
+<p>Selection - набор путей, который определяет полный путь к выбранным объектам графа сцены. Представлен COM-оболочкой <code>InwOpSelection</code>.</p>
+<p>SelectionSet - именованный набор Selection. Представлен COM-оболочкой <code>InwOpSelectionSet</code>. В дополнение к выбору Selection в нём содержится информация об отображаемом имени данного набора <code>name</code>, имени пользователя, под которым была создана данная выборка <code>Author</code>, время создания набора <code>Date</code>, комментарии к выборке (в виде COM-оболочки <code>InwCommentsColl</code>).</p>
+<h2 id="fragment"><a class="header" href="#fragment">Fragment</a></h2>
+<p>Представлен COM-оболочкой <code>InwOaFragment</code>.</p>
+<p>Фрагмент — это представление конкретного экземпляра узла Geometry (в том числе его части) в графе сцены. Большие геометрические объекты могут быть разбиты на несколько фрагментов для более эффективного отображения. Каждый фрагмент предоставляет доступ к:</p>
+<ul>
+<li>Матрице трансформации координат относительно мировых координат модели (метод <code>GetLocalToWorldMatrix()</code>);</li>
+<li>Путь в дереве модели (свойство <code>path</code>) к данному фрагменту;</li>
+<li>Геометрия, которой представлен данный фрагмент (свойство <code>Geometry</code>);</li>
+<li>Способ отображения фрагмента (свойство <code>Appearance</code>). Из справки доступные значения: Ambient(3),Diffuse(3),Specular(3),Emissive(3),Shininess(1),Transparency(1) ;</li>
+</ul>
+<h2 id="anonview"><a class="header" href="#anonview">AnonView</a></h2>
+<p>Представлен COM-оболочкой <code>InwOpAnonView</code>.</p>
+<p>Предназначен для работы с видом. COM-оболочка <code>InwOpAnonView</code> предоставляет доступ к:</p>
+<ul>
+<li>Точке обзора (свойство <code>ViewPoint</code>), представляется в виде COM-оболочки <code>InwNvViewPoint</code>;</li>
+<li>Набору применяемых секущих плоскостей (свойство <code>ClippingPlanes</code>), представляется в виде COM-оболочки <code>InwClippingPlaneColl</code>;</li>
+</ul>
+<h2 id="viewpoint"><a class="header" href="#viewpoint">ViewPoint</a></h2>
+<p>Представлено COM-оболочкой <code>InwNvViewPoint</code>. Характеризует положение камеры и параметры обзора для неё. COM-оболочка <code>InwNvViewPoint</code> позволяет получить:</p>
+<ul>
+<li>Свойство <code>Camera</code> - предоставляет доступ к камере - на что вы смотрите (описывается COM-оболочкой <code>InwNvCamera</code>);</li>
+<li>Свойство <code>WorldUpVector</code> - задает вектор направления вверх для системы координат просмотра (описывается COM-оболочкой <code>InwLUnitVec3f</code>);</li>
+<li>Свойство <code>FocalDistance</code> - расстояние от точки расположения камеры до целевого объекта (при навигации через Осмотр или Орбиту);</li>
+<li>Свойство <code>LinearSpeed</code> - определяет скорость движения вперед и назад (при навигации через Обход);</li>
+<li>Свойство <code>AngularSpeed</code>- определяет скорость движения (при навигации через Облёт); (❓)</li>
+<li>Свойство <code>Paradigm</code> - определяет формат навигации (Walk = Обход, Orbit = Орбита, Examine = Облёт и пр.);</li>
+<li>Свойство <code>Lighting</code> - определяет режим освещения (в виде одного из значений перечисления <code>nwELighting</code>);</li>
+<li>Свойство <code>RenderStyle</code> - определяет, как отображается геометрия (каркас, текстуры и пр. в виде одного из значений перечисления <code>nwERenderStyle</code>);</li>
+</ul>
+<h2 id="camera"><a class="header" href="#camera">Camera</a></h2>
+<p>Представлена COM-оболочкой <code>InwNvCamera</code>. Хранит информацию, на Что направлен взгляд. COM-оболочка <code>InwNvCamera</code> позволяет получить:</p>
+<ul>
+<li>Свойство <code>Position</code> - точка положения камеры в пространстве (описывается COM-оболочкой <code>InwLPos3f</code>);</li>
+<li>Свойство <code>Rotation</code> - поворот камеры, задаётся с помощью COM-оболочки <code>InwLRotation3f</code>;</li>
+<li>Свойство <code>Projection</code> - какая проекция камеры, ортогональная или перспективная, задается в виде перечисления <code>nwEProjection</code>;</li>
+<li>Свойство <code>HeightField</code> - поле зрения камеры в перспективном режиме, высота в ортогональном (<em>прим. автора</em>, я не понял как это в ортогональном);</li>
+</ul>
+<h2 id="savedview"><a class="header" href="#savedview">SavedView</a></h2>
+<p>Представлено COM-оболочкой <code>InwOpSavedView</code>. Базовое представление для различных точек обзора:</p>
+<ul>
+<li>Вид: именованный AnonView (описывается COM-оболочкой <code>InwOpView</code>);</li>
+<li>Папка: коллекция разных точек обзора (описывается COM-оболочкой <code>InwOpGroupView</code>);</li>
+<li>Анимация: последовательность анимации;</li>
+<li>Кадр: отдельный монтажный кадр (описывается COM-оболочкой <code>InwOpCutView</code>);</li>
+</ul>
+<h2 id="animation"><a class="header" href="#animation">Animation</a></h2>
+<p>Анимация представляется в виде последовательности видов <code>InwOpView</code> и монтажных кадров <code>InwOpCutView</code>. Каждый Вид выступает в качестве "ключевого кадра" анимации. При воспроизведении анимации Navisworks выполняет переход между ключевыми кадрами. С помощью монтажных кадров можно сделать паузу, а затем перейти к следующему "ключевому кадру-виду"). Анимация представлена COM-оболочкой <code>InwOpAnimView</code> и характеризуется 2 свойствами:</p>
+<ul>
+<li>Свойство <code>Looped</code> - анимация повторяется после конца, то есть зацикливается (true) или нет (false);</li>
+<li>Свойство <code>Smoothing</code> - задает тип интерполяции между видами, в виде перечисления <code>nwEAnimSmoothing</code>;</li>
+</ul>
+<h2 id="Объекты-из-части-линейной-алгебры-3f"><a class="header" href="#Объекты-из-части-линейной-алгебры-3f">Объекты из части линейной алгебры (...3f)</a></h2>
+<p>COM-оболочки с суффиксами "3f" описывают различные вспомогательные конструкции из состава линейной алгебры (<em>прим. автора</em> - название сохранено из оригинальной справки).</p>
+<ul>
+<li><code>InwLVec3f</code> - описывает произвольный вектор в трехмерном пространстве. Задает направление и длину в 3D. Представляется тремя координатами типа double;</li>
+<li><code>InwLUnitVec3f</code> - описывает направление в трехмерном пространстве. Представляется вектором единичной длины;</li>
+<li><code>InwLPos3f</code> - описывает точку в трехмерном пространстве. Представляется тремя координатами типа double;</li>
+<li><code>InwLRotation3f</code> - описывает поворот в трехмерном пространстве. Задается как <code>InwLUnitVec3f</code> - ось Z и угол в радианах вокруг данной оси. Представляется в Navisworks виде кватерниона;</li>
+<li><code>InwLPlane3f2</code> - описывает плоскость в трехмерном пространстве. Задается как <code>InwLUnitVec3f</code> - вектор нормали и расстояние от точки начала координат;</li>
+<li><code>InwLBox3f</code> - описывает ориентированную по осям координат ограничивающую призму. Представляется в виде двух точек <code>InwLPos3f</code> - минимальной и максимальной;</li>
+<li><code>InwLTransform3f</code> - описывает произвольную трансформацию координат в трехмерном пространстве. Представляется в виде матрицы 4х4. Все трансформации должны быть аффинными (см. <a href="https://ru.wikipedia.org/wiki/%D0%90%D1%84%D1%84%D0%B8%D0%BD%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5">вики</a>).</li>
+</ul>
+<h2 id="plugin"><a class="header" href="#plugin">Plugin</a></h2>
+<p>Navisworks поддерживает подключаемые объекты, расширяющие базовую функциональность. Все реализуют COM-интерфейс <code>InwPlugin</code>. Существует четыре типа таких объектов (плагинов):</p>
+<ul>
+<li>Работа с экспортом <code>InwExportPlugin</code> - определяет новую команду, которая может быть добавлена в меню экспорта Navisworks, в число инструментов или в контекстное меню;</li>
+<li>Работа со свойствами <code>InwPropertyPlugin</code> - переопределяет порядок отображения и поиска Атрибутов объекта в диалоговых окнах "Свойства", "Поиск";</li>
+<li>Работа с проверками на коллизии  <code>InwClashPlugin</code>- добавляет правила поиска коллизий в Navisworks (<em>прим. автора</em>, не понимаю про что конкретно речь, например, среди методов <code>InwOclClashTest</code> имеется <code>IgnoreRuleFlags</code>);</li>
+<li>Работа с визуализация <code>InwPresenterPlugin</code>: Добавляет новые правила на вкладку "Presenter" (Визуализация), они используются для применения текстур к объектам модели;</li>
+</ul>
+<p>Подробнее см. описательный раздел в <a href="Topic_DeveloperGuide_NavisObjectModel_COMAbout.html#COM-Plugins">другой статье</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="О-доступе-через-com-api"><a class="header" href="#О-доступе-через-com-api">О доступе через COM API</a></h1>
+<p>В Navisworks COM существует для 4 различных сценариев:</p>
+<ul>
+<li>Navisworks ActiveX controls;</li>
+<li>Navisworks Automation;</li>
+<li>COM Plug-ins for Navisworks;</li>
+<li>COM 'State' API for Navisworks and ActiveX controls;</li>
+</ul>
+<h2 id="navisworks-activex-controls"><a class="header" href="#navisworks-activex-controls">Navisworks ActiveX Controls</a></h2>
+<p>Данный вид COM-API предназначен для вызова функциональности Navisworks извне (со стороны пользовательских приложений, веб-страниц, иные контейнеры). Можно получать доступ к содержимому моделей, управлять им, открывать в Navisworks файлы. Загрузка файлов осуществляется в отдельном потоке, чтобы предотвратить «зависание» программы, в которой эти файлы были созданы (<em>прим. автора</em>, тут непонятно, или программы, откуда этот скрипт вызывается)  <code>File download is done in a separate thread to prevent 'hanging' the containing program.</code>.</p>
+<p>Используются 2 динамические библиотеки, содержащие COM API, где XX - номер версии Navisworks, для которого библиотеки есть (в оригинальном <code>COM Interface.pdf</code> из SDK они имели номер 14, для Navisworks 2021 номер = 18).
+<strong>Navisworks Redistributable API Library XX</strong> (lcodieDX.dll)</p>
+<pre><code class="language-xml"># В csproj строка подключения COM-reference будет примерно такой с поправкой на версию XX
+&lt;COMReference Include="NavisworksRedistributableAPI18"&gt;
+  &lt;WrapperTool&gt;tlbimp&lt;/WrapperTool&gt;
+  &lt;VersionMinor&gt;0&lt;/VersionMinor&gt;
+  &lt;VersionMajor&gt;1&lt;/VersionMajor&gt;
+  &lt;Guid&gt;1ae0ca20-712a-5761-b4a6-a891c594f278&lt;/Guid&gt;
+  &lt;Lcid&gt;0&lt;/Lcid&gt;
+  &lt;Isolated&gt;false&lt;/Isolated&gt;
+  &lt;EmbedInteropTypes&gt;true&lt;/EmbedInteropTypes&gt;
+&lt;/COMReference&gt;
+</code></pre>
+<ul>
+<li>Этот компонент может быть доступен без установленного Navisworks (достаточно только иметь установленный модуль с этим API, возможно имеется в виду NW Freedom) <code>This control is supplied in a Windows Installer merge module and also a self-installing  executable.</code>;</li>
+<li>Доступ к управлению моделью и внутренним данным модели (<em>прим. автора</em> <code>For control and internal state access</code>) ;</li>
+<li>Могут быть открыты только файлы проекта Navisworks (*.nwd);</li>
+<li>Поддержка без ограничений 32bit и 64bit версий ОС (<em>прим. автора</em> на 2026й год уже неактуально);</li>
+<li>Доступны только методы API, способные работать в "безлицензионном режиме", либо все, если лицензия как-то загружена в данное контейнерное приложение `Only certain methods in the API will works as the control runs in ‘unlicensed’ mode unless a special runtime license is embedded in the container application.;</li>
+</ul>
+<p><strong>Navisworks Integrated API Library XX</strong> (lcodieD.dll)</p>
+<pre><code class="language-xml"># В csproj строка подключения COM-reference будет примерно такой с поправкой на версию XX
+&lt;COMReference Include="NavisworksIntegratedAPI18"&gt;
+  &lt;WrapperTool&gt;tlbimp&lt;/WrapperTool&gt;
+  &lt;VersionMinor&gt;0&lt;/VersionMinor&gt;
+  &lt;VersionMajor&gt;1&lt;/VersionMajor&gt;
+  &lt;Guid&gt;b55d0ec6-97ab-5ff0-b6e3-a62e2a2e2bf9&lt;/Guid&gt;
+  &lt;Lcid&gt;0&lt;/Lcid&gt;
+  &lt;Isolated&gt;false&lt;/Isolated&gt;
+  &lt;EmbedInteropTypes&gt;true&lt;/EmbedInteropTypes&gt;
+&lt;/COMReference&gt;
+</code></pre>
+<ul>
+<li>Этот компонент поставляется вместе с устанавливаемым Navisworks;</li>
+<li>Доступ к управлению моделью и внутренним данным модели (<em>прим. автора</em> <code>For control and internal state access</code>) ;</li>
+<li>32-битная библиотека будет работать только на 32-битной ОС, соответственно, 64-битная только на 64-битной ОС (<em>прим. автора</em> на 2026й год уже неактуально, всё ушло на 64-битные системы);</li>
+<li>Могут быть открыты различные файлы, не только файлы проекта Navisworks (*.nwd);</li>
+<li>Всё API доступно к вызову, если основной продукт (Navisworks) лицензирован;
+<strong>Примечание</strong>: в оригинальном <code>COM Interface.pdf</code> из SDK имеется заметка, что при разработке на 32-битной Visual Studio под 64-битные библиотеки могут быть сложности, и надо вручную регистрировать 32-битные библиотеки через <code>regsvr32.exe lcodied.dll</code>;</li>
+</ul>
+<p>Таким образом, <strong>Navisworks Integrated API</strong> - это способ взаимодействия с Navisworks из другого процесса с полным доступом к имеющемуся API.</p>
+<h3 id="mdi--sdi-Режимы"><a class="header" href="#mdi--sdi-Режимы">MDI / SDI Режимы</a></h3>
+<p>Для каждой из упомянутых выше библиотек управления (Redistributable и Integrated) имеются 2 режима работы с ограничениями:</p>
+<p>MDI: Multiple Document Support</p>
+<ul>
+<li>В одном процессе может использоваться несколько элементов управления;</li>
+<li>Поддержка плагинов отсутствует. Поэтому <a href="Topic_DeveloperGuide_NavisObjectModel_About.html#Plugin">плагины, расширяющие экспорт и работу с рецензированием</a> недоступны;</li>
+</ul>
+<p>SDI: Single Document Support</p>
+<ul>
+<li>В одном процессе может использоваться только один элемент управления;</li>
+<li>Поддержка плагинов имеется;</li>
+</ul>
+<h3 id="Встраивание-в-html"><a class="header" href="#Встраивание-в-html">Встраивание в HTML</a></h3>
+<p>Возможно встроить в HTML-код страницы сценарий, обращающийся к COM API Navisworks. Для внедрения в страницу функциональности просмотра некоторой модели. В современной практике это не используется, в угоду WEB API различных систем (в отношении Autodesk -- Forge, Autodesk Docs и т.д.).</p>
+<pre><code class="language-html">&lt;object
+    id="NavisworksControl"
+    classid="CLSID:XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"  &lt;!-- Тот самый CLSID --&gt;
+    codebase="http://ваш_сайт/Installers/NavisworksActiveX.exe" &lt;!-- Откуда качать, если нет --&gt;
+    width="800"
+    height="600"&gt;
+    &lt;param name="FileName" value="model.nwc"&gt; &lt;!-- Какой файл открыть --&gt;
+&lt;/object&gt;
+</code></pre>
+<ul>
+<li>CLSID (classid) - это Guid, характеризующий целевую библиотеку (см. примеры выше для cspoj)</li>
+<li>codebase  - это путь для загрузки элемента управления, если в данной системе отсутствует компонент для указанного classid;</li>
+<li>данный подход работает только в Windows (т.к. вызывается внешний COM);</li>
+</ul>
+<h2 id="com-state-api-for-navisworks-and-activex-controls"><a class="header" href="#com-state-api-for-navisworks-and-activex-controls">COM 'State' API for Navisworks and ActiveX controls</a></h2>
+<p>Элементы управления Navisworks и его ActiveX используют общий API для доступа к внутренним функциям Несмотря на сходство, некоторые интерфейсы и классы могут присутствовать только в одной DLL-библиотеке. Ниже основные особенности COM API и рекомендации по работе с ним.</p>
+<h3 id="Имена-com-интерфейсов"><a class="header" href="#Имена-com-интерфейсов">Имена COM-интерфейсов</a></h3>
+<p>Каждый объект имеет только один соответствующий ему интерфейс, содержащий все методы. Имя интерфейса для конкретного объекта аналогично имени самого объекта. Например, объект "nwOpState" имеет интерфейс <code>InwOpState</code>.</p>
+<h3 id="Объект-верхнего-уровня"><a class="header" href="#Объект-верхнего-уровня">Объект верхнего уровня</a></h3>
+<p>Объект "nwOpState" — это объект верхнего уровня, отвечающий за состояние модели Navisworks. Ниже него находится иерархия других объектов, доступных через свойства, методы и коллекции. Состояние ("nwOpState") также позволяет обрабатывать COM-события, когда происходят различные действия в пользовательском интерфейсе  Navisworks.</p>
+<h3 id="Наследование-методов-интерфейсов"><a class="header" href="#Наследование-методов-интерфейсов">Наследование методов интерфейсов</a></h3>
+<p>Интерфейс каждого объекта напрямую или косвенно наследуется от <code>InwBase</code>. Он содержит стандартные методы. Например, <code>InwOpState</code> наследуется от <code>InwBase</code>. Таким образом, он содержит все методы и свойства <code>InwBase</code>.</p>
+<h3 id="Коллекции"><a class="header" href="#Коллекции">Коллекции</a></h3>
+<p>В практике COM все индексы начинаются с 1. Все коллекции имеют стандартный набор методов, но некоторые из них могут быть не реализованы для некоторых коллекций. Одна коллекция может содержать различные типы объектов. Обычно все они наследуются от одного общего типа объекта.</p>
+<h3 id="Идентификация-объектов"><a class="header" href="#Идентификация-объектов">Идентификация объектов</a></h3>
+<p>Интерфейс <code>InwBase</code> содержит readonly-свойство <code>ObjectName</code>. Его можно использовать для идентификации неизвестных объектов вместо выполнения операций "QueryInterface" или "Set" в Visual Basic или as в .NET. Это единственный способ идентификации объектов в языках с динамической типизацией.</p>
+<h3 id="Создание-новых-объектов"><a class="header" href="#Создание-новых-объектов">Создание новых объектов</a></h3>
+<p>Объекты Navisworks нельзя создать м помощью директивы <code>new</code>. Вместо этого используйте метод <code>ObjectFactory</code> у COM-оболочки состояния документа <code>InwOpState</code>.</p>
+<h3 id="Перечисления"><a class="header" href="#Перечисления">Перечисления</a></h3>
+<p>В языках с динамической типизацией нельзя использовать встроенные перечисления (enum) из COM API. Для перехода к ним из строкового представления используйте метод GetEnum у у COM-оболочки состояния документа <code>InwOpState</code>, это позволит сделать код более читаемым.</p>
+<p>При разработке на .NET такой проблемы нет, enum можно использовать без ограничений.</p>
+<h3 id="Сравнение-объектов"><a class="header" href="#Сравнение-объектов">Сравнение объектов</a></h3>
+<p>Если вы хотите установить, ссылаются ли 2 ссылки на один и тот же объект, не сравнивайте их COM-оболочки, вместо этого вызывайте метод <code>PtrEquals</code> у COM-оболочки состояния документа <code>InwOpState</code>.</p>
+<h2 id="navisworks-automation"><a class="header" href="#navisworks-automation">Navisworks Automation</a></h2>
+<p>В Navisworks реализована ​​базовая поддержка автоматизации. Цель состоит в том, чтобы позволить пользователям программно запускать и управлять продуктом с помощью скриптовых языков (Visual Basic, VBA или VBScript <em>прим. автора</em> - из оригинальной справки). Пользователь также может получать доступ к внутреннему состоянию приложения и управлять им (т.е. работать с COM-оболочкой модели <code>InwOpState</code>).</p>
+<h3 id="Об-установке-нескольких-версий-navisworks"><a class="header" href="#Об-установке-нескольких-версий-navisworks">Об установке нескольких версий Navisworks</a></h3>
+<p>С версий Navisworks 2017 каждый из продуктов (Manage и Simulate) может быть установлен параллельно. Для целей COM-автоматизации они идентичны, и фактически GUID'ы (CLSID) для каждого продукта идентичны. При запуске через COM запускается тот продукт, который был установлен или запущен последним. Например, если вы установили Navisworks Manage 2017, а затем установили Navisworks Simulate 2017, то при запуске продукта через COM запустится Navisworks Simulate. Но если пользователь впоследствии запустит Navisworks Manage, то при выполнении следующего скрипта с COM запустится именно он.</p>
+<h3 id="navisworks-licensing"><a class="header" href="#navisworks-licensing">Navisworks Licensing</a></h3>
+<p>Какая-либо COM-автоматизация доступна только для лицензионных версий Navisworks.</p>
+<h3 id="Подключение-к-процессу"><a class="header" href="#Подключение-к-процессу">Подключение к процессу</a></h3>
+<p>Осуществляется по идентификатору приложения "Navisworks.Document"</p>
+<h3 id="Типы-com-библиотек"><a class="header" href="#Типы-com-библиотек">Типы COM-библиотек</a></h3>
+<ul>
+<li>Navisworks Automation Library XX - для взаимодействия с приложением Navisworks;</li>
+<li>Navisworks Integrated API Library XX - для взаимодействия с моделью в Navisworks;</li>
+</ul>
+<h2 id="com-plugins"><a class="header" href="#com-plugins">COM-Plugins</a></h2>
+<p>Для Navisworks можно создавать COM-плагины. Они расширяют базовую функциональность продукта и доступны на соответствующих вкладках ленты продукта. <em>Прим. автора</em> - имеется подозрение, что плагины ограничены языком Visual Basic (по документации).</p>
+<p>Существует 4 типа плагинов, подробнее см. <a href="Topic_DeveloperGuide_NavisObjectModel_About.html#Plugin">раздел про них</a>. Каждый плагин должен реализовывать базовый COM-интерфейс для плагина <code>InwPlugin</code>. Указывается имя плагина, его настройки в зависимости от типа плагина. Плагины могут быть созданы в виде DLL-файлов или исполняемых файлов. Преимущество исполняемых файлов заключается в возможности отображения немодальных диалогов.</p>
+<p>В процессе инициализации плагина в Navisworks вы передаете плагину набор флагов. Это будет влиять на его поведение. Для каждого плагина можно добавить страницу параметров. На ней можно отображать пользовательские свойства типов CLng (int 64), CDbl (double), CBool (bool), CDate (DateTime) и CStr (string).</p>
+<h3 id="export-plugin"><a class="header" href="#export-plugin">Export-plugin</a></h3>
+<p>Плагины экспорта должны реализовывать интерфейс <code>InwExportPlugin</code>. Плагины экспорта позволяют осуществлять полностью настраиваемый экспорт данных путем добавления их в меню Navisworks. Основной метод, заслуживающий внимания, — это <code>iExport</code>, который будет вызываться при экспорте. Автор плагина может использовать API COM-оболочки приложения <code>InwOpState</code> и всю мощь VB для выполнения любых необходимых действий. Флаги позволяют добавлять пункты меню в меню «Вид», «Вывод» и «Надстройки». Также, в альтернативу добавления кнопок на ленты, вы можете использовать подписки на события <code>InwOpState</code> для отслеживания происходящих событий в модели.</p>
+<h3 id="clash-detective-plug-ins-проверки-на-коллизиипересечения"><a class="header" href="#clash-detective-plug-ins-проверки-на-коллизиипересечения">Clash Detective Plug-ins (проверки на коллизии\пересечения)</a></h3>
+<p>Плагины, добавляющие исключения при обработке коллизий, должны реализовывать интерфейс <code>InwClashPlugin</code>. Плагины позволяют игнорировать определенные конфликты (для некоторых заданных условий). При обнаружении каждого конфликта в Navisworks у загруженных плагинов с данным типом будет вызываться метод <code>iIgnore</code> с целью оставить или отбросить обнаруженную коллизию.</p>
+<h3 id="property-plug-ins-плагины-работающие-со-свойствами"><a class="header" href="#property-plug-ins-плагины-работающие-со-свойствами">Property Plug-ins (плагины, работающие со свойствами)</a></h3>
+<p>Плагины свойств должны реализовывать интерфейс <code>InwPropertyPlugin</code>. Плагины свойств позволяют переопределять то, что отображается при щелчке правой кнопкой мыши по объекту. Результат может представлять текстовую строку (реализация iContentsText) или список свойств (реализация iContentsProperties).</p>
+<h3 id="presenter-plug-ins"><a class="header" href="#presenter-plug-ins">Presenter Plug-ins</a></h3>
+<p>Плагины для "Визуализации" должны реализовывать интерфейс <code>InwPresenterPlugin</code>. Плагины используются для применения текстур к модели. Загруженные плагины отображаются на вкладке «Правила» на вкладке "Визуализация".</p>
+<h3 id="Загрузка-плагинов"><a class="header" href="#Загрузка-плагинов">Загрузка плагинов</a></h3>
+<p>В настоящее время (<em>прим. автора</em> - на 2017 версию как минимум) единственный способ заставить Navisworks загружать COM-плагины — это добавить их строку «ProgId» в реестр. Настроек в UI для этого не предусмотрено. Для загрузки плагинов необходимо перезапустить Navisworks.</p>
+<p>Поскольку каждый продукт начиная с Navisworks 2017 может быть установлен параллельно, у каждого из них будет свой набор записей в реестре. Это означает, что вам необходимо зарегистрировать свой плагин в каждой версии продукта, с которой он совместим. Ключи реестра для каждого плагина показаны в таблице ниже.</p>
+<div class="table-wrapper"><table><thead><tr><th>Product</th><th>Registry Key</th></tr></thead><tbody>
+<tr><td>Navisworks Manage 2017</td><td>Software\Autodesk\Navisworks Manage\14.0\COM Plugins</td></tr>
+<tr><td>Navisworks Simulate 2017</td><td>Software\Autodesk\Navisworks Simulate\14.0\COM Plugins</td></tr>
+<tr><td>Navisworks Manage  2021 64-bit</td><td>Software\Autodesk\Navisworks Manage x64\18.0\COM Plugins</td></tr>
+<tr><td>Добавьте строковые значения, соответствующие идентификаторам программ (progIds) вашего плагина, в соответствующий ключ реестра для данного продукта.</td><td></td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="Программная-работа-с-navisworks"><a class="header" href="#Программная-работа-с-navisworks">Программная работа с Navisworks</a></h1>
+<p>Данный раздел содержит примеры и рекомендации для программного взаимодействия с Navisworks, моделью и иными механиками продукта. Настоящий раздел полностью авторский и не присутствует в каком-либо в виде в официальной справке.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Приложение-navisworks"><a class="header" href="#Приложение-navisworks">Приложение Navisworks</a></h1>
+<p><strong>О функциональности приложения</strong>
+По существу, доступная функциональность COM-оболочки приложения Navisworks ограничивается следующими действиями:</p>
+<ul>
+<li>открыть проект Navisworks (*.nwd; *.nwf);</li>
+<li>подключить к проекту данные (аналог команды "Главная - Добавить - ... ");</li>
+<li>сохранить проект в файл;</li>
+<li>получить доступ к содержимому проекту (COM-оболочка <code>InwOpState</code>);</li>
+</ul>
+<p><strong>Примечание</strong>: добиться работы метода AppendFile у меня не получилось - выбрасывало странное исключение про файл.</p>
+<p>Наиболее важное доступное действие - это получение доступа к содержимому проекту (COM-оболочка <code>InwOpState</code>), т.к. именно с ней идут все остальные действия с COM API.</p>
+<p><strong>О получении приложения</strong>
+Есть 2 варианта взаимодействия с API - для случая внутреннего подключения через .NET API и в случае внешнего взаимодействия. Рассмотрим 2 эти варианта в отдельности</p>
+<h2 id="Внешнее-взаимодействие"><a class="header" href="#Внешнее-взаимодействие">Внешнее взаимодействие</a></h2>
+<p>Рассмотрим случай подключения к Navisworks из-под стороннего процесса, создания нового процесса и переходу к COM из-под .NET API</p>
+<p>Navisworks, как приложение, описывается отдельной библиотекой типов под названием "NavisworksAutomation". Её необходимо подключить к проекту вручную. Также необходимо подключить Intergated API.
+![[Pasted image 20260418201504.png]]</p>
+<p>Приложение Navisworks описывается COM-оболочкой <code>NavisworksAutomationAPI18.Document</code> (где 18 - номер версии Navisworks, в данном случае 2021; приведение нужно скорее для знакомства с API, можно использовать и dynamic, <em>прим. автора</em>). У любого приложения Navisworks процесс имеет постоянный префикс <code>Navisworks.Document</code>. По нему можно идентифицировать запущенные процессы, либо создать новый процесс. В табличке ниже приведена информация о соответствии версии NW и ProgId - она фактически "линейная".</p>
+<div class="table-wrapper"><table><thead><tr><th>Версия NW</th><th>Соответствующий ProgId</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>Navisworks 2015</td><td>Navisworks.Document.12</td><td></td></tr>
+<tr><td>Navisworks 2016</td><td>Navisworks.Document.13</td><td></td></tr>
+<tr><td>Navisworks 2017</td><td>Navisworks.Document.14</td><td></td></tr>
+<tr><td>Navisworks 2018</td><td>Navisworks.Document.15</td><td></td></tr>
+<tr><td>Navisworks 2019</td><td>Navisworks.Document.16</td><td></td></tr>
+<tr><td>Navisworks 2020</td><td>Navisworks.Document.17</td><td></td></tr>
+<tr><td>Navisworks 2021</td><td>Navisworks.Document.18</td><td></td></tr>
+<tr><td>Navisworks 2022</td><td>Navisworks.Document.19</td><td>19.1 : 2022.1</td></tr>
+<tr><td>Navisworks 2023</td><td>Navisworks.Document.20</td><td>20.1 : 2023.1</td></tr>
+<tr><td>Navisworks 2024</td><td>Navisworks.Document.21</td><td></td></tr>
+<tr><td>Navisworks 2025</td><td>Navisworks.Document.22</td><td></td></tr>
+<tr><td>Navisworks 2026</td><td>Navisworks.Document.23</td><td></td></tr>
+<tr><td>Navisworks 2027</td><td>Navisworks.Document.24</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="Подключение-к-запущенному-navisworks"><a class="header" href="#Подключение-к-запущенному-navisworks">Подключение к запущенному Navisworks</a></h3>
+<p>Для подключения к приложению Navisworks (если оно запущено) из внешнего процесса необходимо найти среди запущенных процессов начинающиеся на <code>Navisworks.Document</code> и далее использовать его.</p>
+<p>Хорошая реализация процесса получения запущенных COM-приложений приведена <a href="https://stackoverflow.com/a/7738455">тут</a>. На всякий случай приведу её листинг ниже:</p>
+<pre><code class="language-cs">using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+using System.Text;
+
+public class COM_Interaction
+{
+    private COM_Interaction() { }
+
+    public static List&lt;string&gt; GetCOMProcesses()
+    {
+        StringBuilder SB = new StringBuilder();
+        List&lt;string&gt; processes = new List&lt;string&gt;();
+        foreach (var moniker in EnumRunningObjects())
+        {
+            List&lt;string&gt; t1 = GetMonikerString(moniker).Split('\t').ToList();
+            processes = processes.Concat(t1).ToList();
+        }
+        return processes;
+    }
+    private const int S_OK = 0x00000000;
+
+    [DllImport("ole32.dll")]
+    private static extern int GetRunningObjectTable(uint reserved, out IRunningObjectTable pprot);
+
+    [DllImport("ole32.dll")]
+    private static extern int CreateBindCtx(uint reserved, out IBindCtx ppbc);
+
+    private static void OleCheck(string message, int result)
+    {
+        if (result != S_OK)
+            throw new COMException(message, result);
+    }
+
+    private static IEnumerable&lt;IMoniker&gt; EnumRunningObjects()
+    {
+        IRunningObjectTable objTbl;
+        OleCheck("GetRunningObjectTable failed", GetRunningObjectTable(0, out objTbl));
+        IEnumMoniker enumMoniker;
+        IMoniker[] monikers = new IMoniker[1];
+        objTbl.EnumRunning(out enumMoniker);
+        enumMoniker.Reset();
+        while (enumMoniker.Next(1, monikers, IntPtr.Zero) == S_OK)
+        {
+            yield return monikers[0];
+        }
+    }
+
+    private static bool TryGetCLSIDFromDisplayName(string displayName, out string clsid)
+    {
+        var bBracket = displayName.IndexOf("{");
+        var eBracket = displayName.IndexOf("}");
+        if (bBracket &gt; 0 &amp;&amp; eBracket &gt; 0 &amp;&amp; eBracket &gt; bBracket)
+        {
+            clsid = displayName.Substring(bBracket, eBracket - bBracket + 1);
+            return true;
+        }
+        else
+        {
+            clsid = string.Empty;
+            return false;
+        }
+    }
+
+    private static string ReadSubKeyValue(string keyName, RegistryKey key)
+    {
+        var subKey = key.OpenSubKey(keyName);
+        if (subKey != null)
+        {
+            using (subKey)
+            {
+                var value = subKey.GetValue("");
+                return value == null ? string.Empty : value.ToString();
+            }
+        }
+        return string.Empty;
+    }
+
+    private static string GetMonikerString(IMoniker moniker)
+    {
+        IBindCtx ctx;
+        OleCheck("CreateBindCtx failed", CreateBindCtx(0, out ctx));
+        var sb = new StringBuilder();
+        string displayName;
+        moniker.GetDisplayName(ctx, null, out displayName);
+        sb.Append(displayName);
+        sb.Append('\t');
+        string clsid;
+        if (TryGetCLSIDFromDisplayName(displayName, out clsid))
+        {
+            var regClass = Registry.ClassesRoot.OpenSubKey("\\CLSID\\" + clsid);
+            if (regClass != null)
+            {
+                using (regClass)
+                {
+                    sb.Append(regClass.GetValue(""));
+                    sb.Append('\t');
+                    sb.Append(ReadSubKeyValue("ProgID", regClass));
+                    sb.Append('\t');
+                    sb.Append(ReadSubKeyValue("LocalServer32", regClass));
+                }
+            }
+        }
+        return sb.ToString();
+    }
+}
+
+</code></pre>
+<p>Пример работы с листингом выше может выглядеть так (для метода <code>GetNWInstance</code>):</p>
+<pre><code class="language-cs">using System.Runtime.InteropServices;
+
+[DllImport("ole32.dll")]
+public static extern int GetActiveObjectExt(ref Guid rclsid, IntPtr reserved, [MarshalAs(UnmanagedType.Interface)] out object ppunk);
+
+public static object? GetNWInstance()
+{
+    foreach (string comProcId in COM_Interaction.GetCOMProcesses())
+    {
+        if (comProcId.Contains("Navisworks.Document."))
+        {
+            var type = Type.GetTypeFromProgID(comProcId);
+            var guid = type.GUID;
+
+            object obj;
+            int result = GetActiveObjectExt(ref guid, IntPtr.Zero, out obj);
+
+            return obj;
+        }
+    }
+    return null;
+}
+</code></pre>
+<p><strong>Примечание</strong>: в листинге выше используется обращение к GetActiveObjectExt, это универсальная конструкция для .NET5+ и .NET Framework.</p>
+<h3 id="Запуск-нового-экземпляра-navisworks"><a class="header" href="#Запуск-нового-экземпляра-navisworks">Запуск нового экземпляра Navisworks</a></h3>
+<p>Если на данном ПК установлен любой Navisworks, то можно запустить его экземпляр для заданной версии ProgID (см. табличку в начале раздела).</p>
+<pre><code class="language-cs">string nwProgID = "Navisworks.Document.18"; // for NW 2021
+var type = System.Type.GetTypeFromProgID(nwProgID);
+object nwApp = System.Activator.CreateInstance(type);
+</code></pre>
+<h2 id="Подключение-к-com-из-под-net-api"><a class="header" href="#Подключение-к-com-из-под-net-api">Подключение к COM из-под .NET API</a></h2>
+<p>Для этого в .NET API имеется специальный класс <code>Autodesk.Navisworks.Api.ComApi.ComApiBridge</code> (из <code>Autodesk.Navisworks.ComApi.dll</code>), а само COM API доступно через пространство имён <code>Autodesk.Navisworks.Api.Interop</code>. Тогда переход к COM-оболочки модели будет выглядеть как:</p>
+<pre><code class="language-cs">using ComBridge = Autodesk.Navisworks.Api.ComApi.ComApiBridge;
+using COMApi = Autodesk.Navisworks.Api.Interop.ComApi;
+
+COMApi.InwOpState oState = ComBridge.State;
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Модель-проект-navisworks"><a class="header" href="#Модель-проект-navisworks">Модель (проект) Navisworks</a></h1>
+<p><strong>Прим. автора</strong> - не уверен, как это правильно называется, называю из логики работы.</p>
+<p>Проект у приложения Navisworks существует в единственном экземпляре и характеризует некоторую загруженную модель с рядом файлов, точек обзора, настройками визуализации и т.д. Функции работы с проектом доступны через COM-оболочку <code>InwOpState</code> с суффиксами до 11 включительно. Возможно, так развивалось API - путем добавления новой функциональности в новую COM-оболочку с соответствующим суффиксом. При использовании динамической типизации (<code>dynamic</code>) нет разницы к чему приводить полученный у приложения <code>State</code> - все методы "номерных" оболочек можно применять и к базовому <code>InwOpState</code>.</p>
+<p>Для удобства, можете считать, что модель Navisworks описывается COM-оболочкой <code>InwOpState11</code> , которая наследует все методы от базовой <code>InwOpState</code>. Далее будем рассматривать функциональность <code>InwOpState</code> без привязки к версии (фактически, будем говорить о <code>InwOpState11</code>).</p>
+<p>Для удобства, в таблице ниже приведена информация, каким элементам UI соответствуют методы COM-оболочек <code>InwOpState**</code> и краткая справка, что они делают.</p>
+<p>Как читать третью колонку:</p>
+<ul>
+<li>"✅" - если для метода COM-оболочки имеется прямое соответствие в UI;</li>
+<li>"🔧" - различные внутренние технические методы;</li>
+<li>"❓" - автор не уверен в точной идентификации;</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>Метод интерфейса InwOpState</th><th>Чему соответствует в Naviworks</th><th>UI</th></tr></thead><tbody>
+<tr><td><strong>InwOpState</strong></td><td></td><td></td></tr>
+<tr><td>NumTriangles</td><td>Главная - Проект - Окно "Статистика сцены", <br>числовое значение напротив "Треугольников, линий и точек:"</td><td>✅</td></tr>
+<tr><td>GetBoundingBox</td><td>Главная - Проект - Окно "Статистика сцены", <br>значение напротив "Ограничивающий параллелепипед:"</td><td>✅</td></tr>
+<tr><td>GlobalAmbient</td><td>Контекстное меню модели - Параметры файла - Освещение сцены -<br>Ползунок для рассеянного цвета</td><td>✅</td></tr>
+<tr><td>SceneLights</td><td>Прямого соответствия нет. Информация о расположении источников <br>света в загруженных файлах (например, камеры (?) в DWG)</td><td></td></tr>
+<tr><td>CreatePlugin</td><td>Технический метод, создание пользовательского COM-плагина</td><td>🔧</td></tr>
+<tr><td>Plugins</td><td>Технический метод, перечисление всех пользовательских плагинов</td><td>🔧</td></tr>
+<tr><td>SavedViews</td><td>Вид - Рабочее пространство - Окна - Сохраненные точки обзора</td><td>✅</td></tr>
+<tr><td>NdxArray2SavedView</td><td>Технический метод, поиск сохраненной точки обзора по внутреннему пути</td><td>🔧</td></tr>
+<tr><td>SavedView2NdxArray</td><td>Технический метод, получение пути для сохраненной точки обзора</td><td>🔧</td></tr>
+<tr><td>NdxArray2Node</td><td>Технический метод, получение узла дерева по внутреннему пути</td><td>🔧</td></tr>
+<tr><td>SelectionSets</td><td>Вид - Рабочее пространство - Окна - Наборы</td><td>✅</td></tr>
+<tr><td>BeginEdit</td><td>Технический метод, аналог транзакций в API (начало работы)</td><td>🔧</td></tr>
+<tr><td>EndEdit</td><td>Технический метод, аналог транзакций в API (конец работы)</td><td>🔧</td></tr>
+<tr><td>ObjectFactory</td><td>Технический метод, создание новых экземпляров <br>объектов всех поддерживаемых типов</td><td>🔧</td></tr>
+<tr><td>CurrentView</td><td>То, как сейчас видна модель в Naviworks. Численные параметры камеры в <br>"Точка обзора - Редактирование точки обзора - Текущий вид"</td><td>✅</td></tr>
+<tr><td>CurrentSelection</td><td>Набор выбранных объектов в Naviworks</td><td>✅</td></tr>
+<tr><td>CurrentPartition</td><td>Первый загруженный в модель файл (в Дереве выбора)</td><td>✅</td></tr>
+<tr><td>GetEnum</td><td>Технический метод, для языков с динамической типизацией <br>получить значение перечисления по его строковому варианту</td><td>🔧</td></tr>
+<tr><td>FrameRate</td><td>Контекстное меню модели - Параметры файла - Скорость - Частота кадров</td><td>✅</td></tr>
+<tr><td>ZoomInCurViewOnSel</td><td>Контекстное меню - Показать выбранные <br>(если в модели выбран 1 или несколько объектов)</td><td>✅</td></tr>
+<tr><td>ZoomInViewOnSel</td><td>"Клик" на данной сохраненной точке обзора <br>в окне "Сохраненные точки обзора"</td><td>✅</td></tr>
+<tr><td>OverrideColor</td><td>Контекстное меню модели - Переопределить - Переопределить цвет <br>(если выбран хотя бы 1 объект в модели)</td><td>✅</td></tr>
+<tr><td>OverrideTransparency</td><td>Контекстное меню модели -  Переопределить - Переопределить прозрачность<br>(если выбран хотя бы 1 объект в модели)<br></td><td>✅</td></tr>
+<tr><td>OverrideReset</td><td>Контекстное меню модели - Сбросить для элемента - Сброс внешнего вида<br>(если выбран хотя бы 1 объект в модели у кого был переопределен цвет <br>и\или прозрачность)<br></td><td>✅</td></tr>
+<tr><td>OverrideResetAll</td><td>Прямого соответствия нет. Сбрасывает для всех объектов имевшие место <br>переопределения цвета и прозрачности</td><td>🔧</td></tr>
+<tr><td>SelectionHidden</td><td>Контекстное меню у выбранного набора элементов -<br>Скрыть (true) и Показать (false)</td><td>✅</td></tr>
+<tr><td>SelectionRequired</td><td>Контекстное меню у выбранного набора элементов - <br>Обязательный (true = галочка стоит, false = галочка не стоит)</td><td>✅</td></tr>
+<tr><td>HiddenItemsResetAll</td><td>Контекстное меню модели - Сбросить все - Показать все</td><td>✅</td></tr>
+<tr><td>RequiredItemsResetAll</td><td>Контекстное меню модели - Сбросить все - Сделать все необязательными</td><td>✅</td></tr>
+<tr><td>EventsEnabled</td><td>Технический метод. Временное отключение и включение обработки <br>событий действий с объектами (для повышения производительности)</td><td>🔧</td></tr>
+<tr><td>CreatePicture</td><td>Точка обзора - Экспорт - Изображение<br>Для данной точки модели <br>(со стороны API данная точка доступна через метод CurrentView)</td><td>✅</td></tr>
+<tr><td>CurrentAnimation</td><td>Анимация - активная анимация (среди списка)</td><td>✅</td></tr>
+<tr><td>BackgroundColor</td><td>Контекстное меню модели - Фон - Цвет</td><td>✅</td></tr>
+<tr><td>HeadlightAmbient</td><td>Контекстное меню модели - Параметры файла - Лобовое освещение -<br>Ползунок для рассеянного цвета (?)</td><td>✅❓</td></tr>
+<tr><td>HeadlightIntensity</td><td>Контекстное меню модели - Параметры файла - Лобовое освещение -<br>Ползунок для направленного цвета (?)</td><td>✅❓</td></tr>
+<tr><td>SeekSelection</td><td>Технический метод, запрос у пользователя выбора объектов</td><td>🔧</td></tr>
+<tr><td>CurrentPlanView</td><td>Вид - Рабочее пространство - Окна - Вид в плане</td><td>✅</td></tr>
+<tr><td>CurrentSectionView</td><td>Вид - Рабочее пространство - Окна - Вид в сечении</td><td>✅</td></tr>
+<tr><td>AreaCullThreshold</td><td>Контекстное меню модели - Параметры файла - Отсев - Площадь -<br>численное поле "Минимальное количество пикселов для отсева"</td><td>✅</td></tr>
+<tr><td>MaxNearDistance</td><td>Контекстное меню модели - Параметры файла - Отсев - Площадь отсечения - <br>Ближняя - численное поле "Расстояние" для фиксированного значения</td><td>✅</td></tr>
+<tr><td>MinFarDistance</td><td>Контекстное меню модели - Параметры файла - Отсев - Площадь отсечения - <br>Дальнее - численное поле "Расстояние" для фиксированного значения</td><td>✅</td></tr>
+<tr><td>ApplyView</td><td>Технический метод. <br>Переход к заданному виду (с данными настройками камеры)</td><td>🔧</td></tr>
+<tr><td>TwoSided</td><td>Прямого соответствия нет. <br>Как подсказывает ИИ, где-то в настройках визуализации<br>во встроенном рендере от Autodesk. <br>Наиболее ближе по смыслу <br>Точка обзора - Стиль визуализации - Режим - Полная визуализация</td><td>❓</td></tr>
+<tr><td>ViewAll</td><td>Контекстное меню модели - Показать все</td><td>✅</td></tr>
+<tr><td>StopMovement</td><td>Прямого соответствия нет. Прерывает любую анимацию (?)</td><td>❓</td></tr>
+<tr><td><strong>InwOpState2</strong></td><td></td><td></td></tr>
+<tr><td>OverrideTransform</td><td>Контекстное меню - Переопределить - Переопределить преобразование<br>(если выбран хотя бы 1 объект в модели)</td><td>✅</td></tr>
+<tr><td>OverrideTransformReset</td><td>Контекстное меню модели - Сбросить все - Отменить преобразование<br>(если выбран хотя бы 1 объект в модели)<br></td><td>✅</td></tr>
+<tr><td>OverrideTransformResetAll</td><td>Контекстное меню модели - Сбросить все - Преобразования</td><td>✅</td></tr>
+<tr><td><strong>InwOpState3</strong></td><td></td><td></td></tr>
+<tr><td>CurrentFindSpec</td><td>Вид - Рабочее пространство - Окна - Поиск элементов<br>Имеются в виду параметры поиска (<code>InwOpFindSpec</code>):<br>- выборка (где искать) <code>selection</code>;<br>- условия поиска <code>Conditions</code>;<br>- "До первого найденного" true в <code>ResultDisjoint</code>;<br>- Выпадающий список "Найти" - <code>SearchMode</code>, перечисление <code>nwESearchMode</code></td><td>✅</td></tr>
+<tr><td>GetAttributeProperties</td><td>Вспомогательный метод. Преобразование атрибута в перечень свойств</td><td>🔧</td></tr>
+<tr><td>StdName</td><td>Вспомогательный метод. Получение внутреннего имени объекта. <br><br>Контекстное меню модели - Глобальные параметры - Интерфейс - <br>Разработчик - Показывать внутренние имена свойств (если это выбрано)</td><td>🔧✅</td></tr>
+<tr><td>SetOverrideURL</td><td></td><td></td></tr>
+<tr><td>GetOverrideURL</td><td></td><td></td></tr>
+<tr><td>OverrideURLReset</td><td></td><td></td></tr>
+<tr><td>OverrideURLResetAll</td><td></td><td></td></tr>
+<tr><td>DeleteSelectedFiles</td><td>Сбросить выбор объектов в модели</td><td>✅</td></tr>
+<tr><td>GlobalProperties</td><td>Вспомогательный метод. Возвращает настройки модели<br><em>прим. автора</em> - все настройки про URL</td><td>🔧❓</td></tr>
+<tr><td>URLsEnabled</td><td></td><td></td></tr>
+<tr><td>IsComposite</td><td></td><td></td></tr>
+<tr><td>GetMeasureFirstPos</td><td></td><td></td></tr>
+<tr><td>GetMeasureEndPos</td><td></td><td></td></tr>
+<tr><td>GetMeasureDiff</td><td></td><td></td></tr>
+<tr><td>GetMeasureValue</td><td></td><td></td></tr>
+<tr><td>GetGUIPropertyNode</td><td></td><td></td></tr>
+<tr><td>SmartTagsEnabled</td><td></td><td></td></tr>
+<tr><td><strong>InwOpState4</strong></td><td></td><td></td></tr>
+<tr><td>GetFirstInstanceOfNode</td><td>Технический метод. Возвращает первый узел дерева<br>для данного внутреннего пути</td><td>🔧</td></tr>
+<tr><td>ZoomInCurViewOnBoundingBox</td><td>Вид - Включить сечение (настроить рамку и масштаб)</td><td>✅</td></tr>
+<tr><td>SmartTagText</td><td>Технический метод. Получение содержимого тэга по внутреннему пути<br>Аналог просмотра тэга вручную (?)</td><td>🔧❓</td></tr>
+<tr><td>GetIOPluginOptions</td><td></td><td>🔧</td></tr>
+<tr><td>DriveIOPlugin</td><td></td><td>🔧</td></tr>
+<tr><td>PluginOptions</td><td></td><td>🔧</td></tr>
+<tr><td>PluginOption</td><td></td><td>🔧</td></tr>
+<tr><td><strong>InwOpState5</strong></td><td></td><td></td></tr>
+<tr><td>CheckLicense</td><td>Верхняя панель функций - Справка - О программе ...</td><td>✅</td></tr>
+<tr><td><strong>InwOpState6</strong></td><td></td><td></td></tr>
+<tr><td>StartInteractive</td><td></td><td>🔧</td></tr>
+<tr><td>EndInteractive</td><td></td><td>🔧</td></tr>
+<tr><td>GetCurrentFilename</td><td>Панель Свойства - Элемент - Имя файла источника<br>(для выбранного узла из Дерева выбора, соответствующего файлу)</td><td>✅</td></tr>
+<tr><td><strong>InwOpState7</strong></td><td></td><td></td></tr>
+<tr><td>LoadedFileCount</td><td>Число загруженных в модель файлов. <br>В UI не отображается, но можно посчитать вручную из Дерева выбора</td><td>✅🔧</td></tr>
+<tr><td>LoadedFileFromNdx</td><td>Технический метод. Получение информации о загруженном файле<br>Интерактивный выбор в Дереве выбора по индексу</td><td>✅🔧</td></tr>
+<tr><td>LoadedFileFromPath</td><td>Технический метод. Получение информации о загруженном файле<br>по внутреннему пути</td><td>🔧</td></tr>
+<tr><td><strong>InwOpState8</strong></td><td></td><td></td></tr>
+<tr><td>SelectionSetsEx</td><td>Вероятно, какая-то безопасная версия метода <code>SelectionSets</code>.<br>По сути, перечень Вид - Рабочее пространство - Окна - Наборы</td><td>🔧</td></tr>
+<tr><td>FileVersion</td><td></td><td>🔧</td></tr>
+<tr><td><strong>InwOpState9</strong></td><td></td><td></td></tr>
+<tr><td>GetProductInfo</td><td>Заголовок приложения Navisworks<br>(то что отображается в шапке приложения)</td><td>✅</td></tr>
+<tr><td><strong>InwOpState10</strong></td><td></td><td></td></tr>
+<tr><td>PtrEquals</td><td>Технический метод. Сравнение двух объектов</td><td>🔧</td></tr>
+<tr><td>X64PtrVar</td><td>Технический метод. Получение указателя на объект</td><td>🔧</td></tr>
+<tr><td>X64PtrLongs</td><td>Технический метод. Сравнение двух объектов (по указателям)</td><td>🔧</td></tr>
+<tr><td><strong>InwOpState11</strong></td><td></td><td></td></tr>
+<tr><td>OverrideTransformEx</td><td>Вероятно, какая-то безопасная версия метода <code>OverrideTransform</code>.<br>Контекстное меню - Переопределить - Переопределить преобразование<br>(если выбран хотя бы 1 объект в модели)</td><td>✅🔧</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="О-базовых-представлениях-объектов"><a class="header" href="#О-базовых-представлениях-объектов">О базовых представлениях объектов</a></h1>
+<p>Перед тем, как переходить к рассмотрению объектов, необходимо уделить внимание двум базовым COM-оболочкам, описывающим объекты в Navisworks -- <code>InwOaSceneBase</code> и <code>InwBase</code>.</p>
+<p>Первая оболочка <code>InwOaSceneBase</code> характерна для непосредственно структурных объектов (видимых в Дереве выбора в NW) и атрибутов объектов (т.к. наследуется у <code>InwOaNode</code> и <code>InwOaAttribute</code>). Вторая оболочка <code>InwBase</code> наследуется широким перечнем объектов, тех, что сохраняются в памяти файла проекта Navisworks (nwf; nwd).</p>
+<h2 id="inwoascenebase"><a class="header" href="#inwoascenebase">InwOaSceneBase</a></h2>
+<p>Опишем далее состав доступных методов у данного интерфейса:</p>
+<ul>
+<li>UserName - отображаемое имя элемента (привычный заголовок);</li>
+<li>ClassUserName - тип элемента;</li>
+<li>ClassName - внутреннее имя типа элемента;</li>
+</ul>
+<p>Например, для загруженного в модель NW файла "Pyramid.nwc" (он будет описываться с помощью интерфейса <code>InwOaPartition</code>) выдача свойств выше будет следующей:</p>
+<pre><code class="language-textfile">ClassName:     LcOaPartition,
+UserName:      Pyramid.nwc,
+ClassUserName: Файл
+</code></pre>
+<p>Все эти значения можно увидеть на стандартной панели "Свойства" во вкладке "Общие" в Navisworks. <code>UserName</code> - свойство "Имя", <code>ClassUserName</code> - свойство "Тип". Чтобы увидеть <code>ClassName</code> необходимо включить режим "Глобальные параметры - Интерфейс - Разработчик - Показывать внутренние свойства", в свойствах появится "Внутренний тип", и его значение будет соответствовать значению <code>ClassName</code>.</p>
+<p>Пользовательское имя (<code>UserName</code>) по API доступно к изменению. Также можно переопределить значения <code>ClassName</code> и <code>ClassUserName</code>, воспользовавшись методом <code>Rename</code> с соответствующими аргументами в указанном порядке -- <code>ClassName</code> и <code>ClassUserName</code>.</p>
+<h2 id="inwbase"><a class="header" href="#inwbase">InwBase</a></h2>
+<p>Опишем далее состав доступных методов у данного интерфейса:</p>
+<div class="table-wrapper"><table><thead><tr><th>Метод или свойство</th><th>Что делает</th><th>Примечание</th></tr></thead><tbody>
+<tr><td>nwReadOnly</td><td>Возвращает признак, доступен ли объект<br>и содержимое только для чтения</td><td>Если свойство = true, то его свойства нельзя изменить через API</td></tr>
+<tr><td>nwInvalidated</td><td>Возвращает признак, является ли объект <br>и его содержимое недействительными <br>(напр., ссылка на объект устарела или <br>он был удален из исходных данных)</td><td></td></tr>
+<tr><td>nwHandle</td><td>Уникальный идентификатор <br>(хэндл) объекта в памяти сессии Navisworks</td><td>⚠️Не доступен к получению из внешнего процесса<br>Ошибка "Отказано в доступе. (Исключение <br>из HRESULT: 0x80070005 (E_ACCESSDENIED))"</td></tr>
+<tr><td>nwID</td><td>Числовой идентификатор объекта</td><td>⚠️Не доступен к получению из внешнего процесса<br>Ошибка "Отказано в доступе. (Исключение <br>из HRESULT: 0x80070005 (E_ACCESSDENIED))"</td></tr>
+<tr><td>Xtension()</td><td>Позволяет получить доступ к "Расширениям"<br>(Extensions) объекта. Это механизм для хранения <br>пользовательских данных или метаданных, <br>которые не входят в стандартные свойства элемента.</td><td></td></tr>
+<tr><td>nwProcess</td><td>Возвращает номер процесса в системе, <br>где существует объект</td><td></td></tr>
+<tr><td>nwThread</td><td>Возвращает номер потока процесса, где сейчас <br>существует объект</td><td></td></tr>
+<tr><td>nwInit()</td><td>Вызывается для инициализации объекта. Вызывать <br>в случае создания элемента через state.ObjectFactory</td><td></td></tr>
+<tr><td>nwInvalidate()</td><td>Принудительно помечает объект как <br>недействительный. Чтобы заставить NW пересчитать <br>для него свойства или обновить геометрию</td><td></td></tr>
+<tr><td>nwLock</td><td>Управление блокировкой объекта. Для безопасных <br>(в памяти) изменений объекта, особенно если он <br>nwReadOnly = true</td><td></td></tr>
+<tr><td>nwOwn</td><td>Возвращает или задает "право владения <br>объектом" - ручные действия с объектом для очистки<br> его из памяти, если true.</td><td>Для работы с временными объектами</td></tr>
+<tr><td>ObjectName</td><td>Имя типа объекта</td><td>Не то же самое, что InwOaSceneBase.UserName. <br>Что-то похожее, но другое (созвучное с ним).</td></tr>
+<tr><td>Copy()</td><td>Создает копию данного объекта</td><td></td></tr>
+</tbody></table>
+</div>
+<p>Ниже в таблица приведена справочная информация, какими объектами данный интерфейс наследуется.</p>
+<div class="table-wrapper"><table><thead><tr><th>Чем наследуется</th><th>Что это за объекты</th></tr></thead><tbody>
+<tr><td>InwGUIAttribute</td><td>Атрибут приложения</td></tr>
+<tr><td>InwOpState</td><td>Модель NW</td></tr>
+<tr><td>InwLBox3f</td><td>Геометрия. Ограничивающая призма</td></tr>
+<tr><td>InwLBaseVec3f</td><td>Геометрия. Представление 3D-вектора</td></tr>
+<tr><td>InwOpSavedView</td><td>Сохраненная точка обзора</td></tr>
+<tr><td>InwOaSceneBase</td><td>Базовое представление для объектов и атрибутов (см. выше)</td></tr>
+<tr><td>InwOpAnonView</td><td>Любой именованный вид</td></tr>
+<tr><td>InwNvViewPoint</td><td>Точка обзора NW</td></tr>
+<tr><td>InwNvCamera</td><td>Параметры камеры NW</td></tr>
+<tr><td>InwLRotation3f</td><td>Геометрия. Вектор направления и угол вращения</td></tr>
+<tr><td>InwOpSelection</td><td>Выборка объектов NW</td></tr>
+<tr><td>InwOaPath</td><td>Внутренние пути к данным NW</td></tr>
+<tr><td>InwLTransform3f</td><td>Геометрия. Параметры преобразования координат</td></tr>
+<tr><td>InwOpFindSpec</td><td>Настройки поиска объектов в NW</td></tr>
+<tr><td>InwOaPropertyVec</td><td>Набор свойств</td></tr>
+<tr><td>InwURLOverride</td><td>Переопределение тэга (?)</td></tr>
+<tr><td>InwGlobalProperties</td><td>Обобщенные настройки проекта (что-то про ссылки)</td></tr>
+<tr><td>InwSmartTagsOpts</td><td>Настройки тэгов (?)</td></tr>
+<tr><td>InwGUIPropertyNode</td><td>Оболочка для получения коллекции атрибутов приложения</td></tr>
+<tr><td>InwOpFind</td><td>Найденный объект по условиям (вроде для спецификаций)</td></tr>
+<tr><td>InwOpFindCondition</td><td>Поисковое условие</td></tr>
+<tr><td>InwOaCommonLight</td><td>Базовое представления источника освещения</td></tr>
+<tr><td>InwOaProperty</td><td>Базовое представление определения свойства</td></tr>
+<tr><td>InwOaClipPlane</td><td>Плоскость сечения</td></tr>
+<tr><td>InwLPlane3f</td><td>Геометрия. Определение плоскости</td></tr>
+<tr><td>InwOaFragment</td><td>Часть геометрии объекта (из-под него предоставляется<br>доступ к чтению геометрии)</td></tr>
+<tr><td>InwOpComment</td><td>Комментарий на модели</td></tr>
+<tr><td>InwOpProgress</td><td>Вспомогательное. Прогресс выполнения задачи</td></tr>
+<tr><td>InwOpSelectionSet</td><td>Именованный набор выбора (аналог в окне "Наборы")</td></tr>
+<tr><td>InwURL</td><td>Именованная ссылка</td></tr>
+<tr><td>InwURLCategory</td><td>Набор именованных ссылок (категория?)</td></tr>
+<tr><td>InwOpInternalPlugin</td><td>Вспомогательное.</td></tr>
+<tr><td>InwNvViewer</td><td>Параметры реалистичности при просмотре (?)</td></tr>
+<tr><td>InwSimpleVertex</td><td>Вспомогательное. Точка геометрии</td></tr>
+<tr><td>InwSelectionSetFolder</td><td>Доступ к наборам выборки</td></tr>
+<tr><td>InwPlugin_Site</td><td>Вспомогательное. Место плагина в меню (?)</td></tr>
+<tr><td>InwOclTestResult</td><td>Результат проверки на коллизии</td></tr>
+<tr><td>InwOclClashTest</td><td>Параметры проверки на коллизии</td></tr>
+<tr><td>InwOpClashElement</td><td>Коллизирующий элемент</td></tr>
+<tr><td>InwUInt32Vector</td><td>Геометрия. Вектор с координатами int32</td></tr>
+<tr><td>InwOpUserFindSpec</td><td>Пользовательские настройки поиска объектов</td></tr>
+<tr><td>InwOpUserSelectionTreeSpec</td><td>Вспомогательное</td></tr>
+<tr><td>InwOpUserSelectionTreePlugin</td><td>Вспомогательное</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="Работа-с-загруженными-файлами-и-объектами"><a class="header" href="#Работа-с-загруженными-файлами-и-объектами">Работа с загруженными файлами и объектами</a></h1>
+<p>Рассмотрим, как получить перечень данных в модели (объектов с иерархией, обладающих свойствами и геометрией). То есть методам API, которые соответствуют "Дереву выбора" в UI Navisworks.</p>
+<p>Первоначально необходимо получить перечень загруженных файлов\проектов через методы со стороны COM-оболочки <strong>InwOpState7</strong>. Напомним, что проект описывается с помощью COM-оболочки <code>InwOaPartition</code>.</p>
+<pre><code class="language-cs">using System.Runtime.InteropServices;
+using NavisworksAutomationAPI18;
+using NavisworksIntegratedAPI18;
+
+Inavisdoc3? nwDoc = Marshal.GetActiveObject("Navisworks.Document.18") as Inavisdoc3;
+InwOpState11? nwState = nwDoc.State() as InwOpState11;
+
+for (int fileIndex = 0; fileIndex &lt; nwState.LoadedFileCount; fileIndex++)
+{
+    InwOaPartition nwPartition = nwState.LoadedFileFromNdx(fileIndex + 1);
+}
+</code></pre>
+<p><strong>Примечание</strong>: обращаем внимание, что все коллекции внутри Navisworks начинаются не с 0, а с 1 (для этого в теле метода LoadedFileFromNdx делаем <code>+1</code>);</p>
+<p>Всего в Navisworks COM API существует 4 разных оболочки, описывающих содержимое загруженных в него данных:</p>
+<ul>
+<li><code>InwOaPartition</code> (также <code>InwOaPartition2</code>, <code>InwOaPartition3</code>) - представляет собой отдельный проект\файл;</li>
+<li><code>InwOaGroup</code> - представляет любой элемент, у которого есть потомки (вложенные элементы по иерархии);</li>
+<li><code>InwOaNode</code> - базовая оболочка для любых объектов, фактически предоставляет полноценный доступ к объекту;</li>
+<li><code>InwOaGeometry</code> - обёртка над геометрией. Никаких специальных методов не содержит, кроме того, что для неё свойство Fragments у <code>InwOaNode</code> вернет набор составляющих геометрию объектов и далее с ней продолжится работа, об этом чуть позднее).</li>
+</ul>
+<p>Далее для каждого загруженного файла необходимо получить рекурсивно доступ к элементам. В примере ниже полученная информация выводится в окно.</p>
+<pre><code class="language-cs">using System;
+using System.Runtime.InteropServices;
+using System.Text;
+using NavisworksAutomationAPI18;
+using NavisworksIntegratedAPI18;
+
+using System.Windows; //WPF, MessageBox
+
+Inavisdoc3? nwDoc = Marshal.GetActiveObject("Navisworks.Document.18") as Inavisdoc3;
+InwOpState11? nwState = nwDoc.State() as InwOpState11;
+
+StringBuilder tmpStructure = new StringBuilder();
+tmpStructure.AppendLine("Hierarchy info");
+
+for (int fileIndex = 0; fileIndex &lt; nwState.LoadedFileCount; fileIndex++)
+{
+    InwOaPartition nwPartition = nwState.LoadedFileFromNdx(fileIndex + 1);
+    childProcessing(nwPartition, "");
+}
+
+void childProcessing(InwOaNode node, string prefix)
+{
+    tmpStructure.AppendLine(prefix + node.UserName);
+    if (node.IsGroup)
+    {
+        InwOaGroup inwOaGroup = node as InwOaGroup;
+        foreach (InwOaNode childElem in inwOaGroup.Children())
+        {
+            childProcessing(childElem, "-" + prefix);
+        }
+    }
+}
+
+MessageBox.Show(tmpStructure.ToString());
+</code></pre>
+<h2 id="Работа-с-геометрий"><a class="header" href="#Работа-с-геометрий">Работа с геометрий</a></h2>
+<p><strong>Дисклеймер</strong>: автор заранее извиняется на изложение материала далее, так как сам не до конца понимает механику в Navisworks.</p>
+<p>Геометрию нельзя получить через какие-либо методы, вместо этого разработчику предлагается создать специальный класс, унаследованный от интерфейса <code>InwSimplePrimitivesCB</code>, где реализовать методы, получающие соответственно вырожденную геометрию: точку, линию, 3d-грань.</p>
+<p>Ниже приведен минималистичный вид данных интерфейсов из библиотеки типов Integrated. Для того, чтобы создать класс-обработчик геометрии, вам придется подключать её к проекту как зависимость, реализовать обработку через <code>dynamic</code>-типизацию со "своим" интерфейсом, одинаковым по сигнатуре с Navisworks, не выйдет (у автора, во всяком случае, не получилось).</p>
+<pre><code class="language-cs">public interface InwSimpleVertex
+{
+    object coord { get; }
+    object tex_coords { get; }
+    object normal { get; }
+    object color { get; }
+}
+
+public interface InwSimplePrimitivesCB
+{
+    void Triangle(InwSimpleVertex v1, InwSimpleVertex v2, InwSimpleVertex v3);
+    void Line(InwSimpleVertex v1, InwSimpleVertex v2);
+    void Point(InwSimpleVertex v1);
+    void SnapPoint(InwSimpleVertex v1);
+}
+</code></pre>
+<p>Реализация чтения с данным классом будет выглядеть так (сделал полный листинг, для консольного приложения):</p>
+<pre><code class="language-cs">using System;
+using System.Runtime.InteropServices;
+using NavisworksAutomationAPI18;
+using NavisworksIntegratedAPI18;
+
+public class PrimitiveChecker : InwSimplePrimitivesCB
+{
+    public bool HasTriangles { get; private set; }
+    public bool HasLines { get; private set; }
+    public bool HasPoints { get; private set; }
+    public bool HasSnapPoints { get; private set; }
+
+    public void Line(InwSimpleVertex v1, InwSimpleVertex v2) =&gt; HasLines = true;
+
+    public void Point(InwSimpleVertex v1) =&gt; HasPoints = true;
+
+    public void SnapPoint(InwSimpleVertex v1) =&gt; HasSnapPoints = true;
+
+    public void Triangle(InwSimpleVertex v1, InwSimpleVertex v2, InwSimpleVertex v3) =&gt;
+      HasTriangles = true;
+}
+
+internal class Program
+{
+    static void Main(string[] args)
+    {
+        Inavisdoc3? nwDoc = Marshal.GetActiveObject("Navisworks.Document.18") as Inavisdoc3;
+        InwOpState11? nwState = nwDoc.State() as InwOpState11;
+
+        for (int fileIndex = 0; fileIndex &lt; nwState.LoadedFileCount; fileIndex++)
+        {
+            InwOaPartition nwPartition = nwState.LoadedFileFromNdx(fileIndex + 1);
+            childProcessing(nwPartition);
+        }
+
+        void childProcessing(InwOaNode node)
+        {
+            if (node.IsGroup)
+            {
+                InwOaGroup inwOaGroup = node as InwOaGroup;
+                foreach (InwOaNode childElem in inwOaGroup.Children())
+                {
+                    childProcessing(childElem);
+                }
+            }
+
+            if (node.IsGeometry)
+            {
+                foreach (InwOaFragment3 geomFragm in node.Fragments())
+                {
+                    PrimitiveChecker geomChecker = new PrimitiveChecker();
+                    geomFragm.GenerateSimplePrimitives(nwEVertexProperty.eNORMAL, geomChecker);
+
+                    if (geomChecker.HasTriangles)
+                    {
+                        //... some work the geometry
+                    }
+                }
+            }
+        }
+        Console.WriteLine("\nEnd!");
+    }
+}
+</code></pre>
+<p>Пример класса для обработки геометрии можете посмотреть у Speckle.Navisworks (конкретно, в <a href="https://github.com/specklesystems/speckle-sharp-connectors/blob/175145c452d17bbcdd99c8dfe22598e9a4755b7e/Converters/Navisworks/Speckle.Converters.NavisworksShared/ToSpeckle/Raw/GeometryToSpeckleConverter.cs#L85">этом месте</a>).</p>
+<h3 id="Примечание-про-пользовательскую-реализацию"><a class="header" href="#Примечание-про-пользовательскую-реализацию">Примечание про пользовательскую реализацию</a></h3>
+<p>Путем экспериментов, если реализовать вот такую конструкцию:</p>
+<pre><code class="language-cs">[ComImport]
+[Guid("1F4067D7-48FB-4759-BB8E-3E4A281FC841")]
+public interface InwSimplePrimitivesCB
+{
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    void Triangle([In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v1, [In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v2, [In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v3);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    void Line([In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v1, [In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v2);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    void Point([In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v1);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    void SnapPoint([In][MarshalAs(UnmanagedType.Interface)] InwSimpleVertex v1);
+}
+
+public interface InwSimpleVertex
+{
+    object coord
+    {
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [return: MarshalAs(UnmanagedType.Struct)]
+        get;
+    }
+
+    object tex_coord
+    {
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [return: MarshalAs(UnmanagedType.Struct)]
+        get;
+    }
+
+    object normal
+    {
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [return: MarshalAs(UnmanagedType.Struct)]
+        get;
+    }
+
+    object color
+    {
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [return: MarshalAs(UnmanagedType.Struct)]
+        get;
+    }
+}
+</code></pre>
+<p>И для неё написать класс-обработки геометрии, то подключать к проекту COM-библиотеку типов вроде как нет необходимости, необходимо проверить, одинаков ли идентификатор у InwSimplePrimitivesCB в библиотеках типов для других версий Navisworks.</p>
+<h2 id="Работа-со-свойствами"><a class="header" href="#Работа-со-свойствами">Работа со свойствами</a></h2>
+<p>У COM-оболочки <code>InwOaNode</code>, напомним, это "базовое" представление объекта и данных в Navosiworks, имеется свойство <code>Attributes</code>, возвращающее коллекцию атрибутов. Все атрибуты имеют "базовый" интерфейс <code>InwOaAttribute</code>. Всего атрибутов в Navisworks 7+1 (7 тех, что могут быть в коллекции атрибутов объекта и 1 (<code>nwGUIAttribute</code>), характерный для свойств приложения).</p>
+<div class="table-wrapper"><table><thead><tr><th>Имя свойства (ObjectName)</th><th>Чем описывается</th></tr></thead><tbody>
+<tr><td>nwOaNameAttribute</td><td>InwOaNameAttribute</td></tr>
+<tr><td>nwOaMaterial</td><td>InwOaMaterial</td></tr>
+<tr><td>nwOaPublishAttribute</td><td>InwOaPublishAttribute</td></tr>
+<tr><td>nwOaNat64Attribute</td><td>InwOaNat64Attribute</td></tr>
+<tr><td>nwOaTransform</td><td>InwOaTransform</td></tr>
+<tr><td>nwOaBinaryAttribute</td><td>InwOaBinaryAttribute</td></tr>
+<tr><td>nwOaPropertyAttribute</td><td>InwOaPropertyAttribute</td></tr>
+<tr><td>nwOaAttribute</td><td>InwOaAttribute</td></tr>
+<tr><td>Принцип обработки показан ниже.</td><td></td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-cs">InwNodeAttributesColl attrsColl = node.Attributes();
+foreach (InwOaAttribute atrrBase in attrsColl)
+{
+    string attrType = atrrBase.ObjectName;
+    switch (attrType)
+    {
+        case "nwOaNameAttribute":
+            InwOaNameAttribute attrName = atrrBase as InwOaNameAttribute;
+            //...
+            break;
+        case "nwOaMaterial":
+            InwOaMaterial attrMaterial = atrrBase as InwOaMaterial;
+            //...
+            break;
+    }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Прочие-инструменты"><a class="header" href="#Прочие-инструменты">Прочие инструменты</a></h1>
+<p>В разделе описываются различные оболочки и вспомогательные инструменты</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Выборка-объектов"><a class="header" href="#Выборка-объектов">Выборка объектов</a></h1>
+<p>Выбор каких либо объектов в API описывается с помощью COM-оболочки <code>InwOpSelection</code>.</p>
+<p>Для перехода от неё к непосредственно выбранным объектом можно воспользоваться следующим методом:</p>
+<pre><code class="language-cs">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows;
+
+using NavisworksAutomationAPI18;
+using NavisworksIntegratedAPI18;
+
+Inavisdoc3? nwDoc = Marshal.GetActiveObject("Navisworks.Document.18") as Inavisdoc3;
+InwOpState11? nwState = nwDoc.State() as InwOpState11;
+
+InwOpSelection nwCurrentSelection = nwState.CurrentSelection;
+InwSelectionPathsColl selectionResultPaths = nwCurrentSelection.Paths();
+
+List&lt;InwOaNode&gt; needNodes = new List&lt;InwOaNode&gt;();
+foreach (InwOaPath nwPath in selectionResultPaths)
+{
+    // Возвращается полное "дерево" выбора от корня (файла) до геометрии.
+    // Т.к. свойства объекта привязаны к "родителю" геометрии, то нужно
+    // получить последний в цепочке структурный элемент (не геометрию)
+    InwPathNodesColl nwNodes = nwPath.Nodes();
+
+    // Поэтому начинаем отсчет с конца
+    for (int nodeIndex = nwNodes.Count; nodeIndex &gt; 0; nodeIndex--)
+    {
+        InwOaNode node = nwNodes[nodeIndex];
+        if (!node.IsGeometry &amp;&amp; node.UserName != "GeometryCollection")
+        {
+            needNodes.Add(node);
+            break;
+        }
+    }
+}
+
+MessageBox.Show("Selected next objects: " +
+    string.Join("\n", needNodes.Select(n =&gt; n.UserName)));
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="Набор-выборки-объектов"><a class="header" href="#Набор-выборки-объектов">Набор выборки объектов</a></h1>
+<p>Набор выборки описывается COM-оболочкой <code>InwOpSelectionSet</code>, имеется также <code>InwOpSelectionSet2</code>, но она содержит лишь какие-то технические методы.</p>
+<p>Набор выборки отличается от самой выборки только тем, что он имеет связанные имя <code>name</code>, дату <code>Date</code>, информацию об авторе <code>Author</code> и поле с комментариями <code>Comments</code>, и конечно, ссылку на саму выборку <code>InwOpSelection</code>- через свойство <code>selection</code>.</p>
+<p><strong>Примечание</strong>: при внешнем обращении к API при попытке получения даты (<code>Date</code>) выбрасывает ошибку <code>System.Runtime.InteropServices.COMException: '&lt;&lt;Navisworks Error - Unspecific&gt;&gt;'</code>.</p>
+<p>Ниже приведен код, получающий перечень сохраненных выборок в модели (в UI видны в окне "Наборы") и выводящий в окно информацию об имени набора и количестве объектов в выборке:</p>
+<pre><code class="language-cs">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows;
+
+using NavisworksAutomationAPI18;
+using NavisworksIntegratedAPI18;
+
+Inavisdoc3? nwDoc = Marshal.GetActiveObject("Navisworks.Document.18") as Inavisdoc3;
+InwOpState11? nwState = nwDoc.State() as InwOpState11;
+
+List&lt;string&gt; ssInfo = new List&lt;string&gt;();
+InwSelectionSetColl nwSelSets = nwState.SelectionSets();
+foreach (InwOpSelectionSet nwSelectionSet in nwSelSets)
+{
+    InwSelectionPathsColl selectionResultPaths = nwSelectionSet.selection.Paths();
+
+    List&lt;InwOaNode&gt; needNodes = new List&lt;InwOaNode&gt;();
+    foreach (InwOaPath nwPath in selectionResultPaths)
+    {
+        InwPathNodesColl nwNodes = nwPath.Nodes();
+        for (int nodeIndex = nwNodes.Count; nodeIndex &gt; 0; nodeIndex--)
+        {
+            InwOaNode node = nwNodes[nodeIndex];
+            if (!node.IsGeometry &amp;&amp; node.UserName != "GeometryCollection")
+            {
+                needNodes.Add(node);
+                break;
+            }
+        }
+    }
+    ssInfo.Add($"Набор {nwSelectionSet.name} - {needNodes.Count} шт.");
+}
+MessageBox.Show(string.Join("\n", ssInfo));
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

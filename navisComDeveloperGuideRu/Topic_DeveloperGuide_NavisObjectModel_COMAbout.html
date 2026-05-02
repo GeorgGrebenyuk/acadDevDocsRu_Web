@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>О доступе через COM API - Руководство разработчика Autodesk NavisWorks COM API</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Руководство разработчика Autodesk NavisWorks COM API</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="О-доступе-через-com-api"><a class="header" href="#О-доступе-через-com-api">О доступе через COM API</a></h1>
+<p>В Navisworks COM существует для 4 различных сценариев:</p>
+<ul>
+<li>Navisworks ActiveX controls;</li>
+<li>Navisworks Automation;</li>
+<li>COM Plug-ins for Navisworks;</li>
+<li>COM 'State' API for Navisworks and ActiveX controls;</li>
+</ul>
+<h2 id="navisworks-activex-controls"><a class="header" href="#navisworks-activex-controls">Navisworks ActiveX Controls</a></h2>
+<p>Данный вид COM-API предназначен для вызова функциональности Navisworks извне (со стороны пользовательских приложений, веб-страниц, иные контейнеры). Можно получать доступ к содержимому моделей, управлять им, открывать в Navisworks файлы. Загрузка файлов осуществляется в отдельном потоке, чтобы предотвратить «зависание» программы, в которой эти файлы были созданы (<em>прим. автора</em>, тут непонятно, или программы, откуда этот скрипт вызывается)  <code>File download is done in a separate thread to prevent 'hanging' the containing program.</code>.</p>
+<p>Используются 2 динамические библиотеки, содержащие COM API, где XX - номер версии Navisworks, для которого библиотеки есть (в оригинальном <code>COM Interface.pdf</code> из SDK они имели номер 14, для Navisworks 2021 номер = 18).
+<strong>Navisworks Redistributable API Library XX</strong> (lcodieDX.dll)</p>
+<pre><code class="language-xml"># В csproj строка подключения COM-reference будет примерно такой с поправкой на версию XX
+&lt;COMReference Include="NavisworksRedistributableAPI18"&gt;
+  &lt;WrapperTool&gt;tlbimp&lt;/WrapperTool&gt;
+  &lt;VersionMinor&gt;0&lt;/VersionMinor&gt;
+  &lt;VersionMajor&gt;1&lt;/VersionMajor&gt;
+  &lt;Guid&gt;1ae0ca20-712a-5761-b4a6-a891c594f278&lt;/Guid&gt;
+  &lt;Lcid&gt;0&lt;/Lcid&gt;
+  &lt;Isolated&gt;false&lt;/Isolated&gt;
+  &lt;EmbedInteropTypes&gt;true&lt;/EmbedInteropTypes&gt;
+&lt;/COMReference&gt;
+</code></pre>
+<ul>
+<li>Этот компонент может быть доступен без установленного Navisworks (достаточно только иметь установленный модуль с этим API, возможно имеется в виду NW Freedom) <code>This control is supplied in a Windows Installer merge module and also a self-installing  executable.</code>;</li>
+<li>Доступ к управлению моделью и внутренним данным модели (<em>прим. автора</em> <code>For control and internal state access</code>) ;</li>
+<li>Могут быть открыты только файлы проекта Navisworks (*.nwd);</li>
+<li>Поддержка без ограничений 32bit и 64bit версий ОС (<em>прим. автора</em> на 2026й год уже неактуально);</li>
+<li>Доступны только методы API, способные работать в "безлицензионном режиме", либо все, если лицензия как-то загружена в данное контейнерное приложение `Only certain methods in the API will works as the control runs in ‘unlicensed’ mode unless a special runtime license is embedded in the container application.;</li>
+</ul>
+<p><strong>Navisworks Integrated API Library XX</strong> (lcodieD.dll)</p>
+<pre><code class="language-xml"># В csproj строка подключения COM-reference будет примерно такой с поправкой на версию XX
+&lt;COMReference Include="NavisworksIntegratedAPI18"&gt;
+  &lt;WrapperTool&gt;tlbimp&lt;/WrapperTool&gt;
+  &lt;VersionMinor&gt;0&lt;/VersionMinor&gt;
+  &lt;VersionMajor&gt;1&lt;/VersionMajor&gt;
+  &lt;Guid&gt;b55d0ec6-97ab-5ff0-b6e3-a62e2a2e2bf9&lt;/Guid&gt;
+  &lt;Lcid&gt;0&lt;/Lcid&gt;
+  &lt;Isolated&gt;false&lt;/Isolated&gt;
+  &lt;EmbedInteropTypes&gt;true&lt;/EmbedInteropTypes&gt;
+&lt;/COMReference&gt;
+</code></pre>
+<ul>
+<li>Этот компонент поставляется вместе с устанавливаемым Navisworks;</li>
+<li>Доступ к управлению моделью и внутренним данным модели (<em>прим. автора</em> <code>For control and internal state access</code>) ;</li>
+<li>32-битная библиотека будет работать только на 32-битной ОС, соответственно, 64-битная только на 64-битной ОС (<em>прим. автора</em> на 2026й год уже неактуально, всё ушло на 64-битные системы);</li>
+<li>Могут быть открыты различные файлы, не только файлы проекта Navisworks (*.nwd);</li>
+<li>Всё API доступно к вызову, если основной продукт (Navisworks) лицензирован;
+<strong>Примечание</strong>: в оригинальном <code>COM Interface.pdf</code> из SDK имеется заметка, что при разработке на 32-битной Visual Studio под 64-битные библиотеки могут быть сложности, и надо вручную регистрировать 32-битные библиотеки через <code>regsvr32.exe lcodied.dll</code>;</li>
+</ul>
+<p>Таким образом, <strong>Navisworks Integrated API</strong> - это способ взаимодействия с Navisworks из другого процесса с полным доступом к имеющемуся API.</p>
+<h3 id="mdi--sdi-Режимы"><a class="header" href="#mdi--sdi-Режимы">MDI / SDI Режимы</a></h3>
+<p>Для каждой из упомянутых выше библиотек управления (Redistributable и Integrated) имеются 2 режима работы с ограничениями:</p>
+<p>MDI: Multiple Document Support</p>
+<ul>
+<li>В одном процессе может использоваться несколько элементов управления;</li>
+<li>Поддержка плагинов отсутствует. Поэтому <a href="Topic_DeveloperGuide_NavisObjectModel_About.html#Plugin">плагины, расширяющие экспорт и работу с рецензированием</a> недоступны;</li>
+</ul>
+<p>SDI: Single Document Support</p>
+<ul>
+<li>В одном процессе может использоваться только один элемент управления;</li>
+<li>Поддержка плагинов имеется;</li>
+</ul>
+<h3 id="Встраивание-в-html"><a class="header" href="#Встраивание-в-html">Встраивание в HTML</a></h3>
+<p>Возможно встроить в HTML-код страницы сценарий, обращающийся к COM API Navisworks. Для внедрения в страницу функциональности просмотра некоторой модели. В современной практике это не используется, в угоду WEB API различных систем (в отношении Autodesk -- Forge, Autodesk Docs и т.д.).</p>
+<pre><code class="language-html">&lt;object
+    id="NavisworksControl"
+    classid="CLSID:XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"  &lt;!-- Тот самый CLSID --&gt;
+    codebase="http://ваш_сайт/Installers/NavisworksActiveX.exe" &lt;!-- Откуда качать, если нет --&gt;
+    width="800"
+    height="600"&gt;
+    &lt;param name="FileName" value="model.nwc"&gt; &lt;!-- Какой файл открыть --&gt;
+&lt;/object&gt;
+</code></pre>
+<ul>
+<li>CLSID (classid) - это Guid, характеризующий целевую библиотеку (см. примеры выше для cspoj)</li>
+<li>codebase  - это путь для загрузки элемента управления, если в данной системе отсутствует компонент для указанного classid;</li>
+<li>данный подход работает только в Windows (т.к. вызывается внешний COM);</li>
+</ul>
+<h2 id="com-state-api-for-navisworks-and-activex-controls"><a class="header" href="#com-state-api-for-navisworks-and-activex-controls">COM 'State' API for Navisworks and ActiveX controls</a></h2>
+<p>Элементы управления Navisworks и его ActiveX используют общий API для доступа к внутренним функциям Несмотря на сходство, некоторые интерфейсы и классы могут присутствовать только в одной DLL-библиотеке. Ниже основные особенности COM API и рекомендации по работе с ним.</p>
+<h3 id="Имена-com-интерфейсов"><a class="header" href="#Имена-com-интерфейсов">Имена COM-интерфейсов</a></h3>
+<p>Каждый объект имеет только один соответствующий ему интерфейс, содержащий все методы. Имя интерфейса для конкретного объекта аналогично имени самого объекта. Например, объект "nwOpState" имеет интерфейс <code>InwOpState</code>.</p>
+<h3 id="Объект-верхнего-уровня"><a class="header" href="#Объект-верхнего-уровня">Объект верхнего уровня</a></h3>
+<p>Объект "nwOpState" — это объект верхнего уровня, отвечающий за состояние модели Navisworks. Ниже него находится иерархия других объектов, доступных через свойства, методы и коллекции. Состояние ("nwOpState") также позволяет обрабатывать COM-события, когда происходят различные действия в пользовательском интерфейсе  Navisworks.</p>
+<h3 id="Наследование-методов-интерфейсов"><a class="header" href="#Наследование-методов-интерфейсов">Наследование методов интерфейсов</a></h3>
+<p>Интерфейс каждого объекта напрямую или косвенно наследуется от <code>InwBase</code>. Он содержит стандартные методы. Например, <code>InwOpState</code> наследуется от <code>InwBase</code>. Таким образом, он содержит все методы и свойства <code>InwBase</code>.</p>
+<h3 id="Коллекции"><a class="header" href="#Коллекции">Коллекции</a></h3>
+<p>В практике COM все индексы начинаются с 1. Все коллекции имеют стандартный набор методов, но некоторые из них могут быть не реализованы для некоторых коллекций. Одна коллекция может содержать различные типы объектов. Обычно все они наследуются от одного общего типа объекта.</p>
+<h3 id="Идентификация-объектов"><a class="header" href="#Идентификация-объектов">Идентификация объектов</a></h3>
+<p>Интерфейс <code>InwBase</code> содержит readonly-свойство <code>ObjectName</code>. Его можно использовать для идентификации неизвестных объектов вместо выполнения операций "QueryInterface" или "Set" в Visual Basic или as в .NET. Это единственный способ идентификации объектов в языках с динамической типизацией.</p>
+<h3 id="Создание-новых-объектов"><a class="header" href="#Создание-новых-объектов">Создание новых объектов</a></h3>
+<p>Объекты Navisworks нельзя создать м помощью директивы <code>new</code>. Вместо этого используйте метод <code>ObjectFactory</code> у COM-оболочки состояния документа <code>InwOpState</code>.</p>
+<h3 id="Перечисления"><a class="header" href="#Перечисления">Перечисления</a></h3>
+<p>В языках с динамической типизацией нельзя использовать встроенные перечисления (enum) из COM API. Для перехода к ним из строкового представления используйте метод GetEnum у у COM-оболочки состояния документа <code>InwOpState</code>, это позволит сделать код более читаемым.</p>
+<p>При разработке на .NET такой проблемы нет, enum можно использовать без ограничений.</p>
+<h3 id="Сравнение-объектов"><a class="header" href="#Сравнение-объектов">Сравнение объектов</a></h3>
+<p>Если вы хотите установить, ссылаются ли 2 ссылки на один и тот же объект, не сравнивайте их COM-оболочки, вместо этого вызывайте метод <code>PtrEquals</code> у COM-оболочки состояния документа <code>InwOpState</code>.</p>
+<h2 id="navisworks-automation"><a class="header" href="#navisworks-automation">Navisworks Automation</a></h2>
+<p>В Navisworks реализована ​​базовая поддержка автоматизации. Цель состоит в том, чтобы позволить пользователям программно запускать и управлять продуктом с помощью скриптовых языков (Visual Basic, VBA или VBScript <em>прим. автора</em> - из оригинальной справки). Пользователь также может получать доступ к внутреннему состоянию приложения и управлять им (т.е. работать с COM-оболочкой модели <code>InwOpState</code>).</p>
+<h3 id="Об-установке-нескольких-версий-navisworks"><a class="header" href="#Об-установке-нескольких-версий-navisworks">Об установке нескольких версий Navisworks</a></h3>
+<p>С версий Navisworks 2017 каждый из продуктов (Manage и Simulate) может быть установлен параллельно. Для целей COM-автоматизации они идентичны, и фактически GUID'ы (CLSID) для каждого продукта идентичны. При запуске через COM запускается тот продукт, который был установлен или запущен последним. Например, если вы установили Navisworks Manage 2017, а затем установили Navisworks Simulate 2017, то при запуске продукта через COM запустится Navisworks Simulate. Но если пользователь впоследствии запустит Navisworks Manage, то при выполнении следующего скрипта с COM запустится именно он.</p>
+<h3 id="navisworks-licensing"><a class="header" href="#navisworks-licensing">Navisworks Licensing</a></h3>
+<p>Какая-либо COM-автоматизация доступна только для лицензионных версий Navisworks.</p>
+<h3 id="Подключение-к-процессу"><a class="header" href="#Подключение-к-процессу">Подключение к процессу</a></h3>
+<p>Осуществляется по идентификатору приложения "Navisworks.Document"</p>
+<h3 id="Типы-com-библиотек"><a class="header" href="#Типы-com-библиотек">Типы COM-библиотек</a></h3>
+<ul>
+<li>Navisworks Automation Library XX - для взаимодействия с приложением Navisworks;</li>
+<li>Navisworks Integrated API Library XX - для взаимодействия с моделью в Navisworks;</li>
+</ul>
+<h2 id="com-plugins"><a class="header" href="#com-plugins">COM-Plugins</a></h2>
+<p>Для Navisworks можно создавать COM-плагины. Они расширяют базовую функциональность продукта и доступны на соответствующих вкладках ленты продукта. <em>Прим. автора</em> - имеется подозрение, что плагины ограничены языком Visual Basic (по документации).</p>
+<p>Существует 4 типа плагинов, подробнее см. <a href="Topic_DeveloperGuide_NavisObjectModel_About.html#Plugin">раздел про них</a>. Каждый плагин должен реализовывать базовый COM-интерфейс для плагина <code>InwPlugin</code>. Указывается имя плагина, его настройки в зависимости от типа плагина. Плагины могут быть созданы в виде DLL-файлов или исполняемых файлов. Преимущество исполняемых файлов заключается в возможности отображения немодальных диалогов.</p>
+<p>В процессе инициализации плагина в Navisworks вы передаете плагину набор флагов. Это будет влиять на его поведение. Для каждого плагина можно добавить страницу параметров. На ней можно отображать пользовательские свойства типов CLng (int 64), CDbl (double), CBool (bool), CDate (DateTime) и CStr (string).</p>
+<h3 id="export-plugin"><a class="header" href="#export-plugin">Export-plugin</a></h3>
+<p>Плагины экспорта должны реализовывать интерфейс <code>InwExportPlugin</code>. Плагины экспорта позволяют осуществлять полностью настраиваемый экспорт данных путем добавления их в меню Navisworks. Основной метод, заслуживающий внимания, — это <code>iExport</code>, который будет вызываться при экспорте. Автор плагина может использовать API COM-оболочки приложения <code>InwOpState</code> и всю мощь VB для выполнения любых необходимых действий. Флаги позволяют добавлять пункты меню в меню «Вид», «Вывод» и «Надстройки». Также, в альтернативу добавления кнопок на ленты, вы можете использовать подписки на события <code>InwOpState</code> для отслеживания происходящих событий в модели.</p>
+<h3 id="clash-detective-plug-ins-проверки-на-коллизиипересечения"><a class="header" href="#clash-detective-plug-ins-проверки-на-коллизиипересечения">Clash Detective Plug-ins (проверки на коллизии\пересечения)</a></h3>
+<p>Плагины, добавляющие исключения при обработке коллизий, должны реализовывать интерфейс <code>InwClashPlugin</code>. Плагины позволяют игнорировать определенные конфликты (для некоторых заданных условий). При обнаружении каждого конфликта в Navisworks у загруженных плагинов с данным типом будет вызываться метод <code>iIgnore</code> с целью оставить или отбросить обнаруженную коллизию.</p>
+<h3 id="property-plug-ins-плагины-работающие-со-свойствами"><a class="header" href="#property-plug-ins-плагины-работающие-со-свойствами">Property Plug-ins (плагины, работающие со свойствами)</a></h3>
+<p>Плагины свойств должны реализовывать интерфейс <code>InwPropertyPlugin</code>. Плагины свойств позволяют переопределять то, что отображается при щелчке правой кнопкой мыши по объекту. Результат может представлять текстовую строку (реализация iContentsText) или список свойств (реализация iContentsProperties).</p>
+<h3 id="presenter-plug-ins"><a class="header" href="#presenter-plug-ins">Presenter Plug-ins</a></h3>
+<p>Плагины для "Визуализации" должны реализовывать интерфейс <code>InwPresenterPlugin</code>. Плагины используются для применения текстур к модели. Загруженные плагины отображаются на вкладке «Правила» на вкладке "Визуализация".</p>
+<h3 id="Загрузка-плагинов"><a class="header" href="#Загрузка-плагинов">Загрузка плагинов</a></h3>
+<p>В настоящее время (<em>прим. автора</em> - на 2017 версию как минимум) единственный способ заставить Navisworks загружать COM-плагины — это добавить их строку «ProgId» в реестр. Настроек в UI для этого не предусмотрено. Для загрузки плагинов необходимо перезапустить Navisworks.</p>
+<p>Поскольку каждый продукт начиная с Navisworks 2017 может быть установлен параллельно, у каждого из них будет свой набор записей в реестре. Это означает, что вам необходимо зарегистрировать свой плагин в каждой версии продукта, с которой он совместим. Ключи реестра для каждого плагина показаны в таблице ниже.</p>
+<div class="table-wrapper"><table><thead><tr><th>Product</th><th>Registry Key</th></tr></thead><tbody>
+<tr><td>Navisworks Manage 2017</td><td>Software\Autodesk\Navisworks Manage\14.0\COM Plugins</td></tr>
+<tr><td>Navisworks Simulate 2017</td><td>Software\Autodesk\Navisworks Simulate\14.0\COM Plugins</td></tr>
+<tr><td>Navisworks Manage  2021 64-bit</td><td>Software\Autodesk\Navisworks Manage x64\18.0\COM Plugins</td></tr>
+<tr><td>Добавьте строковые значения, соответствующие идентификаторам программ (progIds) вашего плагина, в соответствующий ключ реестра для данного продукта.</td><td></td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Topic_DeveloperGuide_NavisObjectModel_About.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Topic_DeveloperGuide_Progs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Topic_DeveloperGuide_NavisObjectModel_About.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Topic_DeveloperGuide_Progs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
